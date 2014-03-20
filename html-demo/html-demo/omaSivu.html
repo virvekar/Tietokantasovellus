@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <link href="../css/bootstrap.css" rel="stylesheet">
+        <link href="../css/bootstrap-theme.css" rel="stylesheet">
+        <link href="../css/main.css" rel="stylesheet">
+
+        <title>OmaSivu</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width">
+    </head>
+    <body>
+   
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-3">  
+                        <h1>Puuha-arkisto</h1>
+                    </div>
+                    <div class="col-md-3 col-md-offset-1">
+                        <a href="http://virvemaa.users.cs.helsinki.fi/Tietokantasovellus/html-demo/kirjautuminen.html">Kirjaudu sisään</a> <br>
+                        <a href="http://virvemaa.users.cs.helsinki.fi/Tietokantasovellus/html-demo/Rekisteroityminen.html">Rekisteröidy</a>
+                    </div>
+                </div>
+
+
+                <ul class="nav nav-tabs" data-tabs="tabs">
+                    <li><a href="http://virvemaa.users.cs.helsinki.fi/Tietokantasovellus/html-demo/haku.html" data-toggle="tab">Puuha-haku</a></li>
+                    <li><a href="http://virvemaa.users.cs.helsinki.fi/Tietokantasovellus/html-demo/Puuhat.html" data-toggle="tab">Puuhat</a></li>
+                    <li><a href="http://virvemaa.users.cs.helsinki.fi/Tietokantasovellus/html-demo/Taidot.html" data-toggle="tab">Taidot</a></li>
+                    <li class="active"><a href="#omaSivu" data-toggle="tab">0ma sivu</a></li>
+                </ul>
+                <div id="my-tab-content" class="tab-content">
+                    <div class="tab-pane active" id="omaSivu">
+                        <h1>Oma Sivu</h1>
+                        <div> <h2> Osaamani taidot</h2>
+                         <table style="width:400px" class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>Nimi</th>
+                                <th>Kuvaus</th>
+                                <th>Poista</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Japanin kieli</td>
+                                <td>Osaa sujuvasti japanin kieltä</td>
+                                <td><button type="button" class="btn btn-xs btn-default"><span class="glyphicon remove-circle"></span> Poista</button></td>
+                            </tr>
+                            <tr>
+                                <td>Kitaran soitto:</td>
+                                <td>Osaa soittaa kitaraa</td>
+                                <td><button type="button" class="btn btn-xs btn-default"><span class="glyphicon remove-circle"></span> Poista</button></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    </div>
+                    <div> <h2> Suosikkipuuhani</h2>
+                         <table style="width:400px" class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>Nimi</th>
+                                <th>Kuvaus</th>
+                                <th>Poista</th>
+                                <th>Kirjoita suositus</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Artemis Fowl</td>
+                                <td>Hupaisa kirja Eoin Colferilta</td>
+                                <td><button type="button" class="btn btn-xs btn-default"><span class="glyphicon remove-circle"></span> Poista</button></td>
+                                <td><a class="btn" href="http://virvemaa.users.cs.helsinki.fi/Tietokantasovellus/html-demo/suosituksenKirjoitus.html">Kirjoita Suositus</a></td>
+                            </tr>
+                            <tr>
+                                <td>Yhdellä jalalla hyppely</td>
+                                <td>Ota toinen jalka irti maasta ja ponnista toisella jalalla</td>
+                                <td><button type="button" class="btn btn-xs btn-default"><span class="glyphicon remove-circle"></span> Poista</button></td>
+                                <td>Kirjoita suositus</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    </div>
+                        
+                        <div> <h2> Puuhat jotka olen lisännyt järjestelmään</h2>
+                         <table style="width:500px" class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>Nimi</th>
+                                <th>Kuvaus</th>
+                                <th>Muokkaa</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Artemis Fowl</td>
+                                <td>Hupaisa kirja Eoin Colferilta</td>
+                                <td><a class="btn" href="http://virvemaa.users.cs.helsinki.fi/Tietokantasovellus/html-demo/puuhanMuokkaus.html">Muokkaa</a></td>
+                            </tr>
+                            <tr>
+                                <td>Lentokonepongaus</td>
+                                <td>Listaa ylös jokainen näkemäsi lentokone ja havaintohetki</td>
+                                <td></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    </div>
+                    <div> <h2> Taidot jotka olen lisännyt järjestelmään</h2>
+                         <table style="width:500px" class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>Nimi</th>
+                                <th>Kuvaus</th>
+                                <th>Poista</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Sukellus</td>
+                                <td>On käynyt sukelluksen perusteet kurssin</td>
+                                <td><a class="btn" href="http://virvemaa.users.cs.helsinki.fi/Tietokantasovellus/html-demo/taidonMuokkaus.html">Muokkaa</a></td>
+                            </tr>
+                            <tr>
+                                <td>Japanin kieli</td>
+                                <td>Osaa sujuvasti puhua ja kirjoittaa japania</td>
+                                <td></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    </div>
+                        <a class="btn" href="http://virvemaa.users.cs.helsinki.fi/Tietokantasovellus/html-demo/salasananVaihto.html">Vaihda salasana</a>
+                    </div>
+                    
+                    
+                </div>
+                
+            </div>
+    </body>
+</html>
