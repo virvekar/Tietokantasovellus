@@ -43,8 +43,7 @@ CREATE TABLE taidot (
 CREATE TABLE suosikit (
     puuhanid serial,
     puuhaajaid serial,
-    suositusid serial,
-    PRIMARY KEY (suositusid),
+    PRIMARY KEY (puuhanid, puuhajaid),
     FOREIGN KEY (puuhanid) references puuhat(puuhanid),
     FOREIGN KEY (puuhaajaid) references henkilo(puuhaajaid)
 );
@@ -52,8 +51,9 @@ CREATE TABLE suosikit (
 CREATE TABLE suositukset (
     puuhanid serial,
     puuhaajaid serial,
+    suositusid serial,
     suositusTeksti varchar(1000),
-    PRIMARY KEY (puuhanid, puuhaajaid),
+    PRIMARY KEY (suositusid),
     FOREIGN KEY (puuhanid) references puuhat(puuhanid),
     FOREIGN KEY (puuhaajaid) references henkilo(Puuhaajaid)
 );
