@@ -1,12 +1,4 @@
 
-
-
-            <ul class="nav nav-tabs" data-tabs="tabs">
-                <li class="active"><a href="#haku" data-toggle="tab">Puuha-haku</a></li>
-                <li><a href="http://virvemaa.users.cs.helsinki.fi/Tietokantasovellus/html-demo/Puuhat.html" data-toggle="tab">Puuhat</a></li>
-                <li><a href="http://virvemaa.users.cs.helsinki.fi/Tietokantasovellus/html-demo/Taidot.html" data-toggle="tab">Taidot</a></li>
-                <li><a href="http://virvemaa.users.cs.helsinki.fi/Tietokantasovellus/html-demo/omaSivu.html" data-toggle="tab">Oma sivu</a></li>
-            </ul>
             <div id="my-tab-content" class="tab-content">
                 <div class="tab-pane active" id="haku">
                     <h1>Puuha-haku</h1>

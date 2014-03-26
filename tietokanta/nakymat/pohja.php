@@ -27,14 +27,28 @@ require_once 'tietokanta/kirjastot/onkoKirjautunut.php';
                             Kirjaudu ulos</a>
                     <?php } else { ?> Kirjaudu sisään</a>
                     <?php } ?> <br>
-                    <a href="http://virvemaa.users.cs.helsinki.fi/Tietokantasovellus/html-demo/Rekisteroityminen.html">Rekisteröidy</a>
+                    <a href="http://virvemaa.users.cs.helsinki.fi/Tietokantasovellus/rekisteroityminenK.php">Rekisteröidy</a>
                 </div>
             </div>
-            <?php
-            require $sivu;
+            <?php if (!empty($data->aktiivinen)) { ?>
+                <ul class="nav nav-tabs" data-tabs="tabs">
+                    <li <?php if ($data->aktiivinen == "haku") { ?>class="active"<?php } ?>><a 
+                            href="http://virvemaa.users.cs.helsinki.fi/Tietokantasovellus/hakuK.php" data-toggle="tab">Puuha-haku</a></li>
+                    <li <?php if ($data->aktiivinen == "puuhat") { ?>class="active"<?php } ?>><a 
+                            href="http://virvemaa.users.cs.helsinki.fi/Tietokantasovellus/puuhatK.php" data-toggle="tab">Puuhat</a></li>
+                    <li <?php if ($data->aktiivinen == "taidot") { ?>class="active"<?php } ?>><a 
+                            href="http://virvemaa.users.cs.helsinki.fi/Tietokantasovellus/taidotK.php" data-toggle="tab">Taidot</a></li>
+                    <li <?php if ($data->aktiivinen == "omaSivu") { ?>class="active"<?php } ?>><a 
+                            href="http://virvemaa.users.cs.helsinki.fi/Tietokantasovellus/omaSivuK.php" data-toggle="tab">Oma sivu</a></li>
+                </ul>
+                <div id="my-tab-content" class="tab-content">
+                     <div class="tab-pane active" >
+                     </div>
+                </div>
+            <?php }
+               require $sivu;
             ?>
-
-
+                      
         </div>
-    </body>
+      </body>
 </html>
