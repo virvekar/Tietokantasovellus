@@ -1,9 +1,9 @@
 <?php
 
 session_start();
-include 'tietokanta/kirjastot/nakymakutsut.php';
-include 'tietokanta/kirjastot/onkoKirjautunut.php';
-include 'tietokanta/kirjastot/kirjauduUlos.php';
+require_once 'tietokanta/kirjastot/nakymakutsut.php';
+require_once 'tietokanta/kirjastot/onkoKirjautunut.php';
+require_once 'tietokanta/kirjastot/kirjauduUlos.php';
 
 require_once 'tietokanta/kirjastot/tietokantayhteys.php';
 require_once "tietokanta/kirjastot/mallit/Henkilo.php";
@@ -15,12 +15,15 @@ if (OnkoKirjautunut()) {
 
 /* Jos sahkopostia ja salasanaa ei ole syotetty naytetaan normaali nakyma */
 if (empty($_POST["email"]) && empty($_POST["password"])) {
-    naytaPohjaNakyma('tietokanta/nakymat/Kirjautuminen.php');
+    naytaNakyma('tietokanta/nakymat/Kirjautuminen.php', array(
+    'aktiivinen' => "ei mikaan"
+));
 }
 
 /* Jos sahkopostiosoitetta ei ole syotetty mutta salasana on naytetaan virheviesti */
 if (empty($_POST["email"])) {
     naytaNakyma('tietokanta/nakymat/Kirjautuminen.php', array(
+        'aktiivinen' => "ei mikaan",
         'virhe' => "Kirjautuminen epäonnistui! Et antanut sähköpostiosoitetta.",
     ));
 }
@@ -30,6 +33,7 @@ $kayttaja = $_POST["email"];
 if (empty($_POST["password"])) {
     naytaNakyma('tietokanta/nakymat/Kirjautuminen.php', array(
         'kayttaja' => $kayttaja,
+        'aktiivinen' => "ei mikaan",
         'virhe' => "Kirjautuminen epäonnistui! Et antanut salasanaa.",
     ));
 }
@@ -49,6 +53,7 @@ if (!is_null($henkilo)) {
     naytaNakyma('tietokanta/nakymat/Kirjautuminen.php', array(
         /* Välitetään näkymälle tieto siitä, kuka yritti kirjautumista */
         'kayttaja' => $kayttaja,
+        'aktiivinen' => "ei mikaan",
         'virhe' => "Kirjautuminen epäonnistui! Antamasi tunnus tai salasana on väärä.", request
     ));
 }
