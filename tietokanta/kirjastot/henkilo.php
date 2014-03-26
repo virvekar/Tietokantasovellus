@@ -54,4 +54,5 @@ class Henkilo {
         return $tulokset;
     }
 
+
 }
