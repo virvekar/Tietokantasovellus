@@ -34,7 +34,7 @@ class Puuhat {
     public function setKesto($kesto){
         $this->kesto = $kesto;
     }
-    public function sethenkilomaara($henkilomaara){
+    public function setHenkilomaara($henkilomaara){
         $this->henkilomaara = $henkilomaara;
     }
     public function setPaikka($paikka){
@@ -43,7 +43,7 @@ class Puuhat {
     public function setAjankohta($ajankohta){
         $this->ajankohta = $ajankohta;
     }
-    public function setPuuhanlisaysPaiva($puuhanlisayspaiva){
+    public function setPuuhanLisaysPaiva($puuhanlisayspaiva){
         $this->puuhanlisayspaiva = $puuhanlisayspaiva;
     }
     public function setLisaaja($lisaaja){
@@ -72,7 +72,7 @@ class Puuhat {
     public function getAjankohta(){
         return $this->ajankohta;
     }
-    public function getPuuhanlisayspaiva(){
+    public function getPuuhanLisaysPaiva(){
         return $this->puuhanlisayspaiva;
     }
     public function getLisaaja(){
@@ -82,6 +82,54 @@ class Puuhat {
         return $this->kuvaus;
     }
     
+     public static function EtsiPuuhatLuokassa($luokanid) {
+        $sql = "SELECT puuhanid, puuhaluokanid, puuhanNimi, puuhanKuvaus, puuhanKesto, henkilomaara, paikka, ajankohta,puuhanLisaysPaiva, puuhaajaid FROM puuhat
+                where puuhaluokanid= ?";
+        $kysely = getTietokantayhteys()->prepare($sql);
+        $kysely->execute(array($luokanid));
+
+        $tulokset = array();
+        foreach ($kysely->fetchAll(PDO::FETCH_OBJ) as $tulos) {
+            $puuha = new Puuhat();
+            $puuha->setId($tulos->puuhanid);
+            $puuha->setNimi($tulos->puuhannimi);
+            $puuha->setKuvaus($tulos->puuhankuvaus);
+            $puuha->setPuuhaluokanId($tulos->puuhanluokanid);
+            $puuha->setKesto($tulos->puuhankesto);
+            $puuha->setHenkilomaara($tulos->henkilomaara);
+            $puuha->setPaikka($tulos->paikka);
+            $puuha->setAjankohta($tulos->ajankohta);
+            $puuha->setPuuhanLisaysPaiva($tulos->puuhanlisayspaiva); 
+            $puuha->setLisaaja($tulos->puuhaajaid);
+            //$array[] = $muuttuja; lisää muuttujan arrayn perään. 
+            //Se vastaa melko suoraan ArrayList:in add-metodia.
+            $tulokset[] = $puuha;
+        }
+        return $tulokset;
+    }
+    public static function EtsiPuuha($puuhanid) {
+        $sql = "SELECT puuhanid, puuhaluokanid, puuhanNimi, puuhanKuvaus, puuhanKesto, henkilomaara, paikka, ajankohta,puuhanLisaysPaiva, puuhaajaid FROM puuhat
+                where puuhanid= ?";
+        $kysely = getTietokantayhteys()->prepare($sql);
+        $kysely->execute(array($puuhanid));
+
+        $tulos=$kysely->fetchObject();
+            $puuha = new Puuhat();
+            $puuha->setId($tulos->puuhanid);
+            $puuha->setNimi($tulos->puuhannimi);
+            $puuha->setKuvaus($tulos->puuhankuvaus);
+            $puuha->setPuuhaluokanId($tulos->puuhaluokanid);
+            $puuha->setKesto($tulos->puuhankesto);
+            $puuha->setHenkilomaara($tulos->henkilomaara);
+            $puuha->setPaikka($tulos->paikka);
+            $puuha->setAjankohta($tulos->ajankohta);
+            $puuha->setPuuhanLisaysPaiva($tulos->puuhanlisayspaiva); 
+            $puuha->setLisaaja($tulos->puuhaajaid);
+            //$array[] = $muuttuja; lisää muuttujan arrayn perään. 
+            //Se vastaa melko suoraan ArrayList:in add-metodia.
+                  
+        return $puuha;
+    }
 
 }
 

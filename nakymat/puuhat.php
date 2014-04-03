@@ -25,19 +25,23 @@
             </thead>
             <tbody>
                 <?php 
-                $monesko=1;
+                if (isset($data->luokat)){
+                $monesko=0;
+                $sarakeMontako=$data->sarakeMontako;
+                $sarakePaiva=$data->sarakePaiva;
                 foreach($data->luokat as $puuhaluokka): ?>
                 <tr>
-                    <td><?php echo $monesko; ?></td>
-                    <td><a href="http://virvemaa.users.cs.helsinki.fi/Tietokantasovellus/luokanPuuhatK.php"><?php echo $puuhaluokka->getNimi(); ?></a> </td>
+                    <td><?php echo $monesko+1; ?></td>
+                    <td><a href=luokanPuuhatK.php?luokanid=<?php echo $puuhaluokka->getId(); ?>"><?php echo $puuhaluokka->getNimi(); ?></a> </td>
                     <td><?php echo $puuhaluokka->getKuvaus(); ?></td>
-                    <td><?php echo $puuhaluokka->MontakoPuuhaaLuokassa($puuhaluokka->getId()); ?></td>
-                    <td><?php echo $puuhaluokka->AnnaViimeisinLisaysPaiva($puuhaluokka->getId()); ?></td>
+                    <td><?php echo $sarakeMontako[$monesko]; ?></td>
+                    <td><?php echo $sarakePaiva[$monesko]; ?></td>
 
                 </tr>
                 <?php 
                 $monesko=$monesko+1;
-                endforeach; ?>
+                endforeach; 
+                }?>
             </tbody>
         </table>
 

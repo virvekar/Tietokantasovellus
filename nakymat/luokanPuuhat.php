@@ -10,26 +10,23 @@
             </tr>
         </thead>
         <tbody>
-            <tr>
-                <td>1</td>
-                <td><a href="http://virvemaa.users.cs.helsinki.fi/Tietokantasovellus/puuhanTiedotK.php">Leiki koiraa</a> </td>
-                <td>Kuinka kauan vain</td>
-                <td>2014-3-2</td>
-                <td></td>
-            </tr>
-            <tr>
-                <td>2</td>
-                <td>Nuole kyynärpäätäsi</td>
-                <td>Riippuu</td>
-                <td>2014-2-28</td>
-                <td></td>
-            </tr>
-            <tr>
-                <td>3</td>
-                <td>Laske montako varvasta sinulla on</td>
-                <td>0,05</td>
-                <td>2014-2-27</td>
-                <td></td>
-            </tr>
+            <?php 
+            if (isset($data->puuhat)){
+                $monesko=0;
+                foreach($data->puuhat as $puuha): ?>
+                <tr>
+                    <td><?php echo $monesko+1; ?></td>
+                    <td><a href=puuhanTiedotK.php?puuhanid=<?php echo $puuha->getId(); ?>"><?php echo $puuha->getNimi(); ?></a> </td>
+                    <td><?php echo $puuha->getKesto(); ?></td>
+                    <td><?php echo $puuha->getPuuhanLisaysPaiva(); ?></td>
+
+
+                </tr>
+                <?php 
+                $monesko=$monesko+1;
+                endforeach; 
+            
+            }?>
+
         </tbody>
     </table></div>

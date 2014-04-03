@@ -1,5 +1,5 @@
 <?php
-include 'tietokanta/kirjastot/mallit/Henkilo.php';
+require_once 'tietokanta/kirjastot/mallit/Henkilo.php';
 
 function OnkoKirjautunut() {
     session_start();

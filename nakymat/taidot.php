@@ -20,30 +20,26 @@
                 </tr>
             </thead>
             <tbody>
+                <?php 
+            if (isset($data->taidot)){
+                $monesko=0;
+                $lisaajat=$data->lisaajaLista;
+                foreach($data->taidot as $taito): ?>
                 <tr>
-                    <td>1</td>
-                    <td>Japanin kieli</td>
-                    <td>Osaa sujuvasti lukea ja kirjoittaa japania</td>
-                    <td>2014-3-2</td>
-                    <td>Mikko</td>
+                    <td><?php echo $monesko+1; ?></td>
+                    <td><?php echo $taito->getNimi(); ?></a> </td>
+                    <td><?php echo $taito->getKuvaus(); ?></td>
+                    <td><?php echo $taito->getTaidonLisaysPaiva(); ?></td>
+                    <td><?php echo $lisaajat[$monesko]; ?></td>
+
 
                 </tr>
-                <tr>
-                    <td>2</td>
-                    <td>PHP:n koodaaminen</td>
-                    <td>Osaa sujuvasti koodata PHP:llä</td>
-                    <td>2014-2-28</td>
-                    <td>Pertti</td>
+                <?php
+                $monesko=$monesko+1;
+                endforeach; 
+            
+            }?>
 
-                </tr>
-                <tr>
-                    <td>3</td>
-                    <td>Seinäkiipeily</td>
-                    <td>On suorittanut seinäkiipeilyn peruskurssin</td>
-                    <td>2014-2-27</td>
-                    <td>Heikki</td>
-
-                </tr>
             </tbody>
         </table>
 
