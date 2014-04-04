@@ -26,7 +26,7 @@
                 $lisaajat=$data->lisaajaLista;
                 foreach($data->taidot as $taito): ?>
                 <tr>
-                    <td><?php echo $monesko+1; ?></td>
+                    <td><?php echo ($monesko + 1)+($data->sivuNumero-1)*($data->montakoSivulla); ?></td>
                     <td><?php echo $taito->getNimi(); ?></a> </td>
                     <td><?php echo $taito->getKuvaus(); ?></td>
                     <td><?php echo $taito->getTaidonLisaysPaiva(); ?></td>
@@ -42,7 +42,12 @@
 
             </tbody>
         </table>
-
+<?php if ($data->sivuNumero > 1): ?>
+            <a href="taidotK.php?sivuNumero=<?php echo $data->sivuNumero - 1; ?>">Edellinen sivu</a>
+        <?php endif; ?>
+        <?php if ($data->sivuNumero < $data->sivuja): ?>
+            <a href="taidotK.php?sivuNumero=<?php echo $data->sivuNumero + 1; ?>">Seuraava sivu</a>
+<?php endif; ?>
 
     </div></div>
 

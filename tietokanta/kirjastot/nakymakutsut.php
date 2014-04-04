@@ -13,3 +13,5 @@ function naytaPohjaNakyma($sivu) {
     require '/home/virvemaa/htdocs/Tietokantasovellus/nakymat/virhePohja.php';
     exit();
   }
+  
+

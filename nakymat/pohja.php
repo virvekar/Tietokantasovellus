@@ -42,13 +42,25 @@ require_once 'tietokanta/kirjastot/onkoKirjautunut.php';
                             href="http://virvemaa.users.cs.helsinki.fi/Tietokantasovellus/omaSivuK.php" data-toggle="tab">Oma sivu</a></li>
                 </ul>
                 <div id="my-tab-content" class="tab-content">
-                     <div class="tab-pane active" >
-                     </div>
+                    <div class="tab-pane active" >
+                    </div>
                 </div>
-            <?php }
-               require $sivu;
+                <?php if (!empty($_SESSION['ilmoitus'])): error_log(print_r($_SESSION['ilmoitus'], TRUE));
+                    $ilmoitus=$_SESSION['ilmoitus']?>
+                        
+                     <h3><?php echo $ilmoitus; ?></h3>
+  
+                    <?php
+                    // Samalla kun viesti näytetään, se poistetaan istunnosta,
+                    // ettei se näkyisi myöhemmin jollain toisella sivulla uudestaan.
+                    unset($_SESSION['ilmoitus']);
+                endif;
+                ?>
+            <?php
+            }
+            require $sivu;
             ?>
-                      
+
         </div>
-      </body>
+    </body>
 </html>

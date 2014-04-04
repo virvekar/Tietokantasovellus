@@ -5,6 +5,7 @@ class Puuhaluokka {
     private $id;
     private $nimi;
     private $kuvaus;
+    private $virheet = array();
 
     public function __construct() {
         
@@ -18,10 +19,25 @@ class Puuhaluokka {
 
     public function setNimi($nimi) {
         $this->nimi = $nimi;
+
+        if (trim($this->nimi) == '') {
+            $this->virheet['nimi'] = "Nimi ei saa olla tyhjä.";
+        } else if (strlen($this->nimi) > 50) {
+            $this->virheet['nimi'] = "Nimi on liian pitkä.";
+        } else {
+            unset($this->virheet['nimi']);
+        }
     }
 
     public function setKuvaus($kuvaus) {
         $this->kuvaus = $kuvaus;
+        if (trim($this->kuvaus) == '') {
+            $this->virheet['kuvaus'] = "Kuvaus ei saa olla tyhjä.";
+        } else if (strlen($this->kuvaus) > 1000) {
+            $this->virheet['kuvaus'] = "Kuvaus on liian pitkä.";
+        } else {
+            unset($this->virheet['kuvaus']);
+        }
     }
 
     public function getId() {
@@ -36,8 +52,12 @@ class Puuhaluokka {
         return $this->kuvaus;
     }
 
+    public function getVirheet() {
+        return $this->virheet;
+    }
+
     public static function AnnaTiedotListaukseen() {
-        $sql = "SELECT puuhaluokanid, puuhaluokanNimi, puuhaluokanKuvaus FROM puuhaluokka";
+        $sql = "SELECT puuhaluokanid, puuhaluokanNimi, puuhaluokanKuvaus FROM puuhaluokka ORDER BY puuhaluokanNimi";
         $kysely = getTietokantayhteys()->prepare($sql);
         $kysely->execute();
 
@@ -113,6 +133,63 @@ class Puuhaluokka {
             $puuhaluokka->setKuvaus($tulos->puuhaluokankuvaus);
         }
         return $puuhaluokka->getNimi();
+    }
+
+    public static function AnnaPuuhaLuokanID($nimi) {
+        $sql = "SELECT puuhaluokanid, puuhaluokanNimi, puuhaluokanKuvaus FROM puuhaluokka WHERE puuhaluokanNimi= ?";
+        $kysely = getTietokantayhteys()->prepare($sql);
+        $kysely->execute(array($nimi));
+
+
+        $tulos = $kysely->fetchObject();
+        if ($tulos == null) {
+            return null;
+        } else {
+            $puuhaluokka = new Puuhaluokka();
+            $puuhaluokka->setId($tulos->puuhaluokanid);
+            $puuhaluokka->setNimi($tulos->puuhaluokannimi);
+            $puuhaluokka->setKuvaus($tulos->puuhaluokankuvaus);
+        }
+        return $puuhaluokka->getId();
+    }
+
+    public static function AnnaTiedotListaukseetRajattu($montako, $sivu) {
+        $sql = "SELECT puuhaluokanid, puuhaluokanNimi, puuhaluokanKuvaus FROM puuhaluokka ORDER BY puuhaluokanNimi LIMIT ? OFFSET ?";
+        $kysely = getTietokantayhteys()->prepare($sql);
+        $kysely->execute(array($montako, ((int) $sivu - 1) * $montako));
+
+
+        $tulokset = array();
+        foreach ($kysely->fetchAll(PDO::FETCH_OBJ) as $tulos) {
+            $puuhaluokka = new Puuhaluokka();
+            $puuhaluokka->setId($tulos->puuhaluokanid);
+            $puuhaluokka->setNimi($tulos->puuhaluokannimi);
+            $puuhaluokka->setKuvaus($tulos->puuhaluokankuvaus);
+
+
+            $tulokset[] = $puuhaluokka;
+        }
+        return $tulokset;
+    }
+
+    public static function lukumaara() {
+        $sql = "SELECT count(*) FROM puuhaluokka";
+        $kysely = getTietokantayhteys()->prepare($sql);
+        $kysely->execute();
+        return $kysely->fetchColumn();
+    }
+
+    public function lisaaKantaan() {
+        $sql = "INSERT INTO Puuhaluokka( puuhaluokanNimi, puuhaluokanKuvaus) VALUES(?,?) RETURNING puuhaluokanid";
+        $kysely = getTietokantayhteys()->prepare($sql);
+
+        $ok = $kysely->execute(array($this->getNimi(), $this->getKuvaus()));
+        if ($ok) {
+            //Haetaan RETURNING-määreen palauttama id.
+            //HUOM! Tämä toimii ainoastaan PostgreSQL-kannalla!
+            $this->id = $kysely->fetchColumn();
+        }
+        return $ok;
     }
 
 }

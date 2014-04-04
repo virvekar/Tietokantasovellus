@@ -1,15 +1,48 @@
 <?php
+
 require_once 'tietokanta/kirjastot/nakymakutsut.php';
 require_once 'tietokanta/kirjastot/tietokantayhteys.php';
 require_once 'tietokanta/kirjastot/onkoKirjautunut.php';
+require_once 'tietokanta/kirjastot/mallit/Puuhaluokka.php';
 
-/* Tarkistetaan onko käyttäjä kirjautunut sisään*/
+/* Tarkistetaan onko käyttäjä kirjautunut sisään */
 if (!OnkoKirjautunut()) {
-    naytaNakyma('tietokanta/nakymat/Kirjautuminen.php', array(        
+    naytaNakyma('nakymat/Kirjautuminen.php', array(
         'virhe' => "Kirjaudu sisään lisätäksesi puuhaluokan.", request
     ));
 }
-naytaNakyma('tietokanta/nakymat/puuhaluokanLisays.php', array(
-    'aktiivinen' => "puuhat"
+    
+if ( isset( $_POST['submitluokka'] ) ) { 
+    
+    $uusiLuokka = new Puuhaluokka();
+    $uusiLuokka->setNimi($_POST['nimi']);
+    $uusiLuokka->setKuvaus($_POST['kuvaus']);
+    $virheet=$uusiLuokka->getVirheet();
+    
+
+    /* Tarksitetaan onko puuhaluokka syötetty oikein */
+    if (empty($virheet)) {
+        $uusiLuokka->lisaaKantaan();
+        $_SESSION['ilmoitus'] = "Puuhaluokka lisätty onnistuneesti.";
+        error_log(print_r("taaallakin ollaaan alussa", TRUE));
+        //Luokka lisättiin kantaan onnistuneesti, lähetetään käyttäjä eteenpäin
+        header('Location: puuhatK.php');
+        //Asetetaan istuntoon ilmoitus siitä, että luokka on lisätty.
+        //Tästä tekniikasta kerrotaan lisää kohta
+        
+    } else {
+        $virheet = $uusiLuokka->getVirheet();
+
+        //Virheet voidaan nyt välittää näkymälle syötettyjen tietojen kera
+        naytaNakyma("nakymat/puuhaluokanLisays.php", array(
+            'aktiivinen' => "puuhat",
+            'uusiLuokka' => $uusiLuokka,
+            'virhe' => $virheet
+        ));
+    }
+}
+naytaNakyma('nakymat/puuhaluokanLisays.php', array(
+    'aktiivinen' => "puuhat",
+    'uusiLuokka' => new Puuhaluokka()
 ));
 

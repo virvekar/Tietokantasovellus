@@ -80,4 +80,42 @@ public static function AnnaTaitoListaus() {
         }
         return $tulokset;
     }
+    public static function AnnaTaitoListausRajattu($montako,$sivu) {
+        $sql = "SELECT taidonid, taidonNimi,taidonKuvaus,taidonLisaysPaiva,puuhaajaid FROM taidot ORDER BY taidonNimi LIMIT ? OFFSET ?";
+        $kysely = getTietokantayhteys()->prepare($sql);
+        $kysely->execute(array($montako,((int)$sivu - 1) * $montako));
+
+        $tulokset = array();
+        foreach ($kysely->fetchAll(PDO::FETCH_OBJ) as $tulos) {
+            $taidot = new Taidot();
+            $taidot->setId($tulos->taidonid);
+            $taidot->setNimi($tulos->taidonnimi);
+            $taidot->setKuvaus($tulos->taidonkuvaus);
+            $taidot->setTaidonLisaysPaiva($tulos->taidonlisayspaiva);
+            $taidot->setLisaaja($tulos->puuhaajaid);
+
+            //$array[] = $muuttuja; lisää muuttujan arrayn perään. 
+            //Se vastaa melko suoraan ArrayList:in add-metodia.
+            $tulokset[] = $taidot;
+        }
+        return $tulokset;
+    }
+    public static function AnnaTaidonLisaajaListausRajattu($montako,$sivu) {
+        $sql = "SELECT taidonid, taidonNimi,taidonKuvaus,taidonLisaysPaiva,puuhaajaid FROM taidot ORDER BY taidonNimi LIMIT ? OFFSET ?";
+        $kysely = getTietokantayhteys()->prepare($sql);
+        $kysely->execute(array($montako, ((int)$sivu - 1) * $montako));
+
+        $tulokset = array();
+        foreach ($kysely->fetchAll(PDO::FETCH_OBJ) as $tulos) {
+
+            $tulokset[] = $tulos->puuhaajaid;
+        }
+        return $tulokset;
+    }
+     public static function lukumaara() {
+        $sql = "SELECT count(*) FROM taidot";
+        $kysely = getTietokantayhteys()->prepare($sql);
+        $kysely->execute();
+        return $kysely->fetchColumn();
+    }
 }
