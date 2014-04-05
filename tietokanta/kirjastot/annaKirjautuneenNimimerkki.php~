@@ -9,13 +9,3 @@ function annaKirjautuneenNimimerkki() {
     }
     return null;
 }
-
-function annaKirjautuneenId() {
-    if (isset($_SESSION['kirjautunut'])) {
-        $henkilo =  unserialize($_SESSION['kirjautunut']) ;
-        $id = $henkilo->getId();
-         return $id;  
-    }
-    return null;
-}
-

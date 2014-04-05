@@ -3,7 +3,7 @@
     <div class="form-group">
         <label for="nimi" class="col-md-2 control-label">Puuhan nimi</label>
         <div class="col-md-10">
-            <input type="text" class="form-control" value=<?php echo $data->uusiPuuha->getNimi() ?> id="nimi" name="nimi" >
+            <input type="text" class="form-control" id="nimi" name="nimi" >
         </div>
     </div>
                 <div class="col-md-offset-1">
@@ -80,18 +80,6 @@
 <br>
 <br>
 <br>  
-<div class="form-group">
-        <label for="paiva" class="col-md-2 control-label">Päivä</label>
-        <div class="col-md-10">
-            <input type="text" placeholder="Syötä muodossa 1.1.2014" value="<?php echo htmlspecialchars($data->uusiPuuha->getAjankohta()); ?>" class="form-control" id="paiva" name="paiva">
-        </div>
-    </div>
-<div class="form-group">
-        <label for="kellonaika" class="col-md-2 control-label">Kellonaika</label>
-        <div class="col-md-10">
-            <input type="text" placeholder="Syötä muodossa 01.01" value="<?php echo htmlspecialchars($data->uusiPuuha->getAjankohta()); ?>" class="form-control" id="kellonaika" name="kellonaika">
-        </div>
-    </div>
       <div class="col-md-offset-1">
                 Tarvittavat taidot: 
             </div>

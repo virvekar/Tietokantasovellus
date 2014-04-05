@@ -90,7 +90,7 @@ class Puuhat {
     }
     public function setAjankohta($ajankohta){
         $this->ajankohta = $ajankohta;
-	if (!is_a($vajankohta, 'DateTime')) {
+	if (!is_a($vajankohta, 'DateTime') {
   	   $this->virheet['ajankohta'] = "Ajankohta on syötetty väärin.";
 	}
     }
@@ -135,9 +135,6 @@ class Puuhat {
     public function getPuuhaluokanNimi(){
         
 return Puuhaluokka::AnnaPuuhaLuokka($this->puuhaluokanid);
-    }
- public function getVirheet() {
-        return $this->virheet;
     }
      public static function EtsiPuuhatLuokassa($luokanid) {
         $sql = "SELECT puuhanid, puuhaluokanid, puuhanNimi, puuhanKuvaus, puuhanKesto, henkilomaara, paikka, ajankohta,puuhanLisaysPaiva, puuhaajaid FROM puuhat
