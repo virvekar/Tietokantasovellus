@@ -18,7 +18,7 @@ $luokat = Puuhaluokka::AnnaTiedotListaukseen();
 $taidot = Taidot::AnnaTaitoListaus();
 
 if ( isset( $_POST['submitpuuha'] ) ) { 
-    
+       $uusiPuuha = new Puuhat();
    /* Tarkistetaan onko luokkaa annettu ja miten se on annettu*/
    if(!empty($_POST["luokkasailio"])){
 	 $valittuLuokka = $_POST['luokkasailio'];
@@ -33,17 +33,21 @@ if ( isset( $_POST['submitpuuha'] ) ) {
 	$paikka=$_POST["paikkasailio"];
     	
    }
+
+
    /*Ottaa ajan*/
  if(!empty($_POST["paiva"]) && !empty($_POST["kellonaika"])){
 	$ajankohta=date_create_from_format("j.n.Y G.i",$_POST['paiva']." ".$_POST['kellonaika']);
+
     	$uusiPuuha->setAjankohta($ajankohta); 
    }elseif(!empty($_POST["paiva"])){
 	$ajankohta=date_create_from_format("j.n.Y G.i",$_POST['paiva']." 00.00"); 
     	$uusiPuuha->setAjankohta($ajankohta);
+   }elseif(!empty($_POST["kellonaika"])){
+   	$ajankohta=null;
+    	$uusiPuuha->setAjankohta($ajankohta); 
 	}
-   
-
-    $uusiPuuha = new Puuhat();
+ 
     $uusiPuuha->setNimi($_POST['nimi']);
     $uusiPuuha->setKuvaus($_POST['kuvaus']);
     $uusiPuuha->setHenkilomaara($_POST['henkilomaara']);
@@ -57,14 +61,22 @@ if ( isset( $_POST['submitpuuha'] ) ) {
 
     /* Tarksitetaan onko puuha syötetty oikein */
     if (empty($virheet)) {
-        $uusiPuuha->lisaaKantaan();
-        $_SESSION['ilmoitus'] = "Puuhaluokka lisätty onnistuneesti.";
+         if(empty($ajankohta)){
+ 
+		$uusiPuuha->lisaaKantaanEiAikaa();
+        	$_SESSION['ilmoitus'] = "Puuha lisätty kantaan.";
         
-        //Luokka lisättiin kantaan onnistuneesti, lähetetään käyttäjä eteenpäin
-        header('Location: puuhatK.php');
-  
+		//Luokka lisättiin kantaan onnistuneesti, lähetetään käyttäjä eteenpäin
+        	header('Location: puuhatK.php');
+   	}else{ 
+		$uusiPuuha->lisaaKantaan();
+        	$_SESSION['ilmoitus'] = "Puuha lisätty kantaan.";
         
-    } else {
+		//Luokka lisättiin kantaan onnistuneesti, lähetetään käyttäjä eteenpäin
+        	header('Location: omaSivuK.php');
+        }
+        
+    } else { 
         $virheet = $uusiPuuha->getVirheet();
 
         //Virheet voidaan nyt välittää näkymälle syötettyjen tietojen kera

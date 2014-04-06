@@ -12,7 +12,7 @@ and open the template in the editor.
     <body>
         <?php
 
-   header( 'Location: http://virvemaa.users.cs.helsinki.fi/Tietokantasovellus/html-demo/haku.html' ) ;
+   header( 'Location: http://virvemaa.users.cs.helsinki.fi/Tietokantasovellus/hakuK.php' ) ;
 
 ?>
     </body>

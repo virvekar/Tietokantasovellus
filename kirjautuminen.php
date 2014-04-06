@@ -15,14 +15,14 @@ if (OnkoKirjautunut()) {
 
 /* Jos sahkopostia ja salasanaa ei ole syotetty naytetaan normaali nakyma */
 if (empty($_POST["email"]) && empty($_POST["password"])) {
-    naytaNakyma('tietokanta/nakymat/Kirjautuminen.php', array(
+    naytaNakyma('nakymat/Kirjautuminen.php', array(
     'aktiivinen' => "ei mikaan"
 ));
 }
 
 /* Jos sahkopostiosoitetta ei ole syotetty mutta salasana on naytetaan virheviesti */
 if (empty($_POST["email"])) {
-    naytaNakyma('tietokanta/nakymat/Kirjautuminen.php', array(
+    naytaNakyma('nakymat/Kirjautuminen.php', array(
         'aktiivinen' => "ei mikaan",
         'virhe' => "Kirjautuminen epäonnistui! Et antanut sähköpostiosoitetta.",
     ));
@@ -31,7 +31,7 @@ $kayttaja = $_POST["email"];
 
 /* Jos salasanaa ei ole syotetty mutta sahkoposti on naytetaan virheviesti */
 if (empty($_POST["password"])) {
-    naytaNakyma('tietokanta/nakymat/Kirjautuminen.php', array(
+    naytaNakyma('nakymat/Kirjautuminen.php', array(
         'kayttaja' => $kayttaja,
         'aktiivinen' => "ei mikaan",
         'virhe' => "Kirjautuminen epäonnistui! Et antanut salasanaa.",
@@ -44,13 +44,13 @@ $henkilo = Henkilo::etsiKayttajaTunnuksilla($kayttaja, $salasana);
 
 /* Tarkistetaan onko parametrina saatu oikeat tunnukset */
 if (!is_null($henkilo)) {
-    $_SESSION['kirjautunut'] = $henkilo;
-
+    $_SESSION['kirjautunut'] =serialize($henkilo); 
+          
     /* Jos tunnus on oikea, ohjataan käyttäjä hakusivulle */
     header('Location: hakuK.php');
 } else {
     /* Väärän tunnuksen syöttänyt saa eteensä kirjautumislomakkeen. */
-    naytaNakyma('tietokanta/nakymat/Kirjautuminen.php', array(
+    naytaNakyma('nakymat/Kirjautuminen.php', array(
         /* Välitetään näkymälle tieto siitä, kuka yritti kirjautumista */
         'kayttaja' => $kayttaja,
         'aktiivinen' => "ei mikaan",

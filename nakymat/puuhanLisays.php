@@ -3,7 +3,7 @@
     <div class="form-group">
         <label for="nimi" class="col-md-2 control-label">Puuhan nimi</label>
         <div class="col-md-10">
-            <input type="text" class="form-control" value=<?php echo $data->uusiPuuha->getNimi() ?> id="nimi" name="nimi" >
+            <input type="text" class="form-control" value="<?php echo $data->uusiPuuha->getNimi() ?>" id="nimi" name="nimi" >
         </div>
     </div>
                 <div class="col-md-offset-1">
@@ -19,7 +19,7 @@
 
                             foreach ($data->luokat as $puuhaluokka):
                                 ?>
-                                <option value=<?php echo $puuhaluokka->getId(); ?>><?php echo $puuhaluokka->getNimi(); ?></option>
+                                <option value="<?php echo $puuhaluokka->getId();?>"><?php echo $puuhaluokka->getNimi(); ?></option>
                                 <?php
                             endforeach;
                         }
@@ -61,7 +61,7 @@
    </div>
     <div class="form-group">
         <div class="col-md-3 col-md-offset-1">                 
-              <select name="Paikka" id="paikkasailio">
+              <select name="paikkasailio" id="paikkasailio">
                 <option value="any" selected="selected">Mikä tahansa</option>
                 <option value="kotona">Kotona</option>
                 <option value="ulkona">Ulkona</option>
@@ -72,7 +72,7 @@
         <div class="col-md-offset-1 col-md-5"> 
                 <div class="form-group">
 
-                    <input value="<?php echo htmlspecialchars($data->uusiPuuha->getPaikka()); ?>" type="text" class="form-control" id="paikka" name="luokka" placeholder="Valitse paikan kuvaus valikosta tai kirjoita se tähän" >
+                    <input value="<?php echo htmlspecialchars($data->uusiPuuha->getPaikka()); ?>" type="text" class="form-control" id="paikka" name="paikka" placeholder="Valitse paikan kuvaus valikosta tai kirjoita se tähän" >
 
                 </div>
             </div>
@@ -83,13 +83,13 @@
 <div class="form-group">
         <label for="paiva" class="col-md-2 control-label">Päivä</label>
         <div class="col-md-10">
-            <input type="text" placeholder="Syötä muodossa 1.1.2014" value="<?php echo htmlspecialchars($data->uusiPuuha->getAjankohta()); ?>" class="form-control" id="paiva" name="paiva">
+            <input type="text" placeholder="Syötä muodossa 1.1.2014" value="<?php echo htmlspecialchars($data->uusiPuuha->getPaiva()); ?>" class="form-control" id="paiva" name="paiva">
         </div>
     </div>
 <div class="form-group">
         <label for="kellonaika" class="col-md-2 control-label">Kellonaika</label>
         <div class="col-md-10">
-            <input type="text" placeholder="Syötä muodossa 01.01" value="<?php echo htmlspecialchars($data->uusiPuuha->getAjankohta()); ?>" class="form-control" id="kellonaika" name="kellonaika">
+            <input type="text" placeholder="Syötä muodossa 01.01" value="<?php echo htmlspecialchars($data->uusiPuuha->getKellonaika()); ?>" class="form-control" id="kellonaika" name="kellonaika">
         </div>
     </div>
       <div class="col-md-offset-1">

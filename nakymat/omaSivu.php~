@@ -62,24 +62,16 @@
                     </tr>
                 </thead>
                 <tbody>
-                   <?php
-            if (isset($data->omatPuuhat)) {
-               
-                foreach ($data->omatPuuhat as $puuha):
-                    ?>
                     <tr>
-                        <td><a href=puuhanTiedotK.php?puuhanid=<?php echo $puuha->getId(); ?>"><?php echo $puuha->getNimi(); ?></a></td>
-                        <td> <?php echo $puuha->getKuvaus(); ?></td>
-                        <td><a href=puuhanMuokkausK.php?puuhanid=<?php echo $puuha->getId(); ?>">Muokkaa</a></td>
-        
-
-
+                        <td>Artemis Fowl</td>
+                        <td>Hupaisa kirja Eoin Colferilta</td>
+                        <td><a class="btn" href="http://virvemaa.users.cs.helsinki.fi/Tietokantasovellus/puuhanMuokkausK.php">Muokkaa</a></td>
                     </tr>
-                    <?php
-                  
-                endforeach;
-            }
-            ?>
+                    <tr>
+                        <td>Lentokonepongaus</td>
+                        <td>Listaa ylös jokainen näkemäsi lentokone ja havaintohetki</td>
+                        <td></td>
+                    </tr>
                 </tbody>
             </table>
         </div>

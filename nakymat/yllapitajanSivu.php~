@@ -11,14 +11,14 @@
         
         <div class="form-group">
             <div class="col-md-offset-2 col-md-10">
-                <button type="submit" class="btn btn-default">Blokkaa</button>
+                <button type="submit" class="btn btn-default">Hae</button>
             </div>
         </div>
     </form>
 
 <form class="form-horizontal" role="form" action="yllapitajanSivuK.php" method="POST">
         <div class="form-group">
-            <label for="poistettavaPuuha" class="col-md-2 control-label">Poistettavan puuhan nimi</label>
+            <label for="poistettavaPuuha" class="col-md-2 control-label">Poistettava puuha</label>
             <div class="col-md-10">
                 <input type="text" class="form-control" id="poistettavaPuuha" name="poistettavaPuuha">
             </div>
