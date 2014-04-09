@@ -48,7 +48,7 @@ require_once 'tietokanta/kirjastot/onkoKirjautunut.php';
                 <?php if (!empty($_SESSION['ilmoitus'])): error_log(print_r($_SESSION['ilmoitus'], TRUE));
                     $ilmoitus=$_SESSION['ilmoitus']?>
                         
-                     <h3><?php echo $ilmoitus; ?></h3>
+                     <font color="blue" size="15"><?php echo $ilmoitus; ?></font> 
   
                     <?php
                     // Samalla kun viesti näytetään, se poistetaan istunnosta,

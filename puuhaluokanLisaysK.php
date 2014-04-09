@@ -23,12 +23,33 @@ if ( isset( $_POST['submitluokka'] ) ) {
     /* Tarksitetaan onko puuhaluokka syötetty oikein */
     if (empty($virheet)) {
         $uusiLuokka->lisaaKantaan();
-        $_SESSION['ilmoitus'] = "Puuhaluokka lisätty onnistuneesti.";
-        error_log(print_r("taaallakin ollaaan alussa", TRUE));
+        $_SESSION['ilmoitus'] = "Puuhaluokka lisätty onnistuneesti.";  
+        
+        $sivuNumero = 1;
+        $montakoLuokkaaSivulla = 20;
+
+//Kysytään mallilta Luokkia sivulla $sivu, 
+        $luokat = Puuhaluokka::AnnaTiedotListaukseetRajattu($montakoLuokkaaSivulla, $sivuNumero);
+
+//Luokkien kokonaislukumäärä haetaan, jotta tiedetään montako sivua kissoja kokonaisuudessa on:
+        $luokkaLkm = Puuhaluokka::lukumaara();
+        $sivuja = ceil($luokkaLkm / $montakoLuokkaaSivulla);
+
+        $sarakeMontako = Puuhaluokka::AnnaSarakeMontakoPuuhaaLuokassa($luokat);
+        $sarakeViimeisinLisaysPaiva = Puuhaluokka::AnnaSarakeViimeisinLisaysPaiva($luokat);
+            
         //Luokka lisättiin kantaan onnistuneesti, lähetetään käyttäjä eteenpäin
-        header('Location: puuhatK.php');
-        //Asetetaan istuntoon ilmoitus siitä, että luokka on lisätty.
-        //Tästä tekniikasta kerrotaan lisää kohta
+        naytaNakyma('nakymat/puuhat.php', array(
+            'aktiivinen' => "puuhat",
+            'luokat' => $luokat,
+            'sarakeMontako' => $sarakeMontako,
+            'sarakePaiva' => $sarakeViimeisinLisaysPaiva,
+            'sivuNumero' => $sivuNumero,
+            'sivuja'=>$sivuja,
+            'montakoSivulla'=>$montakoLuokkaaSivulla
+        
+));
+
         
     } else {
         $virheet = $uusiLuokka->getVirheet();

@@ -7,6 +7,7 @@ class Taidot {
     private $kuvaus;
     private $taidonlisayspaiva;
     private $lisaaja;
+    private $virheet = array();
 
 
     public function __construct() {
@@ -19,9 +20,23 @@ class Taidot {
     }
     public function setNimi($nimi){
         $this->nimi = $nimi;
+         if (trim($this->nimi) == '') {
+            $this->virheet['nimi'] = "Nimi ei saa olla tyhjä.";
+        } else if (strlen($this->nimi) > 50) {
+            $this->virheet['nimi'] = "Nimi on liian pitkä.";
+        } else {
+            unset($this->virheet['nimi']);
+        }
     }
     public function setKuvaus($kuvaus){
         $this->kuvaus = $kuvaus;
+        if (trim($this->kuvaus) == '') {
+            $this->virheet['kuvaus'] = "Kuvaus ei saa olla tyhjä.";
+        } else if (strlen($this->kuvaus) > 1000) {
+            $this->virheet['kuvaus'] = "Kuvaus on liian pitkä.";
+        } else {
+            unset($this->virheet['kuvaus']);
+        }
     }
     public function setTaidonLisaysPaiva($taidonlisayspaiva){
         $this->taidonlisayspaiva = $taidonlisayspaiva;
@@ -45,6 +60,9 @@ class Taidot {
     }
     public function getLisaaja(){
         return $this->lisaaja;
+    }
+    public function getVirheet() {
+        return $this->virheet;
     }
    
 public static function AnnaTaitoListaus() {
@@ -112,10 +130,41 @@ public static function AnnaTaitoListaus() {
         }
         return $tulokset;
     }
+    public static function AnnaTaidonID($taidonNimi) {
+        $sql = "SELECT taidonid FROM taidot WHERE taidonNimi= ?";
+        $kysely = getTietokantayhteys()->prepare($sql);
+        $kysely->execute(array($taidonNimi));
+
+
+        $tulos = $kysely->fetchObject();
+        if ($tulos == null) {
+            return null;
+        } 
+        return $tulos->taidonid;
+    }
      public static function lukumaara() {
         $sql = "SELECT count(*) FROM taidot";
         $kysely = getTietokantayhteys()->prepare($sql);
         $kysely->execute();
         return $kysely->fetchColumn();
+    }
+     public function lisaaKantaan() {
+        $sql = "INSERT INTO Taidot( taidonNimi, taidonKuvaus,taidonLisaysPaiva, puuhaajaid) VALUES(?,?,?,?) RETURNING taidonid";
+        $kysely = getTietokantayhteys()->prepare($sql);
+
+        $ok = $kysely->execute(array($this->getNimi(), $this->getKuvaus(),$this->getTaidonLisaysPaiva(),$this->getLisaaja()));
+        if ($ok) {
+            //Haetaan RETURNING-määreen palauttama id.
+            //HUOM! Tämä toimii ainoastaan PostgreSQL-kannalla!
+            $this->id = $kysely->fetchColumn();
+        }
+        return $ok;
+    }
+     public static function PoistaTaito($taidonid) {
+        $sql = "DELETE FROM taidot WHERE taidonid = ?";
+        $kysely = getTietokantayhteys()->prepare($sql);
+        $ok = $kysely->execute(array($taidonid));
+
+        return $ok;
     }
 }

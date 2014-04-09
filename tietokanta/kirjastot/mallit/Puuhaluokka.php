@@ -191,5 +191,12 @@ class Puuhaluokka {
         }
         return $ok;
     }
+public static function PoistaPuuhaluokka($puuhaluokanid) {
+        $sql = "DELETE FROM puuhaluokka WHERE puuhaluokanid = ?";
+        $kysely = getTietokantayhteys()->prepare($sql);
+        $ok = $kysely->execute(array($puuhaluokanid));
+   
 
+        return $ok;
+    }
 }

@@ -15,8 +15,7 @@ if (isset($_GET['sivuNumero'])) {
         $sivuNumero = 1;
     }
 }
-$montakoTaitoaSivulla = 1;
-error_log(print_r($sivuNumero, TRUE));
+$montakoTaitoaSivulla = 20;
 $taidot = Taidot::AnnaTaitoListausRajattu($montakoTaitoaSivulla,$sivuNumero);
 $lisaajaIDLista= Taidot::AnnaTaidonLisaajaListausRajattu($montakoTaitoaSivulla,$sivuNumero);
 $lisaajaLista=Henkilo::EtsiLisaajat($lisaajaIDLista);
