@@ -53,7 +53,9 @@
                 </tr>
             </tbody>
         </table>
-
+    <?php if(!($puuha->OnkoTykannyt($data->kirjautuneenid))){ ?>
+<a href=lisaaSuosikkeihinK.php?puuhanid=<?php echo $puuha->getId(); ?>">Tykkää</a>
+    <?php }?>
         <a class="btn" href="http://virvemaa.users.cs.helsinki.fi/Tietokantasovellus/suosituksenKirjoitusK.php">Kirjoita Suositus</a>
     <?php
 }

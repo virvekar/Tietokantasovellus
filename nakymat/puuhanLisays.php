@@ -13,7 +13,6 @@
                 <div class="form-group">
                     <select name="luokkasailio" id="luokkasailio">
                         <option value="0" selected>-</option>
-                        <option value="any">Mikä tahansa</option>
                         <?php
                         if (isset($data->luokat)) {
 

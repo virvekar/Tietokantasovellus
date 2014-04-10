@@ -4,6 +4,7 @@ require_once 'tietokanta/kirjastot/nakymakutsut.php';
 require_once 'tietokanta/kirjastot/mallit/Puuhat.php';
 require_once 'tietokanta/kirjastot/mallit/Puuhaluokka.php';
 require_once 'tietokanta/kirjastot/mallit/Henkilo.php';
+require_once 'tietokanta/kirjastot/annaKirjautuneenNimimerkki.php';
 
 
 $puuhaid = (int)$_GET['puuhanid'];
@@ -21,6 +22,7 @@ naytaNakyma('nakymat/puuhanTiedot.php', array(
     'aktiivinen' => "puuhat",
     'puuha' => $puuha,
     'luokanNimi' => $luokanNimi,
-    'lisaaja'=>$lisaaja
+    'lisaaja'=>$lisaaja,
+    'kirjautuneenid'=>  annaKirjautuneenId()
 ));
 

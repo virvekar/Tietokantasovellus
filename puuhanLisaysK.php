@@ -61,53 +61,18 @@ if (isset($_POST['submitpuuha'])) {
 
     /* Tarksitetaan onko puuha syötetty oikein */
     if (empty($virheet)) {
-        $uusiPuuha->lisaaKantaanEiAikaa();
-        $_SESSION['ilmoitus'] = "Puuha lisätty kantaan.";
             
-        $sivuNumero = 1;
-        $montakoLuokkaaSivulla = 20;
-
-//Kysytään mallilta Luokkia sivulla $sivu, 
-        $luokat = Puuhaluokka::AnnaTiedotListaukseetRajattu($montakoLuokkaaSivulla, $sivuNumero);
-
-//Luokkien kokonaislukumäärä haetaan, jotta tiedetään montako sivua kissoja kokonaisuudessa on:
-        $luokkaLkm = Puuhaluokka::lukumaara();
-        $sivuja = ceil($luokkaLkm / $montakoLuokkaaSivulla);
-
-        $sarakeMontako = Puuhaluokka::AnnaSarakeMontakoPuuhaaLuokassa($luokat);
-        $sarakeViimeisinLisaysPaiva = Puuhaluokka::AnnaSarakeViimeisinLisaysPaiva($luokat);
         if (empty($ajankohta)) {
+             $uusiPuuha->lisaaKantaanEiAikaa();
+           $_SESSION['ilmoitus'] = "Puuha lisätty kantaan.";
 
-           
-
-            //Luokka lisättiin kantaan onnistuneesti, lähetetään käyttäjä eteenpäin
-            //Käytetään naytaNakyma kutsua, koska headeria kaytettäessä ilmoitus ei näy.
-            naytaNakyma('nakymat/puuhat.php', array(
-            'aktiivinen' => "puuhat",
-            'luokat' => $luokat,
-            'sarakeMontako' => $sarakeMontako,
-            'sarakePaiva' => $sarakeViimeisinLisaysPaiva,
-            'sivuNumero' => $sivuNumero,
-            'sivuja'=>$sivuja,
-            'montakoSivulla'=>$montakoLuokkaaSivulla
-        
-));
+            naytaNakymaPuuhatSivulle();
         } else {
             $uusiPuuha->lisaaKantaan();
             $_SESSION['ilmoitus'] = "Puuha lisätty kantaan.";
 
-            //Luokka lisättiin kantaan onnistuneesti, lähetetään käyttäjä eteenpäin
-            //Käytetään naytaNakyma kutsua, koska headeria kaytettäessä ilmoitus ei näy.
-            naytaNakyma('nakymat/puuhat.php', array(
-            'aktiivinen' => "puuhat",
-            'luokat' => $luokat,
-            'sarakeMontako' => $sarakeMontako,
-            'sarakePaiva' => $sarakeViimeisinLisaysPaiva,
-            'sivuNumero' => $sivuNumero,
-            'sivuja'=>$sivuja,
-            'montakoSivulla'=>$montakoLuokkaaSivulla
+            naytaNakymaPuuhatSivulle();
         
-));
         }
     } else {
         $virheet = $uusiPuuha->getVirheet();

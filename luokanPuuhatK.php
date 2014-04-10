@@ -2,9 +2,20 @@
 require_once 'tietokanta/kirjastot/nakymakutsut.php';
 require_once 'tietokanta/kirjastot/mallit/Puuhat.php';
 require_once 'tietokanta/kirjastot/tietokantayhteys.php';
+require_once 'tietokanta/kirjastot/mallit/Suosikit.php';
+require_once 'tietokanta/kirjastot/annaKirjautuneenNimimerkki.php';
 
-$luokanid = (int)$_GET['luokanid'];
-
+if(isset($_POST['submitLisaaSuosikkeihin'])){
+    $luokanid=$_POST['luokan_id'];
+    $puuhanid=$_POST['puuha_id'];
+    $suosikki = new Suosikit();
+    $suosikki->setPuuhaId($puuhanid);
+    $suosikki->setPuuhaajaId(annaKirjautuneenId());
+    $suosikki->LisaaSuosikkeihin();
+    $_SESSION['ilmoitus'] = "Puuha lisätty suosikkeihin.";
+}else{
+    $luokanid = (int)$_GET['luokanid'];
+}
 
 $sivuNumero = 1;
 if (isset($_GET['sivuNumero'])) {
@@ -22,7 +33,6 @@ $puuhat = Puuhat::EtsiPuuhatLuokassaRajattu($luokanid,$montakoLuokkaaSivulla,$si
 $puuhaLkm = Puuhat::lukumaara($luokanid);
 $sivuja = ceil($puuhaLkm / $montakoLuokkaaSivulla);
 
-
 if(empty($puuhat)){
     naytaNakyma('nakymat/luokanPuuhat.php', array(
     'aktiivinen' => "puuhat",
@@ -35,6 +45,9 @@ naytaNakyma('nakymat/luokanPuuhat.php', array(
     'sivuNumero' => $sivuNumero,
     'sivuja'=>$sivuja,
     'montakoSivulla'=>$montakoLuokkaaSivulla,
-    'luokanid'=>$luokanid
+    'luokanid'=>$luokanid,
+    'kirjautuneenid'=>  annaKirjautuneenId(),
+    'luokanid' =>$luokanid,
+    
         
 ));

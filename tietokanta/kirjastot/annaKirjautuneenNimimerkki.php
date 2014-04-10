@@ -11,7 +11,9 @@ function annaKirjautuneenNimimerkki() {
 }
 
 function annaKirjautuneenId() {
+    session_start();
     if (isset($_SESSION['kirjautunut'])) {
+        
         $henkilo =  unserialize($_SESSION['kirjautunut']) ;
         $id = $henkilo->getId();
          return $id;  

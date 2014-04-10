@@ -55,7 +55,13 @@ class Puuhaluokka {
     public function getVirheet() {
         return $this->virheet;
     }
-
+    public static function asetaArvot($tulos){
+            $puuhaluokka = new Puuhaluokka();
+            $puuhaluokka->setId($tulos->puuhaluokanid);
+            $puuhaluokka->setNimi($tulos->puuhaluokannimi);
+            $puuhaluokka->setKuvaus($tulos->puuhaluokankuvaus);
+            return $puuhaluokka;
+    }
     public static function AnnaTiedotListaukseen() {
         $sql = "SELECT puuhaluokanid, puuhaluokanNimi, puuhaluokanKuvaus FROM puuhaluokka ORDER BY puuhaluokanNimi";
         $kysely = getTietokantayhteys()->prepare($sql);
@@ -63,13 +69,8 @@ class Puuhaluokka {
 
         $tulokset = array();
         foreach ($kysely->fetchAll(PDO::FETCH_OBJ) as $tulos) {
-            $puuhaluokka = new Puuhaluokka();
-            $puuhaluokka->setId($tulos->puuhaluokanid);
-            $puuhaluokka->setNimi($tulos->puuhaluokannimi);
-            $puuhaluokka->setKuvaus($tulos->puuhaluokankuvaus);
 
-
-            $tulokset[] = $puuhaluokka;
+            $tulokset[] = Puuhaluokka::asetaArvot($tulos);
         }
         return $tulokset;
     }
@@ -127,10 +128,7 @@ class Puuhaluokka {
         if ($tulos == null) {
             return null;
         } else {
-            $puuhaluokka = new Puuhaluokka();
-            $puuhaluokka->setId($tulos->puuhaluokanid);
-            $puuhaluokka->setNimi($tulos->puuhaluokannimi);
-            $puuhaluokka->setKuvaus($tulos->puuhaluokankuvaus);
+            $puuhaluokka = Puuhaluokka::asetaArvot($tulos);
         }
         return $puuhaluokka->getNimi();
     }
@@ -145,10 +143,7 @@ class Puuhaluokka {
         if ($tulos == null) {
             return null;
         } else {
-            $puuhaluokka = new Puuhaluokka();
-            $puuhaluokka->setId($tulos->puuhaluokanid);
-            $puuhaluokka->setNimi($tulos->puuhaluokannimi);
-            $puuhaluokka->setKuvaus($tulos->puuhaluokankuvaus);
+            $puuhaluokka = Puuhaluokka::asetaArvot($tulos);
         }
         return $puuhaluokka->getId();
     }
@@ -161,13 +156,7 @@ class Puuhaluokka {
 
         $tulokset = array();
         foreach ($kysely->fetchAll(PDO::FETCH_OBJ) as $tulos) {
-            $puuhaluokka = new Puuhaluokka();
-            $puuhaluokka->setId($tulos->puuhaluokanid);
-            $puuhaluokka->setNimi($tulos->puuhaluokannimi);
-            $puuhaluokka->setKuvaus($tulos->puuhaluokankuvaus);
-
-
-            $tulokset[] = $puuhaluokka;
+           $tulokset[] = Puuhaluokka::asetaArvot($tulos);
         }
         return $tulokset;
     }

@@ -16,9 +16,6 @@ if (!OnkoKirjautunut()) {
 $puuhaid = (int)$_GET['puuhanid']; 
 $uusiPuuha = Puuhat::EtsiPuuha($puuhaid);
 $uusiPuuha-> setId($puuhaid);
- error_log(print_r( "ID ON2:", TRUE));
- error_log(print_r($puuhaid, TRUE));
- error_log(print_r($uusiPuuha, TRUE));
  
 if(empty($uusiPuuha)){
     naytaNakyma('nakymat/puuhanMuokkaus.php', array(
