@@ -37,6 +37,7 @@ if ( isset( $_POST['submitPoistaPuuha'] ) ) {
     	 	'aktiivinen' => "omaSivu"
     	 	));
 	}else{
+            /*Jos puuhaa ei löytynyt näytetään virheilmoitus*/
 		naytaNakyma('nakymat/yllapitajanSivu.php', array(
     	 	'aktiivinen' => "omaSivu",
 	 	'virhe' => "Puuhaa ei loytynyt.", request
@@ -44,6 +45,7 @@ if ( isset( $_POST['submitPoistaPuuha'] ) ) {
 		));
 	}
    }else{
+       /*Jos kenttä oli tyhjä niin annetaan virheilmoitus*/
 	naytaNakyma('nakymat/yllapitajanSivu.php', array(
     	 'aktiivinen' => "omaSivu",
 	 'virhe' => "Syötä poistettava puuha.", request
@@ -59,6 +61,7 @@ if ( isset( $_POST['submitPoistaPuuhaluokka'] ) ) {
 	 $nimi = $_POST['poistettavaPuuhaluokka'];
 	 $puuhaluokka=Puuhaluokka::AnnaPuuhaLuokanID($nimi);
          error_log(print_r($puuhaluokka, TRUE));
+         
          /* Jos puuhaluokka löytyy poistetaan se*/
 	 if(!empty( $puuhaluokka)) {
 	       Puuhaluokka::PoistaPuuhaluokka($puuhaluokka); 
@@ -67,6 +70,7 @@ if ( isset( $_POST['submitPoistaPuuhaluokka'] ) ) {
     	 	'aktiivinen' => "omaSivu"
     	 	));
 	}else{
+            /*Jos puuhaluokkaa ei löytynyt annetaan virheilmoitus*/
 		naytaNakyma('nakymat/yllapitajanSivu.php', array(
     	 	'aktiivinen' => "omaSivu",
 	 	'virhe' => "Puuhaluokkaa ei loytynyt.", request
@@ -74,6 +78,7 @@ if ( isset( $_POST['submitPoistaPuuhaluokka'] ) ) {
 		));
 	}
    }else{
+       /*Jos kenttä oli tyhjä annetaan virheilmoitus*/
 	naytaNakyma('nakymat/yllapitajanSivu.php', array(
     	 'aktiivinen' => "omaSivu",
 	 'virhe' => "Syötä poistettava puuhaluokka.", request
@@ -81,6 +86,7 @@ if ( isset( $_POST['submitPoistaPuuhaluokka'] ) ) {
     	 ));
 }
 }
+
 /* Katsotaan onko taidon poistonappia painettu*/
 if ( isset( $_POST['submitPoistaTaito'] ) ) { 
     /* Katsotaan onko kenttään annettu jokin arvo*/
@@ -96,6 +102,7 @@ if ( isset( $_POST['submitPoistaTaito'] ) ) {
     	 	'aktiivinen' => "omaSivu"
     	 	));
 	}else{
+            /*Jos taitoa ei löytynyt annetaan virheilmoitus*/
 		naytaNakyma('nakymat/yllapitajanSivu.php', array(
     	 	'aktiivinen' => "omaSivu",
 	 	'virhe' => "Taitoa ei loytynyt.", request
@@ -103,6 +110,7 @@ if ( isset( $_POST['submitPoistaTaito'] ) ) {
 		));
 	}
    }else{
+       /*Jos kenttä oli tyhjä annetaan virheilmoitus*/
 	naytaNakyma('nakymat/yllapitajanSivu.php', array(
     	 'aktiivinen' => "omaSivu",
 	 'virhe' => "Syötä poistettava taito.", request
@@ -110,6 +118,8 @@ if ( isset( $_POST['submitPoistaTaito'] ) ) {
     	 ));
 }
 }
+
+/*Jos mitään nappia ei ole painettu näytetään sivu normaalisti*/
 naytaNakyma('nakymat/yllapitajanSivu.php', array(
     'aktiivinen' => "omaSivu"
 ));

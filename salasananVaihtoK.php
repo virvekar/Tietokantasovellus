@@ -5,10 +5,13 @@ require_once 'tietokanta/kirjastot/onkoKirjautunut.php';
 
 /* Tarkistetaan onko käyttäjä kirjautunut sisään*/
 if (!OnkoKirjautunut()) {
-    naytaNakyma('tietokanta/nakymat/Kirjautuminen.php', array(        
+    naytaNakyma('nakymat/Kirjautuminen.php', array(        
         'virhe' => "Kirjaudu sisään vaitaaksesi salasanaa.", request
     ));
 }
-naytaNakyma('tietokanta/nakymat/salasananVaihto.php', array(
+
+/*Tähän tulee toiminnallisuus salasanan vaihtamiseksi*/
+
+naytaNakyma('nakymat/salasananVaihto.php', array(
     'aktiivinen' => "omaSivu"
 ));

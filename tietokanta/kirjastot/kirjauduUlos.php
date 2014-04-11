@@ -1,5 +1,6 @@
 <?php
 
+/*Kirjataan käyttäjä ulos*/
 function KirjauduUlos(){
     session_start();
 

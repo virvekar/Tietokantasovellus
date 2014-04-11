@@ -1,7 +1,7 @@
 <div>
     <?php
     if (isset($data->puuha)) {
-        $puuha=$data->puuha;
+        $puuha = $data->puuha;
         ?>
         <table style="width:300px" class="table table-striped">
             <thead>
@@ -53,13 +53,18 @@
                 </tr>
             </tbody>
         </table>
-    <?php if(!($puuha->OnkoTykannyt($data->kirjautuneenid))){ ?>
-<a href=lisaaSuosikkeihinK.php?puuhanid=<?php echo $puuha->getId(); ?>">Tykkää</a>
-    <?php }?>
+    <?php if (OnkoKirjautunut()){ ?>
+        <?php if (!($puuha->OnkoTykannyt($data->kirjautuneenid))) { ?>
+            <form action="puuhanTiedotK.php" method="post">
+                <input type="hidden" name="puuha_id" value="<?php echo $puuha->getId(); ?>">
+                <input type="submit" id=submitLisaaSuosikkeihin name="submitLisaaSuosikkeihin" value="Tykkää">
+            </form>
+        <?php } ?>
         <a class="btn" href="http://virvemaa.users.cs.helsinki.fi/Tietokantasovellus/suosituksenKirjoitusK.php">Kirjoita Suositus</a>
-    <?php
-}
-?>
+        <?php
+    }
+    }
+    ?>
 </div> 
 
 

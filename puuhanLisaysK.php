@@ -7,6 +7,7 @@ require_once 'tietokanta/kirjastot/mallit/Puuhaluokka.php';
 require_once 'tietokanta/kirjastot/mallit/Taidot.php';
 require_once 'tietokanta/kirjastot/mallit/Puuhat.php';
 require_once 'tietokanta/kirjastot/annaKirjautuneenNimimerkki.php';
+require_once 'tietokanta/kirjastot/luoOlio.php';
 
 /* Tarkistetaan onko käyttäjä kirjautunut sisään */
 if (!OnkoKirjautunut()) {
@@ -15,69 +16,40 @@ if (!OnkoKirjautunut()) {
     ));
 }
 
+/* Haetaan puuhaluokat ja taidot dropvalikkoja varten */
 $luokat = Puuhaluokka::AnnaTiedotListaukseen();
 $taidot = Taidot::AnnaTaitoListaus();
 
+/*Katsotaan onko puuhan lisäysnappia painettu*/
 if (isset($_POST['submitpuuha'])) {
-    $uusiPuuha = new Puuhat();
-    /* Tarkistetaan onko luokkaa annettu ja miten se on annettu */
-    if (!empty($_POST["luokkasailio"])) {
-        $valittuLuokka = $_POST['luokkasailio'];
-    } elseif (!empty($_POST["luokka"])) {
-        $luokanNimi = $_POST["luokka"];
-        $valittuLuokka = Puuhaluokka::AnnaPuuhaLuokanID($luokanNimi);
-    }
-    /* Tarkistetaan onko paikkaa annettu ja miten se on annettu */
-    if (!empty($_POST["paikka"])) {
-        $paikka = $_POST['paikka'];
-    } elseif (!empty($_POST["paikkasailio"])) {
-        $paikka = $_POST["paikkasailio"];
-    }
-
-
-    /* Ottaa ajan */
-    if (!empty($_POST["paiva"]) && !empty($_POST["kellonaika"])) {
-        $ajankohta = date_create_from_format("j.n.Y G.i", $_POST['paiva'] . " " . $_POST['kellonaika']);
-
-        $uusiPuuha->setAjankohta($ajankohta);
-    } elseif (!empty($_POST["paiva"])) {
-        $ajankohta = date_create_from_format("j.n.Y G.i", $_POST['paiva'] . " 00.00");
-        $uusiPuuha->setAjankohta($ajankohta);
-    } elseif (!empty($_POST["kellonaika"])) {
-        $ajankohta = null;
-        $uusiPuuha->setAjankohta($ajankohta);
-    }
-
-    $uusiPuuha->setNimi($_POST['nimi']);
-    $uusiPuuha->setKuvaus($_POST['kuvaus']);
-    $uusiPuuha->setHenkilomaara($_POST['henkilomaara']);
-    $uusiPuuha->setKesto($_POST['kesto']);
-    $uusiPuuha->setPaikka($paikka);
-    $uusiPuuha->setPuuhaluokanId($valittuLuokka);
-    $uusiPuuha->setPuuhanLisaysPaiva($date = date('Y-m-d'));
-    $uusiPuuha->setLisaaja(annaKirjautuneenId());
+    
+  /*Kutsutaan funktiota joka asettaa puuhalle arvot syötteestä*/
+    $uusiPuuha=TaytaPuuhanTiedotSyotteella(new Puuhat());
     $virheet = $uusiPuuha->getVirheet();
 
 
-    /* Tarksitetaan onko puuha syötetty oikein */
+     /* Jos ei virheitä lisätään puuha kantaan */
     if (empty($virheet)) {
-            
+            /*Jos ajankohta on tyhjä kutsutaan funktiota joka ei aseta tietokantaan aikkaa*/
         if (empty($ajankohta)) {
              $uusiPuuha->lisaaKantaanEiAikaa();
            $_SESSION['ilmoitus'] = "Puuha lisätty kantaan.";
 
-            naytaNakymaPuuhatSivulle();
+            /*Viedään käyttäjä puuhat sivulle*/
+            naytaNakymaPuuhatSivulle(1);
+            
+            /*Jos ajankohta ei ole tyhjä kutsutaan funktiota joka asettaa tietokantaan myös ajan */
         } else {
             $uusiPuuha->lisaaKantaan();
             $_SESSION['ilmoitus'] = "Puuha lisätty kantaan.";
 
-            naytaNakymaPuuhatSivulle();
+            /*Viedään käyttäjä puuhat sivulle*/
+            naytaNakymaPuuhatSivulle(1);
         
         }
     } else {
+        /*Jos virheitä oli näytetään virheilmoitus ja välitetään puuhan tiedot näkymälle*/
         $virheet = $uusiPuuha->getVirheet();
-
-        //Virheet voidaan nyt välittää näkymälle syötettyjen tietojen kera
         naytaNakyma("nakymat/puuhanLisays.php", array(
             'aktiivinen' => "puuhat",
             'uusiPuuha' => $uusiPuuha,
@@ -87,6 +59,7 @@ if (isset($_POST['submitpuuha'])) {
         ));
     }
 }
+/*Jos nappia ei ole painettu näytetään normaalinäkymä*/
 naytaNakyma('nakymat/puuhanLisays.php', array(
     'aktiivinen' => "puuhat",
     'uusiPuuha' => new Puuhat(),

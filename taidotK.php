@@ -7,6 +7,8 @@ require_once 'tietokanta/kirjastot/mallit/Henkilo.php';
 
 
 $sivuNumero = 1;
+
+/*Katsotaan onko sivunumero annettu*/
 if (isset($_GET['sivuNumero'])) {
     $sivuNumero = (int) $_GET['sivuNumero'];
 
@@ -15,30 +17,7 @@ if (isset($_GET['sivuNumero'])) {
         $sivuNumero = 1;
     }
 }
-$montakoTaitoaSivulla = 20;
-$taidot = Taidot::AnnaTaitoListausRajattu($montakoTaitoaSivulla,$sivuNumero);
-$lisaajaIDLista= Taidot::AnnaTaidonLisaajaListausRajattu($montakoTaitoaSivulla,$sivuNumero);
-$lisaajaLista=Henkilo::EtsiLisaajat($lisaajaIDLista);
 
-$taitoLkm = Taidot::lukumaara();
-$sivuja = ceil($taitoLkm / $montakoTaitoaSivulla);
-
-error_log(print_r($sivuja, TRUE));
-
-
-if(empty($taidot)){
-    naytaNakyma('nakymat/taidot.php', array(
-    'aktiivinen' => "taidot",
-    'virhe' => "Yhtään taitoa ei ole."
-));
-}
-naytaNakyma('nakymat/taidot.php', array(
-    'aktiivinen' => "taidot",
-    'taidot' => $taidot,
-    'lisaajaLista' => $lisaajaLista,
-    'sivuNumero' => $sivuNumero,
-    'sivuja'=>$sivuja,
-    'montakoSivulla'=>$montakoTaitoaSivulla
-        
-));
+/*Kutsutaan funktiota joka nayttaa taidot nakyman*/
+naytaNakymaTaidotSivulle($sivuNumero);
 

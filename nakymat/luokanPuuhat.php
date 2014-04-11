@@ -7,7 +7,11 @@
                 <th>Nimi</th>
                 <th>Kesto tunteina</th>
                 <th>Lisäyspäivä</th>
-                <th>Lisää suosikkeihin</th>
+                <?php if (OnkoKirjautunut()){ ?>
+                    <th>Lisää suosikkeihin</th>
+                    <?php }else{?>
+                    <th></th>
+                 <?php }?>
             </tr>
         </thead>
         <tbody>
@@ -21,13 +25,15 @@
                         <td><a href=puuhanTiedotK.php?puuhanid=<?php echo $puuha->getId(); ?>"><?php echo $puuha->getNimi(); ?></a> </td>
                         <td><?php echo $puuha->getKesto(); ?></td>
                         <td><?php echo $puuha->getPuuhanLisaysPaiva(); ?></td>
+                        <?php if (OnkoKirjautunut()){ ?>
                         <?php if (!($puuha->OnkoTykannyt($data->kirjautuneenid))){  ?>
                         <td><form action="luokanPuuhatK.php" method="post">
                                 <input type="hidden" name="puuha_id" value="<?php echo $puuha->getId(); ?>">
                                 <input type="hidden" name="luokan_id" value="<?php echo $data->luokanid ?>">
                                 <input type="submit" id=submitLisaaSuosikkeihin name="submitLisaaSuosikkeihin" value="Tykkää">
                             </form> </td>
-                        <?php }else{?>
+                        <?php }
+                        }else{?>
                         <td></td><?php }?>
                     </tr>
                     <?php

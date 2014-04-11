@@ -6,6 +6,7 @@ require_once 'tietokanta/kirjastot/onkoKirjautunut.php';
 require_once 'tietokanta/kirjastot/mallit/Taidot.php';
 require_once 'tietokanta/kirjastot/mallit/Puuhat.php';
 require_once 'tietokanta/kirjastot/annaKirjautuneenNimimerkki.php';
+require_once 'tietokanta/kirjastot/luoOlio.php';
 
 /* Tarkistetaan onko käyttäjä kirjautunut sisään */
 if (!OnkoKirjautunut()) {
@@ -14,12 +15,13 @@ if (!OnkoKirjautunut()) {
     ));
 }
 
+/*Jos taidon id löytyy get parametrista haetaan sen tiedot kannasta*/
 if (isset($_GET['taidonid'])) {
     $taitoid = (int) $_GET['taidonid'];
     $uusiTaito = Taidot::EtsiTaito($taitoid);
     
 }
-
+/*Jos taitoa ei löytynyt tai sitä ei annettu annetaan virheilmoitus*/
 if (empty($uusiTaito)) {
     naytaNakyma('nakymat/taidonMuokkaus.php', array(
         'aktiivinen' => "taidot",
@@ -27,33 +29,26 @@ if (empty($uusiTaito)) {
         'virhe' => "Taitoa ei löydy."
     ));
 }
+
+/*Katsotaan onko taidonmuokkausnappia painettu*/
 if (isset($_POST['submittaitoMuokkaus'])) {
+    /*Luodaan uusi taitomuuttuja annetuilla tiedoilla*/
     $uusiTaito = new Taidot();
-    error_log(print_r($taitoid, TRUE)); 
     $uusiTaito->setId($taitoid);
-    $uusiTaito->setNimi($_POST['nimi']);
-    $uusiTaito->setKuvaus($_POST['kuvaus']);
-    $uusiTaito->setTaidonLisaysPaiva($date = date('Y-m-d'));
-    $uusiTaito->setLisaaja(annaKirjautuneenId());
+    $uusiTaito=TaytaTaidonTiedotSyotteella($uusiTaito);
+    /*Otetaan ylös virheet*/
     $virheet = $uusiTaito->getVirheet();
 
+    /*Jos virheitä ei ollut lisätään muokkaukset kantaan*/
     if (empty($virheet)) {
         $uusiTaito->lisaaMuokkauksetKantaan();
         $_SESSION['ilmoitus'] = "Taidon muokkaus onnistui.";
 
-        $omatPuuhat = Puuhat::HaePuuhatTekijalla(annaKirjautuneenId());
-        $omatTaidot = Taidot::HaeTaidotTekijalla(annaKirjautuneenId());
-
-        naytaNakyma('nakymat/omaSivu.php', array(
-            'nimi' => annaKirjautuneenNimimerkki(),
-            'aktiivinen' => "omaSivu",
-            'omatPuuhat' => $omatPuuhat,
-            'omatTaidot' => $omatTaidot
-        ));
+            /*Kutsutaan funktiota joka näyttää oma sivu -näkymän*/
+        naytaNakymaOmalleSivulle();
     } else {
+        /*Jos virheitä löytyi välitetään ne näkymälle annettujen tietojen kera*/
         $virheet = $uusiTaito->getVirheet();
-error_log(print_r("virheita loytyi", TRUE)); 
-        //Virheet voidaan nyt välittää näkymälle syötettyjen tietojen kera
         naytaNakyma("nakymat/taidonMuokkaus.php", array(
             'aktiivinen' => "taidot",
             'uusiTaito' => $uusiTaito,
@@ -61,7 +56,7 @@ error_log(print_r("virheita loytyi", TRUE));
         ));
     }
 }
-
+/*Jos nappia ei painettu näytetään normaalinäkymä muokattavan taidon tiedoilla*/
 naytaNakyma('nakymat/taidonMuokkaus.php', array(
     'aktiivinen' => "taidot",
     'uusiTaito' => $uusiTaito

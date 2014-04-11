@@ -1,60 +1,47 @@
 <?php
+
 require_once 'tietokanta/kirjastot/nakymakutsut.php';
 require_once 'tietokanta/kirjastot/tietokantayhteys.php';
 require_once 'tietokanta/kirjastot/onkoKirjautunut.php';
 require_once 'tietokanta/kirjastot/mallit/Taidot.php';
 require_once 'tietokanta/kirjastot/annaKirjautuneenNimimerkki.php';
 require_once 'tietokanta/kirjastot/mallit/Henkilo.php';
+require_once 'tietokanta/kirjastot/luoOlio.php';
 
-/* Tarkistetaan onko käyttäjä kirjautunut sisään*/
+/* Tarkistetaan onko käyttäjä kirjautunut sisään */
 if (!OnkoKirjautunut()) {
-    naytaNakyma('nakymat/Kirjautuminen.php', array(        
+    naytaNakyma('nakymat/Kirjautuminen.php', array(
         'virhe' => "Kirjaudu sisään lisätäksesi taidon.", request
     ));
 }
 
-if ( isset( $_POST['submittaito'] ) ) { 
-     $uusiTaito = new Taidot();
-     $uusiTaito->setNimi($_POST['nimi']);
-     $uusiTaito->setKuvaus($_POST['kuvaus']);
-     $uusiTaito->setTaidonLisaysPaiva($date = date('Y-m-d'));
-     $uusiTaito->setLisaaja(annaKirjautuneenId());
-     $virheet=$uusiTaito->getVirheet();
-     
-      if (empty($virheet)) {
-          	$uusiTaito->lisaaKantaan();
-        	$_SESSION['ilmoitus'] = "Taito lisätty kantaan.";
-                
-                $sivuNumero = 1;
-                $montakoTaitoaSivulla = 20;
-                $taidot = Taidot::AnnaTaitoListausRajattu($montakoTaitoaSivulla,$sivuNumero);
-                $lisaajaIDLista= Taidot::AnnaTaidonLisaajaListausRajattu($montakoTaitoaSivulla,$sivuNumero);
-                $lisaajaLista=Henkilo::EtsiLisaajat($lisaajaIDLista);
+/* Katsotaan onko taidonlisäysnappia painettu */
+if (isset($_POST['submittaito'])) {
+    /* Luodaan taitomuuttuja ja annetaan sille tarvittavat tiedot */
+    $uusiTaito = new Taidot();
+    $uusiTaito=TaytaTaidonTiedotSyotteella($uusiTaito);
+    /* Otetaan ylös virheet */
+    $virheet = $uusiTaito->getVirheet();
 
-                $taitoLkm = Taidot::lukumaara();
-                $sivuja = ceil($taitoLkm / $montakoTaitoaSivulla);
+    /* Jos virheitä ei ollut lisätään taito tietokantaan */
+    if (empty($virheet)) {
+        $uusiTaito->lisaaKantaan();
+        $_SESSION['ilmoitus'] = "Taito lisätty kantaan.";
 
-		//Taito lisättiin kantaan onnistuneesti, lähetetään käyttäjä eteenpäin.
-                //Käytetään naytaNakyma kutsua, koska headeria kaytettäessä ilmoitus ei näy.
-        	naytaNakyma('nakymat/taidot.php', array(
-    	 	   'aktiivinen' => "taidot",
-                   'taidot' => $taidot,
-                   'lisaajaLista' => $lisaajaLista,
-                   'sivuNumero' => $sivuNumero,
-                   'sivuja'=>$sivuja,
-                   'montakoSivulla'=>$montakoTaitoaSivulla
-    	 	));
-      }else{
-           $virheet = $uusiTaito->getVirheet();
-
-        //Virheet voidaan nyt välittää näkymälle syötettyjen tietojen kera
+        /* Kutsutaan funktiota joka näyttää sivutetun taidot näkymän */
+        naytaNakymaTaidotSivulle(1);
+    } else {
+        /* Jos virheitä oli välitetään ne näkymälle täytettyjen tietojen kera */
+        $virheet = $uusiTaito->getVirheet();
         naytaNakyma("nakymat/taidonLisays.php", array(
             'aktiivinen' => "taidot",
             'uusiTaito' => $uusiTaito,
             'virhe' => $virheet
         ));
-      }
+    }
 }
+
+/*Jos taidonlisäys nappia ei oltu painettu näyteään normaalinäkymä*/
 naytaNakyma('nakymat/taidonLisays.php', array(
     'aktiivinen' => "taidot",
     'uusiTaito' => new Taidot()

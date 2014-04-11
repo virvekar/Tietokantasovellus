@@ -1,6 +1,6 @@
 <?php
 
-
+/*Asettaa henkilömäärän ylä ja alarajan syötteen perusteella*/
 function karsiHenkilo($kesto) {
     if($kesto==10){
         return array(0 , 999999); 
@@ -23,10 +23,10 @@ function karsiHenkilo($kesto) {
 
     
 }
-  /*  <option value="anyHenkilomaara" selected>-</option>
-                        <option value="10">Mikä tahansa</option>
-                        <option value="1">1</option>
-                        <option value="2">2</option>
-                        <option value="3">3-5</option>
-                        <option value="4">5-10</option>
-                        <option value="5">yli 10</option>*/
+/*  <option value="anyHenkilomaara" selected>-</option>
+<option value="10">Mikä tahansa</option>
+<option value="1">1</option>
+<option value="2">2</option>
+<option value="3">3-5</option>
+<option value="4">5-10</option>
+<option value="5">yli 10</option>*/
