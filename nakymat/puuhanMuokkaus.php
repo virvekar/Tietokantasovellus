@@ -81,6 +81,7 @@
 <br>
 <br>
 <br>  
+Ajankohdan talletuksessa on vielä jotain vikaa
 <div class="form-group">
         <label for="paiva" class="col-md-2 control-label">Päivä</label>
         <div class="col-md-10">
@@ -94,7 +95,7 @@
         </div>
     </div>
       <div class="col-md-offset-1">
-                Tarvittavat taidot: 
+                Tarvittavat taidot: Taidon liittäminen puuhaan on vielä tekemättä
             </div>
             <div class="col-md-offset-1"> 
                 <div class="form-group">

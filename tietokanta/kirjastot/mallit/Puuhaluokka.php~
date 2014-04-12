@@ -16,7 +16,7 @@ class Puuhaluokka {
     public function setId($id) {
         $this->id = $id;
     }
-/*Asettaa puuhaluokalle nimen ja tarkistaa ettei se ole tyhjä tai liian pitkä*/
+
     public function setNimi($nimi) {
         $this->nimi = $nimi;
 
@@ -28,7 +28,7 @@ class Puuhaluokka {
             unset($this->virheet['nimi']);
         }
     }
-/*Asettaa puuhaluokalle kuvauksen ja tarkistaa ettei se ole tyhjä tai liian pitkä*/
+
     public function setKuvaus($kuvaus) {
         $this->kuvaus = $kuvaus;
         if (trim($this->kuvaus) == '') {
@@ -55,8 +55,6 @@ class Puuhaluokka {
     public function getVirheet() {
         return $this->virheet;
     }
-
-    /*Luo uuden puuhaluokan ja määrittää sille tuloksissa annetut arvot*/
     public static function asetaArvot($tulos){
             $puuhaluokka = new Puuhaluokka();
             $puuhaluokka->setId($tulos->puuhaluokanid);
@@ -64,8 +62,6 @@ class Puuhaluokka {
             $puuhaluokka->setKuvaus($tulos->puuhaluokankuvaus);
             return $puuhaluokka;
     }
-
-    /*Palauttaa kaikki puuhaluokat tietokannasta nimen mukaan järjestettynä*/
     public static function AnnaTiedotListaukseen() {
         $sql = "SELECT puuhaluokanid, puuhaluokanNimi, puuhaluokanKuvaus FROM puuhaluokka ORDER BY puuhaluokanNimi";
         $kysely = getTietokantayhteys()->prepare($sql);
@@ -79,7 +75,6 @@ class Puuhaluokka {
         return $tulokset;
     }
 
-/*Kertoo montako puuhaa on tietyssä luokassa*/
     public function MontakoPuuhaaLuokassa($luokanid) {
         $sql = "SELECT COUNT(puuhanid) AS luokanpuuhat FROM puuhat WHERE puuhaluokanid= ?";
         $kysely = getTietokantayhteys()->prepare($sql);
@@ -92,6 +87,7 @@ class Puuhaluokka {
 
     /* Ottaa vastaan listan Puuhaluokkia ja palauttaa listan, jossa on kunkin 
       puuhaluokan sisältämien puuhien määrä */
+
     public static function AnnaSarakeMontakoPuuhaaLuokassa($lista) {
         $tulokset = array();
         foreach ($lista as $puuhaluokka):
@@ -100,7 +96,6 @@ class Puuhaluokka {
         return $tulokset;
     }
 
-/*Etsii päivämäärän milloin luokkaan on viimeksi lisätty puuha*/
     public static function AnnaViimeisinLisaysPaiva($luokanid) {
         $sql = "Select max(puuhanLisaysPaiva) AS viimeisinpaiva
                 from puuhat
@@ -115,8 +110,6 @@ class Puuhaluokka {
         return $tulos->viimeisinpaiva;
     }
 
-/*Ottaa vastaan listan puuhaluokkia ja palauttaa listan, jossa on päivämääriä.
-Kukin päivämäärä vastaa päivää, jolloin luokkaan on viimeksi lisätty puuha*/
     public static function AnnaSarakeViimeisinLisaysPaiva($lista) {
         $tulokset = array();
         foreach ($lista as $puuhaluokka):
@@ -125,7 +118,6 @@ Kukin päivämäärä vastaa päivää, jolloin luokkaan on viimeksi lisätty pu
         return $tulokset;
     }
 
-/*Antaa puuhaluokan nimen kun sille annetaan id*/
     public static function AnnaPuuhaLuokka($luokanid) {
         $sql = "SELECT puuhaluokanid, puuhaluokanNimi, puuhaluokanKuvaus FROM puuhaluokka WHERE puuhaluokanid= ?";
         $kysely = getTietokantayhteys()->prepare($sql);
@@ -141,7 +133,6 @@ Kukin päivämäärä vastaa päivää, jolloin luokkaan on viimeksi lisätty pu
         return $puuhaluokka->getNimi();
     }
 
-/*Antaa puuhaluokan id:n kun sille annetaan nimi*/
     public static function AnnaPuuhaLuokanID($nimi) {
         $sql = "SELECT puuhaluokanid, puuhaluokanNimi, puuhaluokanKuvaus FROM puuhaluokka WHERE puuhaluokanNimi= ?";
         $kysely = getTietokantayhteys()->prepare($sql);
@@ -157,7 +148,6 @@ Kukin päivämäärä vastaa päivää, jolloin luokkaan on viimeksi lisätty pu
         return $puuhaluokka->getId();
     }
 
-/*Antaa listan puuhaluokista tietylle sivulle*/
     public static function AnnaTiedotListaukseetRajattu($montako, $sivu) {
         $sql = "SELECT puuhaluokanid, puuhaluokanNimi, puuhaluokanKuvaus FROM puuhaluokka ORDER BY puuhaluokanNimi LIMIT ? OFFSET ?";
         $kysely = getTietokantayhteys()->prepare($sql);
@@ -171,7 +161,6 @@ Kukin päivämäärä vastaa päivää, jolloin luokkaan on viimeksi lisätty pu
         return $tulokset;
     }
 
-/*Laskee montako puuhaluokkaa on*/
     public static function lukumaara() {
         $sql = "SELECT count(*) FROM puuhaluokka";
         $kysely = getTietokantayhteys()->prepare($sql);
@@ -179,7 +168,6 @@ Kukin päivämäärä vastaa päivää, jolloin luokkaan on viimeksi lisätty pu
         return $kysely->fetchColumn();
     }
 
-/*Lisää puuhaluokan tietokantaan*/
     public function lisaaKantaan() {
         $sql = "INSERT INTO Puuhaluokka( puuhaluokanNimi, puuhaluokanKuvaus) VALUES(?,?) RETURNING puuhaluokanid";
         $kysely = getTietokantayhteys()->prepare($sql);
@@ -192,8 +180,6 @@ Kukin päivämäärä vastaa päivää, jolloin luokkaan on viimeksi lisätty pu
         }
         return $ok;
     }
-
-/*Poistaa puuhaluokan tietokannasta*/
 public static function PoistaPuuhaluokka($puuhaluokanid) {
         $sql = "DELETE FROM puuhaluokka WHERE puuhaluokanid = ?";
         $kysely = getTietokantayhteys()->prepare($sql);

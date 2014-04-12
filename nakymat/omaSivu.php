@@ -3,6 +3,7 @@
            <a href="http://virvemaa.users.cs.helsinki.fi/Tietokantasovellus/yllapitajanSivuK.php"> Ylläpitäjän sivu</a>
          <br> <?php } ?> 
         <div> <h2> Osaamani taidot</h2>
+	*Tämä osa on vielä tekemättä
             <table style="width:400px" class="table table-striped">
                 <thead>
                     <tr>

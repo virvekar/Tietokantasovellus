@@ -68,6 +68,8 @@ class Henkilo {
         return "Puuhaja ID: {$this->id}, Nimimerkki: {$this->nimimerkki}, Salasana {$this->salasana}\n";
     }
 
+    /* Tekee listauksen kaikista käyttäjistä tietokannassa */
+
     public static function etsiKaikkiKayttajat() {
         $sql = "SELECT puuhaajaid,nimimerkki, salasana FROM henkilo";
         $kysely = getTietokantayhteys()->prepare($sql);
@@ -109,30 +111,33 @@ class Henkilo {
         }
     }
 
-    public static function EtsiLisaajat($idlista) {
+    /* Etsii kuka on lisännyt minkäkin puuhan tietokantaan ja palauttaa listan nimimerkeistä */
 
-        foreach ($idlista as $kayttajaid){
+    public static function EtsiLisaajat($idlista) {
+        foreach ($idlista as $kayttajaid) {
             $sql = "SELECT puuhaajaid,sahkoposti,salasana,asema,nimimerkki from henkilo where puuhaajaid = ?";
             $kysely = getTietokantayhteys()->prepare($sql);
             $kysely->execute(array($kayttajaid));
 
             $tulos = $kysely->fetchObject();
             if (!$tulos == null) {
-                $kayttajat[]=$tulos->nimimerkki;
+                $kayttajat[] = $tulos->nimimerkki;
             }
-         }
+        }
         return $kayttajat;
     }
-public static function EtsiLisaaja($kayttajaid) {
-            $sql = "SELECT puuhaajaid,sahkoposti,salasana,asema,nimimerkki from henkilo where puuhaajaid = ?";
-            $kysely = getTietokantayhteys()->prepare($sql);
-            $kysely->execute(array($kayttajaid));
+    /*Etsii henkilon nimimerkin id:n perusteella*/
+    public static function EtsiLisaaja($kayttajaid) {
+        $sql = "SELECT puuhaajaid,sahkoposti,salasana,asema,nimimerkki from henkilo where puuhaajaid = ?";
+        $kysely = getTietokantayhteys()->prepare($sql);
+        $kysely->execute(array($kayttajaid));
 
-            $tulos = $kysely->fetchObject();
-            if (!$tulos == null) {
-                return $tulos->nimimerkki;
-            }
-            return null;
-        ;
+        $tulos = $kysely->fetchObject();
+        if (!$tulos == null) {
+            return $tulos->nimimerkki;
+        }
+        return null;
+        
     }
+
 }

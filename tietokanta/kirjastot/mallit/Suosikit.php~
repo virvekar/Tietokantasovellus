@@ -25,15 +25,12 @@ class Suosikit {
         return $this->puuhaajaid;
     }
     
-/*Luo suosikit olion ja antaa sille tuloksissa määritellyt arvot*/
     public static function asetaArvot($tulos){
         $suosikit=new Suosikit();
         $suosikit->setPuuhaId($tulos->puuhanid);
         $suosikit->setPuuhaajaId($tulos->puuhaajaid);
         return $suosikit;
     }
-
-/*Tallentaa henkilön tykkäyksen suosikit tauluun*/
     public function LisaaSuosikkeihin(){
         $sql = "INSERT INTO suosikit(puuhanid, puuhaajaid) VALUES(?,?) RETURNING puuhanid";
         $kysely = getTietokantayhteys()->prepare($sql);
@@ -46,8 +43,6 @@ class Suosikit {
         }
         return $ok;
     }
-
-/*Antaa listan puuhien id:stä jotka ovat henkilön suosikkilistalla*/
     public function AnnaKayttajanSuosikit($puuhaajaid){
         $sql = "SELECT puuhanid, puuhaajaid FROM suosikit WHERE puuhaajaid=?";
         $kysely = getTietokantayhteys()->prepare($sql);
@@ -61,8 +56,6 @@ class Suosikit {
         error_log(print_r($kysely->rowCount(), TRUE)); 
         return $tulokset;
     }
-
-/*Poistaa puuhan henkilön suosikeista*/
     public function PoistaSuosikeista($puuhanid,$puuhaajaid){
          $sql = "DELETE FROM suosikit WHERE puuhanid = ? AND puuhaajaid=?";
         $kysely = getTietokantayhteys()->prepare($sql);

@@ -36,18 +36,30 @@
                     </tr>
                 </thead>
                 <tbody>
+                      <?php
+            if (isset($data->suosikkiPuuhat)) {
+               
+                foreach ($data->suosikkiPuuhat as $puuha):
+                    ?>
                     <tr>
-                        <td>Artemis Fowl</td>
-                        <td>Hupaisa kirja Eoin Colferilta</td>
-                        <td><button type="button" class="btn btn-xs btn-default"><span class="glyphicon remove-circle"></span> Poista</button></td>
-                        <td><a class="btn" href="http://virvemaa.users.cs.helsinki.fi/Tietokantasovellus/suosituksenKirjoitusK.php">Kirjoita Suositus</a></td>
-                    </tr>
-                    <tr>
-                        <td>Yhdellä jalalla hyppely</td>
-                        <td>Ota toinen jalka irti maasta ja ponnista toisella jalalla</td>
-                        <td><button type="button" class="btn btn-xs btn-default"><span class="glyphicon remove-circle"></span> Poista</button></td>
+                        <td><a href=puuhanTiedotK.php?puuhanid=<?php echo $puuha->getId(); ?>"><?php echo $puuha->getNimi(); ?></a></td>
+                        <td> <?php echo $puuha->getKuvaus(); ?></td>
+                        <td>
+                            <form action="omaSivuK.php" method="post">
+                                <input type="hidden" name="puuha_id" value="<?php echo $puuha->getId(); ?>">
+                                <input type="submit" id=submitPoistaSuosikeista name="submitPoistaSuosikeista" value="Poista">
+                            </form>
+                        </td>
                         <td>Kirjoita suositus</td>
+        
+
+
                     </tr>
+                    <?php
+                  
+                endforeach;
+            }
+            ?>
                 </tbody>
             </table>
         </div>
@@ -62,16 +74,24 @@
                     </tr>
                 </thead>
                 <tbody>
+                   <?php
+            if (isset($data->omatPuuhat)) {
+               
+                foreach ($data->omatPuuhat as $puuha):
+                    ?>
                     <tr>
-                        <td>Artemis Fowl</td>
-                        <td>Hupaisa kirja Eoin Colferilta</td>
-                        <td><a class="btn" href="http://virvemaa.users.cs.helsinki.fi/Tietokantasovellus/puuhanMuokkausK.php">Muokkaa</a></td>
+                        <td><a href=puuhanTiedotK.php?puuhanid=<?php echo $puuha->getId(); ?>"><?php echo $puuha->getNimi(); ?></a></td>
+                        <td> <?php echo $puuha->getKuvaus(); ?></td>
+                        <td><a href=puuhanMuokkausK.php?puuhanid=<?php echo $puuha->getId(); ?>">Muokkaa</a></td>
+        
+
+
                     </tr>
-                    <tr>
-                        <td>Lentokonepongaus</td>
-                        <td>Listaa ylös jokainen näkemäsi lentokone ja havaintohetki</td>
-                        <td></td>
-                    </tr>
+                    <?php
+                  
+                endforeach;
+            }
+            ?>
                 </tbody>
             </table>
         </div>
@@ -81,20 +101,26 @@
                     <tr>
                         <th>Nimi</th>
                         <th>Kuvaus</th>
-                        <th>Poista</th>
+                        <th>Muokkaa</th>
                     </tr>
                 </thead>
                 <tbody>
+                     <?php
+            if (isset($data->omatTaidot)) {
+               
+                foreach ($data->omatTaidot as $taito):
+                    ?>
                     <tr>
-                        <td>Sukellus</td>
-                        <td>On käynyt sukelluksen perusteet kurssin</td>
-                        <td><a class="btn" href="http://virvemaa.users.cs.helsinki.fi/Tietokantasovellus/taidonMuokkausK.php">Muokkaa</a></td>
+                        <td><?php echo $taito->getNimi(); ?></td>
+                        <td> <?php echo $taito->getKuvaus(); ?></td>
+                        <td><a href=taidonMuokkausK.php?taidonid=<?php echo $taito->getId(); ?>">Muokkaa</a></td>
+        
                     </tr>
-                    <tr>
-                        <td>Japanin kieli</td>
-                        <td>Osaa sujuvasti puhua ja kirjoittaa japania</td>
-                        <td></td>
-                    </tr>
+                    <?php
+                  
+                endforeach;
+            }
+            ?>
                 </tbody>
             </table>
         </div>

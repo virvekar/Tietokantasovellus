@@ -1,13 +1,13 @@
 <h1>Puuhan lisäys</h1>
 <form class="form-horizontal" role="form" action="puuhanLisaysK.php" method="POST">
     <div class="form-group">
-        <label for="nimi" class="col-md-2 control-label">Puuhan nimi</label>
+        <label for="nimi" class="col-md-2 control-label">Puuhan nimi*</label>
         <div class="col-md-10">
             <input type="text" class="form-control" value="<?php echo $data->uusiPuuha->getNimi() ?>" id="nimi" name="nimi" >
         </div>
     </div>
                 <div class="col-md-offset-1">
-                Puuha-luokka: 
+                Puuha-luokka*: 
             </div>
             <div class="col-md-offset-1"> 
                 <div class="form-group">
@@ -38,19 +38,19 @@
 <br>
 <br>
     <div class="form-group">
-        <label for="kuvaus" class="col-md-2 control-label">Kuvaus</label>
+        <label for="kuvaus" class="col-md-2 control-label">Kuvaus*</label>
         <div class="col-md-10">
             <input type="text" value="<?php echo htmlspecialchars($data->uusiPuuha->getKuvaus()); ?>" style="height: 200px; width: 300px" class="form-control" id="kuvaus" name="kuvaus" >
         </div>
     </div>
     <div class="form-group">
-        <label for="kesto" class="col-md-2 control-label">Kesto tunteina</label>
+        <label for="kesto" class="col-md-2 control-label">Kesto tunteina*</label>
         <div class="col-md-10">
             <input type="text" value="<?php echo htmlspecialchars($data->uusiPuuha->getKesto()); ?>" class="form-control" id="kesto" name="kesto" >
         </div>
     </div>
     <div class="form-group">
-        <label for="henkilomaara" class="col-md-2 control-label">Henkilömäärä</label>
+        <label for="henkilomaara" class="col-md-2 control-label">Henkilömäärä*</label>
         <div class="col-md-10">
             <input type="text" value="<?php echo htmlspecialchars($data->uusiPuuha->getHenkilomaara()); ?>" class="form-control" id="henkilomaara" name="henkilomaara">
         </div>
@@ -79,6 +79,7 @@
 <br>
 <br>
 <br>  
+Ajankohdan talletuksessa on vielä jotain vikaa
 <div class="form-group">
         <label for="paiva" class="col-md-2 control-label">Päivä</label>
         <div class="col-md-10">
@@ -92,7 +93,7 @@
         </div>
     </div>
       <div class="col-md-offset-1">
-                Tarvittavat taidot: 
+                Tarvittavat taidot: Taidon liittäminen puuhaan on vielä tekemättä
             </div>
             <div class="col-md-offset-1"> 
                 <div class="form-group">
@@ -124,4 +125,4 @@
         </div>
     </div>
 </form>
-
+*:llä merkityt kentät ovat pakollisia
