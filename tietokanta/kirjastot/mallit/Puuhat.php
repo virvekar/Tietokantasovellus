@@ -153,10 +153,13 @@ Se ole liian pitkä*/
     }
 
     public function getPaiva() {
+
+
         if (empty($this->ajankohta)) {
             return null;
         }
-        $ajankohta = $this->ajankohta;
+        $ajankohta = new DateTime($this->ajankohta);
+
         return $ajankohta->format("j.n.Y");
     }
 
@@ -164,7 +167,7 @@ Se ole liian pitkä*/
         if (empty($this->ajankohta)) {
             return null;
         }
-        $ajankohta = $this->ajankohta;
+         $ajankohta = new DateTime($this->ajankohta);
         return $ajankohta->format("H.i");
     }
 

@@ -79,7 +79,7 @@
 <br>
 <br>
 <br>  
-Ajankohdan talletuksessa on vielä jotain vikaa
+
 <div class="form-group">
         <label for="paiva" class="col-md-2 control-label">Päivä</label>
         <div class="col-md-10">

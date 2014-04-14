@@ -25,7 +25,7 @@ if ( isset( $_POST['submitluokka'] ) ) {
         $uusiLuokka->lisaaKantaan();
         $_SESSION['ilmoitus'] = "Puuhaluokka lisätty onnistuneesti.";  
         
-        naytaNakymaPuuhatSivulle();
+        naytaNakymaPuuhatSivulle(1);
 
         
     } else {

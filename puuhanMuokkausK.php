@@ -22,6 +22,7 @@ $puuhaid = (int) $_GET['puuhanid'];
 $uusiPuuha = Puuhat::EtsiPuuha($puuhaid);
 $uusiPuuha->setId($puuhaid);
 
+
 /* Haetaan puuhaluokat ja taidot dropvalikkoja varten */
 $luokat = Puuhaluokka::AnnaTiedotListaukseen();
 $taidot = Taidot::AnnaTaitoListaus();
@@ -52,7 +53,7 @@ if (isset($_POST['submitpuuhaMuokkaus'])) {
     /* Jos ei virheitä lisätään muokkaukset kantaan */
     if (empty($virheet)) {
         /*Jos ajankohta on tyhjä kutsutaan funktiota joka ei aseta tietokantaan aikkaa*/
-        if (empty($ajankohta)) {
+        if (is_null($uusiPuuha->getAjankohta())) {
             $uusiPuuha->lisaaMuokkauksetKantaanEiAikaa();
             $_SESSION['ilmoitus'] = "Muutokset tallennetu.";
 
@@ -80,6 +81,8 @@ if (isset($_POST['submitpuuhaMuokkaus'])) {
     }
 }
 
+error_log(print_r("taalla puuhan muokkauksessa ajankohta on:", TRUE));
+error_log(print_r($uusiPuuha->getAjankohta(), TRUE));
 /*Jos nappia ei ole painettu näytetään normaalinäkymä*/
 naytaNakyma('nakymat/puuhanMuokkaus.php', array(
     'aktiivinen' => "puuhat",

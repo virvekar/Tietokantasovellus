@@ -31,7 +31,7 @@ if (isset($_POST['submitpuuha'])) {
      /* Jos ei virheitä lisätään puuha kantaan */
     if (empty($virheet)) {
             /*Jos ajankohta on tyhjä kutsutaan funktiota joka ei aseta tietokantaan aikkaa*/
-        if (empty($ajankohta)) {
+        if (is_null($uusiPuuha->getAjankohta())) {
              $uusiPuuha->lisaaKantaanEiAikaa();
            $_SESSION['ilmoitus'] = "Puuha lisätty kantaan.";
 

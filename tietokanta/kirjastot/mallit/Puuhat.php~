@@ -26,6 +26,8 @@ class Puuhat {
         $this->id = $id;
     }
 
+/*Asettaa puuhalle nimen ja tarkistaa ettei nimi ole tyhjä eikä
+Se ole liian pitkä*/
     public function setNimi($nimi) {
         $this->nimi = $nimi;
 
@@ -38,6 +40,8 @@ class Puuhat {
         }
     }
 
+/*Asettaa puuhalle kuvauksen ja tarkistaa ettei se ole tyhjä eikä
+Se ole liian pitkä*/
     public function setKuvaus($kuvaus) {
         $this->kuvaus = $kuvaus;
         if (trim($this->kuvaus) == '') {
@@ -49,6 +53,7 @@ class Puuhat {
         }
     }
 
+/*Asettaa puuhaluokalle id:n ja tarkistaa löytyykö se tietokannasta*/
     public function setPuuhaluokanId($puuhaluokanid) {
         $this->puuhaluokanid = $puuhaluokanid;
         if (is_null(Puuhaluokka::AnnaPuuhaLuokka($puuhaluokanid))) {
@@ -58,6 +63,7 @@ class Puuhat {
         }
     }
 
+/*Asettaa puuhalle keston ja tarkistaa että se on positiivinen luku*/
     public function setKesto($kesto) {
         $this->kesto = $kesto;
         if (!is_numeric($kesto)) {
@@ -69,6 +75,7 @@ class Puuhat {
         }
     }
 
+/*Asettaa puuhalle henkilomaaran ja tarkistaa että se on positiivinen kokonaisluku*/
     public function setHenkilomaara($henkilomaara) {
         $this->henkilomaara = $henkilomaara;
         if (!is_numeric($henkilomaara)) {
@@ -82,6 +89,7 @@ class Puuhat {
         }
     }
 
+/*Asettaa puuhalle paikan ja tarkistaa ettei se ole tyhjä tai liian pitkä merkkijono*/
     public function setPaikka($paikka) {
         $this->paikka = $paikka;
         if (trim($this->paikka) == '') {
@@ -93,6 +101,7 @@ class Puuhat {
         }
     }
 
+/*Asettaa ajankohdan ja tarkistaa että se on datetime objekti*/
     public function setAjankohta($ajankohta) {
         $this->ajankohta = $ajankohta;
         if (!is_a($ajankohta, 'DateTime')) {
@@ -102,6 +111,7 @@ class Puuhat {
         }
     }
 
+/*Asettaa ajankohdan ilman mitään tarkistuksia*/
     public function setAjankohtaEiTarkistusta($ajankohta) {
         $this->ajankohta = $ajankohta;
     }
@@ -179,6 +189,7 @@ class Puuhat {
         return $this->virheet;
     }
 
+/*Etsii tietokannasta kaikki puuhat tietyssä luokassa*/
     public static function EtsiPuuhatLuokassa($luokanid) {
         $sql = "SELECT puuhanid, puuhaluokanid, puuhanNimi, puuhanKuvaus, puuhanKesto, henkilomaara, paikka, ajankohta,puuhanLisaysPaiva, puuhaajaid FROM puuhat
                 where puuhaluokanid= ?";
@@ -192,6 +203,7 @@ class Puuhat {
         return $tulokset;
     }
 
+/*Luo uuden puuhan ja asettaa tulos muuttujassa saadut arvot sille*/
     public static function asetaArvot($tulos){
         $puuha = new Puuhat();
         $puuha->setId($tulos->puuhanid);
@@ -207,6 +219,8 @@ class Puuhat {
         
         return $puuha;
     }
+
+/*Etsii tietokannasta puuhan id:n avulla*/
     public static function EtsiPuuha($puuhanid) {
         $sql = "SELECT puuhanid, puuhaluokanid, puuhanNimi, puuhanKuvaus, puuhanKesto, henkilomaara, paikka, ajankohta,puuhanLisaysPaiva, puuhaajaid FROM puuhat
                 where puuhanid= ?";
@@ -217,6 +231,7 @@ class Puuhat {
         return Puuhat::asetaArvot($tulos);
     }
 
+/*Etsii tietokannasta puuhan nimen avulla*/
     public static function EtsiPuuhaNimella($puuhanNimi) {
         $sql = "SELECT puuhanid, puuhaluokanid, puuhanNimi, puuhanKuvaus, puuhanKesto, henkilomaara, paikka, ajankohta,puuhanLisaysPaiva, puuhaajaid FROM puuhat
                 where puuhanNimi= ?";
@@ -227,6 +242,7 @@ class Puuhat {
         return Puuhat::asetaArvot($tulos);
     }
 
+/*Etsii luokassa olevat puuhat ottaen tietylle sivulle tulevan osan puuhista*/
     public static function EtsiPuuhatLuokassaRajattu($luokanid, $montako, $sivu) {
         $sql = "SELECT puuhanid, puuhaluokanid, puuhanNimi, puuhanKuvaus, puuhanKesto, henkilomaara, paikka, ajankohta,puuhanLisaysPaiva, puuhaajaid FROM puuhat
                 where puuhaluokanid= ? ORDER BY puuhanNimi LIMIT ? OFFSET ?";
@@ -241,6 +257,7 @@ class Puuhat {
         return $tulokset;
     }
 
+/*Laskee montako puuhaa on tietyssä luokassa*/
     public static function lukumaara($luokanid) {
         $sql = "SELECT count(*) FROM puuhat where puuhaluokanid= ?";
         $kysely = getTietokantayhteys()->prepare($sql);
@@ -248,6 +265,7 @@ class Puuhat {
         return $kysely->fetchColumn();
     }
 
+/*Hakee tiettyyn luokkaan kuuluvat puuhat keston, henkilömäärän ja paikan perusteella*/
     public static function HaePuuhat($luokanid, $kestoAla, $kestoYla, $henkilomaaraAla, $henkilomaaraYla, $paikka) {
         $sql = "SELECT puuhanid, puuhaluokanid, puuhanNimi, puuhanKuvaus, puuhanKesto, henkilomaara, paikka, ajankohta,puuhanLisaysPaiva, puuhaajaid FROM puuhat
                 where puuhaluokanid= ? AND puuhanKesto>= ? AND puuhanKesto<= ? AND henkilomaara>=? AND henkilomaara<=? AND paikka=?
@@ -262,6 +280,7 @@ class Puuhat {
         return $tulokset;
     }
 
+/*Hakee tiettyyn luokkaan kuuluvat puuhat keston ja henkilömäärän perusteella*/
     public static function HaePuuhatEiPaikkaa($luokanid, $kestoAla, $kestoYla, $henkilomaaraAla, $henkilomaaraYla) {
         $sql = "SELECT puuhanid, puuhaluokanid, puuhanNimi, puuhanKuvaus, puuhanKesto, henkilomaara, paikka, ajankohta,puuhanLisaysPaiva, puuhaajaid FROM puuhat
                 where puuhaluokanid= ? AND puuhanKesto>= ? AND puuhanKesto<= ? AND henkilomaara>=? AND henkilomaara<=?
@@ -276,6 +295,7 @@ class Puuhat {
         return $tulokset;
     }
 
+/*Hakee puuhia keston ja henkilömäärän perusteella*/
     public static function HaePuuhatEiPaikkaaEiLuokkaa($kestoAla, $kestoYla, $henkilomaaraAla, $henkilomaaraYla) {
         $sql = "SELECT puuhanid, puuhaluokanid, puuhanNimi, puuhanKuvaus, puuhanKesto, henkilomaara, paikka, ajankohta,puuhanLisaysPaiva, puuhaajaid FROM puuhat
                 where puuhanKesto>= ? AND puuhanKesto<= ? AND henkilomaara>=? AND henkilomaara<=?
@@ -290,6 +310,7 @@ class Puuhat {
         return $tulokset;
     }
 
+/*Hakee puuhia keston, henkilömäärän ja paikan perusteella*/
     public static function HaePuuhatEiLuokkaa($kestoAla, $kestoYla, $henkilomaaraAla, $henkilomaaraYla, $paikka) {
         $sql = "SELECT puuhanid, puuhaluokanid, puuhanNimi, puuhanKuvaus, puuhanKesto, henkilomaara, paikka, ajankohta,puuhanLisaysPaiva, puuhaajaid FROM puuhat
                 where puuhanKesto>= ? AND puuhanKesto<= ? AND henkilomaara>=? AND henkilomaara<=? AND paikka=?
@@ -304,6 +325,7 @@ class Puuhat {
         return $tulokset;
     }
 
+/*Lisää puuhan kantaan*/
     public function lisaaKantaan() {
         $sql = "INSERT INTO Puuhat(puuhanNimi,puuhaluokanid, puuhanKuvaus, puuhanKesto, henkilomaara, paikka, ajankohta, puuhanLisaysPaiva, puuhaajaid)
  VALUES(?,?,?,?,?,?,?,?,?) RETURNING puuhanid";
@@ -318,6 +340,7 @@ class Puuhat {
         return $ok;
     }
 
+/*Lisää puuhan tietokantaan siten että ajankohtaa ei aseteta*/
     public function lisaaKantaanEiAikaa() {
         $sql = "INSERT INTO Puuhat(puuhanNimi,puuhaluokanid, puuhanKuvaus, puuhanKesto, henkilomaara, paikka, puuhanLisaysPaiva, puuhaajaid)
  VALUES(?,?,?,?,?,?,?,?) RETURNING puuhanid";
@@ -332,6 +355,7 @@ class Puuhat {
         return $ok;
     }
 
+/*Tallentaa puuhaan tehdyt muokkaukset tietokantaan*/
     public function lisaaMuokkauksetKantaan() {
         $sql = "UPDATE Puuhat SET puuhanNimi=?, puuhaluokanid=?, puuhanKuvaus=?, puuhanKesto=?, henkilomaara=?, paikka=?, ajankohta=?, puuhanLisaysPaiva=?, puuhaajaid=?
  WHERE puuhanid=?";
@@ -341,6 +365,7 @@ class Puuhat {
         return $ok;
     }
 
+/*Tallentaa puuhaan tehdyt muokkaukset kantaan siten että aikaa ei aseteta*/
     public function lisaaMuokkauksetKantaanEiAikaa() {
         $sql = "UPDATE Puuhat SET puuhanNimi=?, puuhaluokanid=?, puuhanKuvaus=?, puuhanKesto=?, henkilomaara=?, paikka=?, puuhanLisaysPaiva=?, puuhaajaid=?
  WHERE puuhanid=?";
@@ -352,6 +377,7 @@ class Puuhat {
         return $ok;
     }
 
+/*Etsii tietyn henkilön lisäämät puuhat*/
     public static function HaePuuhatTekijalla($lisaajaid) {
         $sql = "SELECT puuhanid, puuhaluokanid, puuhanNimi, puuhanKuvaus, puuhanKesto, henkilomaara, paikka, ajankohta,puuhanLisaysPaiva, puuhaajaid FROM puuhat
                 where puuhaajaid= ?
@@ -366,6 +392,7 @@ class Puuhat {
         return $tulokset;
     }
 
+/*Poistaa puuhan*/
     public static function PoistaPuuha($puuhanid) {
         $sql = "DELETE FROM puuhat WHERE puuhanid = ?";
         $kysely = getTietokantayhteys()->prepare($sql);
@@ -373,6 +400,7 @@ class Puuhat {
 
         return $ok;
     }
+/*Palauttaa true jos henkilön tykkäys löytyy suosikit taulusta*/
     public function OnkoTykannyt($puuhaajaid){
          $sql = "SELECT puuhanid, puuhaajaid FROM Suosikit
                 where puuhanid=? AND puuhaajaid= ?";
@@ -380,8 +408,7 @@ class Puuhat {
         $kysely->execute(array($this->getId(), $puuhaajaid));
 
         $tulos = $kysely->fetchObject();
-        error_log(print_r("taaaalla", TRUE)); 
-        error_log(print_r($puuhaajaid, TRUE)); 
+  
         if(empty($tulos)){
             return FALSE;
         }else{
