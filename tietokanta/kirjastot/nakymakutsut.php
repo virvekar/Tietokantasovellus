@@ -4,6 +4,7 @@ require_once 'tietokanta/kirjastot/mallit/Puuhaluokka.php';
 require_once 'tietokanta/kirjastot/mallit/Henkilo.php';
 require_once 'tietokanta/kirjastot/mallit/Taidot.php';
 require_once 'tietokanta/kirjastot/mallit/Puuhat.php';
+require_once 'tietokanta/kirjastot/annaKirjautuneenNimimerkki.php';
 
 
 /*Funktio joka näyttää pelkän pohjan*/
@@ -116,7 +117,8 @@ function naytaNakymaTaidotSivulle($sivuNumero) {
         'lisaajaLista' => $lisaajaLista,
         'sivuNumero' => $sivuNumero,
         'sivuja' => $sivuja,
-        'montakoSivulla' => $montakoTaitoaSivulla
+        'montakoSivulla' => $montakoTaitoaSivulla,
+        'kirjautuneenid' => annaKirjautuneenId()
     ));
 }
 

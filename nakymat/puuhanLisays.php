@@ -97,7 +97,7 @@
             </div>
             <div class="col-md-offset-1"> 
                 <div class="form-group">
-                    <select name="taitosailio" id="taitosailio">
+                    <select name="taitosailio[]" id="taitosailio" multiple="multiple">
                         <option value="any" selected="selected">Ei erityistaitoja</option>
                         <?php
                         if (isset($data->taidot)) {
@@ -111,7 +111,9 @@
                         ?>
 
                     </select></div>
+                Valitaksesi useita taitoja pidä Ctrl-näppäintä pohjassa.
             </div>
+            
             <div class="col-md-offset-1 col-md-5"> 
                 <div class="form-group">
 

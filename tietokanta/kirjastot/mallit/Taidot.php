@@ -224,5 +224,19 @@ public static function HaeTaidotTekijalla($puuhaajaid) {
 
         return $ok;
     }
+/*Palauttaa true jos taito löytyy henkilön osaamista taidoista*/
+    public function OnkoOmissaTaidoissa($puuhaajaid){
+         $sql = "SELECT taidonid, puuhaajaid FROM omatTaidot
+                where taidonid=? AND puuhaajaid= ?";
+        $kysely = getTietokantayhteys()->prepare($sql);
+        $kysely->execute(array($this->getId(), $puuhaajaid));
 
+        $tulos = $kysely->fetchObject();
+  
+        if(empty($tulos)){
+            return FALSE;
+        }else{
+            return TRUE;
+        }
+    }
 }

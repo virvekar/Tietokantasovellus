@@ -15,6 +15,7 @@ class Puuhat {
     private $puuhanlisayspaiva;
     private $lisaaja;
     private $virheet = array();
+    private $taidot= array();
 
     public function __construct() {
         
@@ -119,6 +120,9 @@ Se ole liian pitkä*/
     public function setPuuhanLisaysPaiva($puuhanlisayspaiva) {
         $this->puuhanlisayspaiva = $puuhanlisayspaiva;
     }
+     public function setTaidot($taidot) {
+        $this->taidot = $taidot;
+    }
 
     public function setLisaaja($lisaaja) {
         $this->lisaaja = $lisaaja;
@@ -190,6 +194,9 @@ Se ole liian pitkä*/
 
     public function getVirheet() {
         return $this->virheet;
+    }
+    public function getTaidot() {
+        return $this->taidot;
     }
 
 /*Etsii tietokannasta kaikki puuhat tietyssä luokassa*/

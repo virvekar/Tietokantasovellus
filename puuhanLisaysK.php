@@ -6,6 +6,7 @@ require_once 'tietokanta/kirjastot/onkoKirjautunut.php';
 require_once 'tietokanta/kirjastot/mallit/Puuhaluokka.php';
 require_once 'tietokanta/kirjastot/mallit/Taidot.php';
 require_once 'tietokanta/kirjastot/mallit/Puuhat.php';
+require_once 'tietokanta/kirjastot/mallit/PuuhaTaidot.php';
 require_once 'tietokanta/kirjastot/annaKirjautuneenNimimerkki.php';
 require_once 'tietokanta/kirjastot/luoOlio.php';
 
@@ -30,11 +31,16 @@ if (isset($_POST['submitpuuha'])) {
 
      /* Jos ei virheitä lisätään puuha kantaan */
     if (empty($virheet)) {
+        
+        
             /*Jos ajankohta on tyhjä kutsutaan funktiota joka ei aseta tietokantaan aikkaa*/
         if (is_null($uusiPuuha->getAjankohta())) {
              $uusiPuuha->lisaaKantaanEiAikaa();
            $_SESSION['ilmoitus'] = "Puuha lisätty kantaan.";
+            
 
+           luoPuuhaTaidot($uusiPuuha);
+    
             /*Viedään käyttäjä puuhat sivulle*/
             naytaNakymaPuuhatSivulle(1);
             
@@ -42,7 +48,8 @@ if (isset($_POST['submitpuuha'])) {
         } else {
             $uusiPuuha->lisaaKantaan();
             $_SESSION['ilmoitus'] = "Puuha lisätty kantaan.";
-
+            
+            luoPuuhaTaidot($uusiPuuha);
             /*Viedään käyttäjä puuhat sivulle*/
             naytaNakymaPuuhatSivulle(1);
         
@@ -66,5 +73,7 @@ naytaNakyma('nakymat/puuhanLisays.php', array(
     'luokat' => $luokat,
     'taidot' => $taidot
 ));
+
+
 
 

@@ -38,8 +38,13 @@ require_once 'tietokanta/kirjastot/onkoKirjautunut.php';
                             href="http://virvemaa.users.cs.helsinki.fi/Tietokantasovellus/puuhatK.php" data-toggle="tab">Puuhat</a></li>
                     <li <?php if ($data->aktiivinen == "taidot") { ?>class="active"<?php } ?>><a 
                             href="http://virvemaa.users.cs.helsinki.fi/Tietokantasovellus/taidotK.php" data-toggle="tab">Taidot</a></li>
-                    <li <?php if ($data->aktiivinen == "omaSivu") { ?>class="active"<?php } ?>><a 
+                   
+                    <?php if (OnkoKirjautunut()) { ?>
+                            <li <?php if ($data->aktiivinen == "omaSivu") { ?>class="active"<?php } ?>><a 
                             href="http://virvemaa.users.cs.helsinki.fi/Tietokantasovellus/omaSivuK.php" data-toggle="tab">Oma sivu</a></li>
+                    <?php }  ?> 
+              
+                            
                 </ul>
                 <div id="my-tab-content" class="tab-content">
                     <div class="tab-pane active" >

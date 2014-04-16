@@ -17,32 +17,44 @@
                     <th>Kuvaus</th>
                     <th>Lisäyspäivä</th>
                     <th>Lisääjä</th>
+                    <th>Hallitsen!</th>
                 </tr>
             </thead>
             <tbody>
-                <?php 
-            if (isset($data->taidot)){
-                $monesko=0;
-                $lisaajat=$data->lisaajaLista;
-                foreach($data->taidot as $taito): ?>
-                <tr>
-                    <td><?php echo ($monesko + 1)+($data->sivuNumero-1)*($data->montakoSivulla); ?></td>
-                    <td><?php echo $taito->getNimi(); ?></a> </td>
-                    <td><?php echo $taito->getKuvaus(); ?></td>
-                    <td><?php echo $taito->getTaidonLisaysPaiva(); ?></td>
-                    <td><?php echo $lisaajat[$monesko]; ?></td>
-
-
-                </tr>
                 <?php
-                $monesko=$monesko+1;
-                endforeach; 
-            
-            }?>
+                if (isset($data->taidot)) {
+                    $monesko = 0;
+                    $lisaajat = $data->lisaajaLista;
+                    foreach ($data->taidot as $taito):
+                        ?>
+                        <tr>
+                            <td><?php echo ($monesko + 1) + ($data->sivuNumero - 1) * ($data->montakoSivulla); ?></td>
+                            <td><?php echo $taito->getNimi(); ?></a> </td>
+                            <td><?php echo $taito->getKuvaus(); ?></td>
+                            <td><?php echo $taito->getTaidonLisaysPaiva(); ?></td>
+                            <td><?php echo $lisaajat[$monesko]; ?></td>
+                            <?php if (OnkoKirjautunut()) { ?>
+                                <?php if (!($taito->OnkoOmissaTaidoissa($data->kirjautuneenid))) { ?>
+                                    <td><form action="taidotK.php" method="post">
+                                            <input type="hidden" name="taito_id" value="<?php echo $taito->getId(); ?>">
+
+                                            <input type="submit" id=submitHallitsen name="submitHallitsen" value="Hallitsen!">
+                                        </form> </td>
+
+                                <?php }
+                            } else {
+                                ?>
+                                <td>   </td><?php } ?>
+                        </tr>
+                        <?php
+                        $monesko = $monesko + 1;
+                    endforeach;
+                }
+                ?>
 
             </tbody>
         </table>
-<?php if ($data->sivuNumero > 1): ?>
+        <?php if ($data->sivuNumero > 1): ?>
             <a href="taidotK.php?sivuNumero=<?php echo $data->sivuNumero - 1; ?>">Edellinen sivu</a>
         <?php endif; ?>
         <?php if ($data->sivuNumero < $data->sivuja): ?>

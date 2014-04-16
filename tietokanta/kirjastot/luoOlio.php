@@ -44,6 +44,22 @@ function TaytaPuuhanTiedotSyotteella($uusiPuuha){
         $ajankohta = null;
         $uusiPuuha->setAjankohta($ajankohta);
     }
+    
+    /*Tarkistetaan onko taitoja annettu*/
+    
+     if (!empty($_POST["taitosailio"])) {
+        /* Otetaan taidot dropvalikosta */
+        $taitojenIdt = $_POST['taitosailio'];
+        error_log(print_r($taidot, TRUE)); 
+        
+
+    } elseif (!empty($_POST["taito"])) {
+        /* Otetaan taidot tekstikentästä */
+        $taitojenNimet = $_POST["taito"];
+        
+    }else{
+        $taitojenIdt=array();
+    }
 
         /*Asetetaan puuhalle arvot*/
     $uusiPuuha->setNimi($_POST['nimi']);
@@ -54,6 +70,7 @@ function TaytaPuuhanTiedotSyotteella($uusiPuuha){
     $uusiPuuha->setPuuhaluokanId($valittuLuokka);
     $uusiPuuha->setPuuhanLisaysPaiva($date = date('Y-m-d'));
     $uusiPuuha->setLisaaja(annaKirjautuneenId());
+    $uusiPuuha->setTaidot($taitojenIdt);
     
     return $uusiPuuha;
 }
@@ -66,4 +83,27 @@ function TaytaTaidonTiedotSyotteella($uusiTaito){
     $uusiTaito->setLisaaja(annaKirjautuneenId());
     return $uusiTaito;
 }
+
+/*Antaa henkilolle arvoksi syötetyt tiedot*/
+function TaytaHenkilonTiedotSyotteella($uusiHenkilo){
+    $uusiHenkilo->setNimimerkki($_POST['nimi']);
+    $uusiHenkilo->setSahkoposti($_POST['sahkoposti']);
+    $uusiHenkilo->setLiittymispaiva($date = date('Y-m-d'));
+    $uusiHenkilo->setAsema("Puuhaaja");
+    $uusiHenkilo->setSalasana($_POST['salasana'],$_POST['salasana2']);
+    return $uusiHenkilo;
+}
+
+function luoPuuhaTaidot($uusiPuuha){
+    error_log(print_r("Ja puuhan id on:", TRUE)); 
+           error_log(print_r($uusiPuuha->getId(), TRUE)); 
+    $taitojenIdt=$uusiPuuha->getTaidot();
+        foreach ($taitojenIdt as $taidonid):
+             $puuhataidot=new PuuhaTaidot();
+             $puuhataidot->setPuuhanId($uusiPuuha->getId());
+             $puuhataidot->setTaitoId($taidonid);
+             $puuhataidot->LisaaKantaan();
+         endforeach;
+}
+
 

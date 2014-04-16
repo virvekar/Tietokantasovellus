@@ -1,5 +1,5 @@
 <h1>Rekisteröitymiskaavake:</h1>
-
+Juuri työn alla 15.4.2014
 <form class="form-horizontal" role="form" action="rekisteroityminenK.php" method="POST">
     <div class="form-group">
         <label for="nimi" class="col-md-2 control-label">Nimimerkki</label>

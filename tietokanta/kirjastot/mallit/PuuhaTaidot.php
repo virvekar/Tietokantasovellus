@@ -3,7 +3,7 @@
 class PuuhaTaidot {
 
     private $taitoid;
-    private $puuhaaid;
+    private $puuhanid;
 
 
     public function __construct() {
@@ -14,17 +14,61 @@ class PuuhaTaidot {
     public function setTaitoId($taitoid){
         $this->taitoid = $taitoid;
     }
-    public function setPuuhaaId($puuhaaid){
-        $this->puuhaaid = $puuhaaid;
+    public function setPuuhanId($puuhanid){
+        $this->puuhanid = $puuhanid;
     }
     
     public function getTaitoId(){
         return $this->taitoid;
     }
-    public function getPuuhaaId(){
-        return $this->puuhaaid;
+    public function getPuuhanId(){
+        return $this->puuhanid;
     }
 
+    /*Luo PuuhaTaidot olion ja antaa sille tuloksissa määritellyt arvot*/
+    public static function asetaArvot($tulos){
+        $puuhaTaito=new PuuhaTaidot();
+        $puuhaTaito->setPuuhanId($tulos->puuhanid);
+        $puuhaTaito->setTaitoId($tulos->taidonid);
+        return $puuhaTaito;
+    }
+    
+    /*Tallentaa taidon puuhan vaatimuksiin*/
+    public function LisaaKantaan(){
+        $sql = "INSERT INTO puuhaTaidot(puuhanid, taidonid) VALUES(?,?) RETURNING puuhanid";
+        $kysely = getTietokantayhteys()->prepare($sql);
+
+        $ok = $kysely->execute(array($this->getPuuhanId(), $this->getTaitoId()));
+        if ($ok) {
+            //Haetaan RETURNING-määreen palauttama id.
+            //HUOM! Tämä toimii ainoastaan PostgreSQL-kannalla!
+            $this->id = $kysely->fetchColumn();
+        }
+        return $ok;
+    }
+    /*Antaa listan puuhien id:stä jotka ovat henkilön suosikkilistalla*/
+    public function AnnaPuuhanTaidot($puuhanid){
+        $sql = "SELECT puuhanid, taidonid FROM puuhaTaidot WHERE puuhanid=?";
+        $kysely = getTietokantayhteys()->prepare($sql);
+        $kysely->execute(array($puuhanid));
+        $kysely->rowCount();
+        $tulokset = array();
+        foreach ($kysely->fetchAll(PDO::FETCH_OBJ) as $tulos) {
+
+            $tulokset[] = Suosikit::asetaArvot($tulos)->getPuuhaId();
+        }
+        error_log(print_r($kysely->rowCount(), TRUE)); 
+        return $tulokset;
+    }
+    
+    /*Poistaa taidon puuhan vaatimuksista*/
+    public function PoistaSuosikeista($puuhanid,$taidonid){
+         $sql = "DELETE FROM puuhaTaidot WHERE puuhanid = ? AND taidonid=?";
+        $kysely = getTietokantayhteys()->prepare($sql);
+        $ok = $kysely->execute(array($puuhanid,$taidonid));
+
+        return $ok;
+    }
 }
 
 

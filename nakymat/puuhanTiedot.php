@@ -62,6 +62,12 @@
         <?php } ?>
         <a class="btn" href="http://virvemaa.users.cs.helsinki.fi/Tietokantasovellus/suosituksenKirjoitusK.php">Kirjoita Suositus</a>
         <?php
+        if(OnkoYllapitajaKirjautunut()){ ?>
+            <form action="puuhanTiedotK.php" method="post">
+                <input type="hidden" name="puuha_id" value="<?php echo $puuha->getId(); ?>">
+                <input type="submit" id=submitPoista name="submitPoista" value="Poista tietokannasta">
+            </form>
+     <?php   }
     }
     }
     ?>
