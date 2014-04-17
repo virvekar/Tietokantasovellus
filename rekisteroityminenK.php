@@ -17,9 +17,11 @@ if (isset($_POST['submitrekisteroidy'])) {
     /* Otetaan ylös virheet */
     $virheet = $uusiHenkilo->getVirheet();
 
-    /* Jos virheitä ei ollut lisätään taito tietokantaan */
+    /* Jos virheitä ei ollut lisätään henkilo tietokantaan */
     if (empty($virheet)) {
         $idtunnus=$uusiHenkilo->lisaaKantaan();
+
+	 session_start();
         $_SESSION['ilmoitus'] = "Rekisteröityminen onnistui.";
          
         /*Haetaan käyttäjä vastasaatuine id tunnuksineen tietokannasta*/
@@ -28,8 +30,7 @@ $henkilo = Henkilo::EtsiKokoHenkilo($uusiHenkilo->getId());
       
         /*Kirjataan henkilo sisään*/
          $_SESSION['kirjautunut'] =serialize($henkilo); 
-          error_log(print_r("Ollaanko kirjauduttu", TRUE));
-        error_log(print_r(isset($_SESSION['kirjautunut']), TRUE));
+         
         /* Kutsutaan funktiota joka näyttää oman sivun*/
         header('Location: omaSivuK.php');
     } else {

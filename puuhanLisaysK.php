@@ -72,6 +72,7 @@ naytaNakyma('nakymat/puuhanLisays.php', array(
     'uusiPuuha' => new Puuhat(),
     'luokat' => $luokat,
     'taidot' => $taidot
+    
 ));
 
 

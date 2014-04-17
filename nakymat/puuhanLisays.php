@@ -40,7 +40,7 @@
     <div class="form-group">
         <label for="kuvaus" class="col-md-2 control-label">Kuvaus*</label>
         <div class="col-md-10">
-            <input type="text" value="<?php echo htmlspecialchars($data->uusiPuuha->getKuvaus()); ?>" style="height: 200px; width: 300px" class="form-control" id="kuvaus" name="kuvaus" >
+            <textarea type="text" style="height: 200px; width: 300px" class="form-control" id="kuvaus" name="kuvaus"  ><?php echo htmlspecialchars($data->uusiPuuha->getKuvaus()); ?></textarea>
         </div>
     </div>
     <div class="form-group">
@@ -93,12 +93,12 @@
         </div>
     </div>
       <div class="col-md-offset-1">
-                Tarvittavat taidot: Taidon liittäminen puuhaan on vielä tekemättä
+                Tarvittavat taidot: 
             </div>
             <div class="col-md-offset-1"> 
                 <div class="form-group">
                     <select name="taitosailio[]" id="taitosailio" multiple="multiple">
-                        <option value="any" selected="selected">Ei erityistaitoja</option>
+                        <option value="0" selected="selected">Ei erityistaitoja</option>
                         <?php
                         if (isset($data->taidot)) {
 
@@ -117,7 +117,7 @@
             <div class="col-md-offset-1 col-md-5"> 
                 <div class="form-group">
 
-                    <input type="text" class="form-control" id="taito" name="taito" placeholder="Valitse taitoluokka valikosta tai kirjoita se tähän" >
+                    <input type="text" class="form-control" id="taito" name="taito" value="<?php  echo htmlspecialchars($data->uusiPuuha-> getTaidotTeksti()); ?>" placeholder="Valitse taitoluokka valikosta tai kirjoita se tähän" >
 
                 </div>
             </div>

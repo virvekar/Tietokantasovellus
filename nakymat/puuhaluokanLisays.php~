@@ -12,7 +12,7 @@
         <div class="form-group">
             <label for="kuvaus" class="col-md-2 control-label">Kuvaus</label>
             <div class="col-md-10">
-                <textarea  type="text" class="form-control" id="kuvaus" name="kuvaus" ><?php echo  htmlspecialchars($data->uusiLuokka->getKuvaus()); ?></textarea>
+                <input type="text" class="form-control" id="kuvaus" name="kuvaus" value="<?php echo  htmlspecialchars($data->uusiLuokka->getKuvaus()); ?>">
             </div>
         </div>
         <div class="form-group">

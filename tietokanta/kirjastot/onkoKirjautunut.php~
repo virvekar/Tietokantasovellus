@@ -24,13 +24,13 @@ function OnkoYllapitajaKirjautunut() {
 }
 
 /*Palauttaa true jos kirjautunut käyttäjä on ylläpitäjä tai annettu henkilo*/
-function OnkoKirjautunutYllapitajaTaiTamaHenkilo($puuhaajaid) {
+function OnkoKirjautunutYllapitajaTaiTamaHenkilo() {
     if (isset($_SESSION['kirjautunut'])) {
         $henkilo =  unserialize($_SESSION['kirjautunut']) ;
         $status = $henkilo->getAsema();
         if ($status == "Yllapitaja") {
             return true;
-        }else if($henkilo->getId()==$puuhaajaid) {
+        }else if($status == "Yllapitaja") {
             return true;
         }    
     }

@@ -1,6 +1,8 @@
 <?php
 
 require_once 'tietokanta/kirjastot/mallit/Puuhaluokka.php';
+require_once 'tietokanta/kirjastot/mallit/Taidot.php';
+
 
 class Puuhat {
 
@@ -15,6 +17,7 @@ class Puuhat {
     private $puuhanlisayspaiva;
     private $lisaaja;
     private $virheet = array();
+    private $taidot= array();
 
     public function __construct() {
         
@@ -120,6 +123,28 @@ Se ole liian pitkä*/
         $this->puuhanlisayspaiva = $puuhanlisayspaiva;
     }
 
+     public function setTaidot($taidot) {
+     	    if (empty($taidot)){
+	        $this->taidot = $taidot;
+  	    }else {
+	    	  $virheita=0;
+            	foreach ($taidot as $taitoid){
+		   $taito=Taidot::EtsiTaito($taitoid);
+		   if(is_null($taito)){		       
+		       $virheita=$virheita+1;
+		   }		       
+		}
+		if($virheita==0){
+	 	   unset($this->virheet['taidot']);
+ 		   $this->taidot = $taidot;
+		}else{
+		   $this->virheet['taidot'] = "Kaikkia taitoja ei löytynyt tietokannasta.";
+		   $this->taidot = array();
+		}
+	    }
+        
+    }
+
     public function setLisaaja($lisaaja) {
         $this->lisaaja = $lisaaja;
     }
@@ -153,10 +178,13 @@ Se ole liian pitkä*/
     }
 
     public function getPaiva() {
+
+
         if (empty($this->ajankohta)) {
             return null;
         }
-        $ajankohta = $this->ajankohta;
+        $ajankohta = new DateTime($this->ajankohta);
+
         return $ajankohta->format("j.n.Y");
     }
 
@@ -164,7 +192,7 @@ Se ole liian pitkä*/
         if (empty($this->ajankohta)) {
             return null;
         }
-        $ajankohta = $this->ajankohta;
+         $ajankohta = new DateTime($this->ajankohta);
         return $ajankohta->format("H.i");
     }
 
@@ -187,6 +215,9 @@ Se ole liian pitkä*/
 
     public function getVirheet() {
         return $this->virheet;
+    }
+    public function getTaidot() {
+        return $this->taidot;
     }
 
 /*Etsii tietokannasta kaikki puuhat tietyssä luokassa*/

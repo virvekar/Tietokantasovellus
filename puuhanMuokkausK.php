@@ -6,6 +6,7 @@ require_once 'tietokanta/kirjastot/onkoKirjautunut.php';
 require_once 'tietokanta/kirjastot/mallit/Puuhaluokka.php';
 require_once 'tietokanta/kirjastot/mallit/Taidot.php';
 require_once 'tietokanta/kirjastot/mallit/Puuhat.php';
+require_once 'tietokanta/kirjastot/mallit/PuuhaTaidot.php';
 require_once 'tietokanta/kirjastot/annaKirjautuneenNimimerkki.php';
 require_once 'tietokanta/kirjastot/luoOlio.php';
 
@@ -27,6 +28,8 @@ $uusiPuuha->setId($puuhaid);
 $luokat = Puuhaluokka::AnnaTiedotListaukseen();
 $taidot = Taidot::AnnaTaitoListaus();
 
+
+
 /* Jos puuhaa ei löydy näytetään virheilmoitus */
 if (empty($uusiPuuha)) {
     naytaNakyma('nakymat/puuhanMuokkaus.php', array(
@@ -38,7 +41,9 @@ if (empty($uusiPuuha)) {
     ));
 }
 
-
+/*Haetaan puuhaan liittyvät taidot*/
+$taitojenIdt=PuuhaTaidot::AnnaPuuhanTaidot($puuhaid);
+$uusiPuuha->setTaidot($taitojenIdt);
 
 /* Onko nappia painettu */
 if (isset($_POST['submitpuuhaMuokkaus'])) {
@@ -57,6 +62,10 @@ if (isset($_POST['submitpuuhaMuokkaus'])) {
             $uusiPuuha->lisaaMuokkauksetKantaanEiAikaa();
             $_SESSION['ilmoitus'] = "Muutokset tallennetu.";
 
+	    /*Poista vanhat puuhataidot*/
+	    PuuhaTaidot::PoistaPuuhaTaidot($uusiPuuha->getId(),$taitojenIdt);
+	    /*luo uudet puuhataidot*/
+ 	    luoPuuhaTaidot($uusiPuuha);
             /*Lähetetään käyttäjä omalle sivulle*/
             header('Location: omaSivuK.php');
             
@@ -65,6 +74,10 @@ if (isset($_POST['submitpuuhaMuokkaus'])) {
             $uusiPuuha->lisaaMuokkauksetKantaan();
             $_SESSION['ilmoitus'] = "Muutokset tallennetu.";
 
+ /*Poista vanhat puuhataidot*/
+	    PuuhaTaidot::PoistaPuuhaTaidot($uusiPuuha->getId(),$taitojenIdt);
+	    /*luo uudet puuhataidot*/
+	     luoPuuhaTaidot($uusiPuuha);
             /*Lähetetään käyttäjä omalle sivulle*/
             header('Location: omaSivuK.php');
         }
@@ -81,8 +94,6 @@ if (isset($_POST['submitpuuhaMuokkaus'])) {
     }
 }
 
-error_log(print_r("taalla puuhan muokkauksessa ajankohta on:", TRUE));
-error_log(print_r($uusiPuuha->getAjankohta(), TRUE));
 /*Jos nappia ei ole painettu näytetään normaalinäkymä*/
 naytaNakyma('nakymat/puuhanMuokkaus.php', array(
     'aktiivinen' => "puuhat",

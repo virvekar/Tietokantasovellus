@@ -1,6 +1,8 @@
 <?php
 
 require_once 'tietokanta/kirjastot/mallit/Puuhaluokka.php';
+require_once 'tietokanta/kirjastot/mallit/Taidot.php';
+
 
 class Puuhat {
 
@@ -120,8 +122,27 @@ Se ole liian pitkä*/
     public function setPuuhanLisaysPaiva($puuhanlisayspaiva) {
         $this->puuhanlisayspaiva = $puuhanlisayspaiva;
     }
+
      public function setTaidot($taidot) {
-        $this->taidot = $taidot;
+     	    if (empty($taidot)){
+	        $this->taidot = $taidot;
+  	    }else {
+	    	  $virheita=0;
+            	foreach ($taidot as $taitoid){
+		   $taito=Taidot::EtsiTaito($taitoid);
+		   if(is_null($taito)){		       
+		       $virheita=$virheita+1;
+		   }		       
+		}
+		if($virheita==0){
+	 	   unset($this->virheet['taidot']);
+ 		   $this->taidot = $taidot;
+		}else{
+		   $this->virheet['taidot'] = "Kaikkia taitoja ei löytynyt tietokannasta.";
+		   $this->taidot = array();
+		}
+	    }
+        
     }
 
     public function setLisaaja($lisaaja) {
@@ -198,6 +219,14 @@ Se ole liian pitkä*/
     public function getTaidot() {
         return $this->taidot;
     }
+    public function getTaidotTeksti(){
+        $tekstia="";
+	$taitojenNimet=Taidot::EtsiTaitojenNimet($this->taidot);
+	foreach($taitojenNimet as  $taidonNimi){
+	    $tekstia=$tekstia.$taidonNimi.", ";
+        }
+	return substr($tekstia,0,strlen($tekstia)-2);
+  }
 
 /*Etsii tietokannasta kaikki puuhat tietyssä luokassa*/
     public static function EtsiPuuhatLuokassa($luokanid) {

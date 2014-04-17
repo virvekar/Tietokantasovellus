@@ -1,13 +1,18 @@
-<h3>Puuhan nimi</h3>
+<h3><?php echo  $data->puuha->getNimi(); ?></h3>
+
+<form class="form-horizontal" role="form" action="suosituksenKirjoitusK.php" method="POST">
 <div class="form-group">
-    <label for="inputSuosittelu" class="col-md-2 control-label">Suosittelu</label>
+    <label for="suosittelu" class="col-md-2 control-label">Suosittelu</label>
     <div class="col-md-10">
-        <input type="text" style="height: 200px; width: 300px" class="form-control" id="inputKuvaus" name="suosittelu" >
+        <textarea type="text" style="height: 200px; width: 300px" class="form-control" id="suosittelu" name="suosittelu" ><?php echo  $data->suositus->getSuositusTeksti(); ?></textarea>
     </div>
 </div>
+<div class="form-group">
+ <input type="hidden" name="puuha_id" value="<?php echo  $data->puuha->getId(); ?>">
+ </div>
 <div class="form-group">
     <div class="col-md-offset-2 col-md-10">
-        <button type="submit" class="btn btn-default">Lisää suositus</button>
+        <button type="submit" id=submitLisaaSuositus name="submitLisaaSuositus" class="btn btn-default">Lisää suositus</button>
     </div>
 </div>
-
+ </form>

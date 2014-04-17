@@ -179,7 +179,7 @@ class Henkilo {
         return $kayttajat;
     }
 
-    /* Etsii henkilon id:n perusteella, */
+    /* Etsii henkilon nimimerkin id:n perusteella, */
 
     public static function EtsiKokoHenkilo($kayttajaid) {
         $sql = "SELECT puuhaajaid,sahkoposti,salasana,asema,nimimerkki from henkilo where puuhaajaid = ?";
@@ -199,7 +199,7 @@ class Henkilo {
         return null;
     }
 
-    /* Etsii henkilon nimimerkin id:n perusteella ja palauttaa vain nimimerkin */
+    /* Etsii henkilon nimimerkin id:n perusteella palauttaa vain nimimerkin */
 
     public static function EtsiHenkilo($kayttajaid) {
         $sql = "SELECT puuhaajaid,sahkoposti,salasana,asema,nimimerkki from henkilo where puuhaajaid = ?";

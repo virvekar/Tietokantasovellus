@@ -69,13 +69,6 @@ class PuuhaTaidot {
 
         return $ok;
     }
-
- /*Poistaa taidot puuhan vaatimuksista*/
-    public function PoistaPuuhaTaidot($puuhanid,$taidonidLista){
-         foreach($taidonidLista as $taitoid){
-	     PuuhaTaidot::PoistaPuuhaTaito($puuhanid,$taitoid);
-    }
- }
 }
 
 

@@ -11,8 +11,8 @@
         <div class="form-group">
             <label for="kuvaus" class="col-md-2 control-label">Kuvaus</label>
             <div class="col-md-10">
-                <input type="text" style="height: 200px; width: 300px" class="form-control" 
-                       value="<?php echo $data->uusiTaito->getKuvaus() ?>" id="kuvaus" name="kuvaus" >
+                 <textarea type="text" style="height: 200px; width: 300px" class="form-control" 
+                        id="kuvaus" name="kuvaus" ><?php echo $data->uusiTaito->getKuvaus() ?></textarea>
             </div>
         </div>
         <div class="form-group">

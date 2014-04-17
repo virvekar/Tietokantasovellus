@@ -81,7 +81,7 @@
 <br>
 <br>
 <br>  
-Ajankohdan talletuksessa on vielä jotain vikaa
+
 <div class="form-group">
         <label for="paiva" class="col-md-2 control-label">Päivä</label>
         <div class="col-md-10">
@@ -94,13 +94,13 @@ Ajankohdan talletuksessa on vielä jotain vikaa
             <input type="text" placeholder="Syötä muodossa 01.01" value="<?php echo htmlspecialchars($data->uusiPuuha->getKellonaika()); ?>" class="form-control" id="kellonaika" name="kellonaika">
         </div>
     </div>
-      <div class="col-md-offset-1">
-                Tarvittavat taidot: Taidon liittäminen puuhaan on vielä tekemättä
+       <div class="col-md-offset-1">
+                Tarvittavat taidot: 
             </div>
             <div class="col-md-offset-1"> 
                 <div class="form-group">
-                    <select name="taitosailio" id="taitosailio">
-                        <option value="any" selected="selected">Ei erityistaitoja</option>
+                    <select name="taitosailio[]" id="taitosailio" multiple="multiple">
+                        <option value="0" selected="selected">Ei erityistaitoja</option>
                         <?php
                         if (isset($data->taidot)) {
 
@@ -113,11 +113,13 @@ Ajankohdan talletuksessa on vielä jotain vikaa
                         ?>
 
                     </select></div>
+                Valitaksesi useita taitoja pidä Ctrl-näppäintä pohjassa.
             </div>
+            
             <div class="col-md-offset-1 col-md-5"> 
                 <div class="form-group">
 
-                    <input type="text" class="form-control" id="taito" name="taito" placeholder="Valitse taitoluokka valikosta tai kirjoita se tähän" >
+                    <input type="text" class="form-control" id="taito" name="taito"  value="<?php  echo htmlspecialchars($data->uusiPuuha-> getTaidotTeksti()); ?>" placeholder="Valitse taitoluokka valikosta tai kirjoita se tähän" >
 
                 </div>
             </div>

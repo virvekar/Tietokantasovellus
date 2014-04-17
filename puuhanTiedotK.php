@@ -5,6 +5,8 @@ require_once 'tietokanta/kirjastot/mallit/Puuhat.php';
 require_once 'tietokanta/kirjastot/mallit/Puuhaluokka.php';
 require_once 'tietokanta/kirjastot/mallit/Henkilo.php';
 require_once 'tietokanta/kirjastot/mallit/Suosikit.php';
+require_once 'tietokanta/kirjastot/mallit/PuuhaTaidot.php';
+require_once 'tietokanta/kirjastot/mallit/Suositukset.php';
 require_once 'tietokanta/kirjastot/annaKirjautuneenNimimerkki.php';
 
 
@@ -45,12 +47,21 @@ if(empty($puuha)){
 /*Haetaan puuhaluokan nimi*/
 $luokanNimi=Puuhaluokka::AnnaPuuhaLuokka($puuha->getPuuhaluokanId());
 
+/*Haetaan puuhaan liittyvät taidot*/
+$taitojenIdt=PuuhaTaidot::AnnaPuuhanTaidot($puuhaid);
+$taitojenNimet=Taidot::EtsiTaitojenNimet($taitojenIdt);
+
+/*Haetaan puuhaan liittyvät suositukset*/
+$suositukset=Suositukset::AnnaSuositukset($puuhaid);
+
 /*Välitetään tiedot näkymälle */
 naytaNakyma('nakymat/puuhanTiedot.php', array(
     'aktiivinen' => "puuhat",
     'puuha' => $puuha,
     'luokanNimi' => $luokanNimi,
     'lisaaja'=>$lisaaja,
-    'kirjautuneenid'=>  annaKirjautuneenId()
+    'kirjautuneenid'=>  annaKirjautuneenId(),
+    'taitojenNimet'=> $taitojenNimet,
+    'suositukset'=> $suositukset
 ));
 

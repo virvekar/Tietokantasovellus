@@ -143,10 +143,10 @@ class Taidot {
     }
 
 /*Antaa taidon nimeä vastaavan id:n*/
-    public static function AnnaTaidonID($taidonNimi) {
+    public function AnnaTaidonID($taidonNimi) {
         $sql = "SELECT taidonid FROM taidot WHERE taidonNimi= ?";
         $kysely = getTietokantayhteys()->prepare($sql);
-        $kysely->execute(array($taidonNimi));
+        $kysely->execute(array(trim($taidonNimi)));
 
 
         $tulos = $kysely->fetchObject();
@@ -154,6 +154,15 @@ class Taidot {
             return null;
         }
         return $tulos->taidonid;
+    }
+/*Antaa listan taitojen nimia vastaavista id:sta*/
+    public static function AnnaTaitojenIDt($nimiLista){
+    	   $idLista=array();
+    	   foreach ($nimiLista as $nimi){
+	   	 $idLista[]=Taidot::AnnaTaidonID(trim($nimi));
+		   
+     	   }
+	   return $idLista;
     }
 
 /*Palauttaa tietyn henkilön lisäämät taidot*/
@@ -183,6 +192,16 @@ public static function HaeTaidotTekijalla($puuhaajaid) {
         }
        
         return Taidot::asetaArvot($tulos);
+    }
+
+/*Palauttaa taitejen id:tä vastaavat taitojen nimet*/
+    public static function EtsiTaitojenNimet($idLista) {
+    	   $nimilista=array();
+        foreach($idLista as $taitoid){
+	   $nimilista[]=Taidot::EtsiTaito($taitoid)->getNimi();
+        }
+	return $nimilista;
+       
     }
 /*Laskee tietokannassa olevien taitojen lukumäärän*/
     public static function lukumaara() {

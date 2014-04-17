@@ -1,5 +1,4 @@
 <?php
-require_once 'tietokanta/kirjastot/mallit/Henkilo.php';
 
 class Suositukset {
 
@@ -7,7 +6,6 @@ class Suositukset {
     private $puuhaajaid;
     private $suositusid;
     private $suositusteksti;
-    private $virheet = array();
 
 
     public function __construct() {
@@ -26,13 +24,6 @@ class Suositukset {
     }
     public function setSuositusTeksti($suositusteksti){
         $this->suositusteksti = $suositusteksti;
- 	if (trim($this->suositusteksti) == '') {
-            $this->virheet['suositusteksti'] = "Suositus ei saa olla tyhjä.";
-        } else if (strlen($this->kuvaus) > 1000) {
-            $this->virheet['suositusteksti'] = "Suositus on liian pitkä.";
-        } else {
-            unset($this->virheet['suositusteksti']);
-        }
     }
     
     public function getPuuhaId(){
@@ -47,13 +38,6 @@ class Suositukset {
     public function getSuositusTeksti(){
         return $this->suositusteksti;
     }
-    public function getVirheet() {
-        return $this->virheet;
-    }
-
-public function getSuosittelija(){
-       return Henkilo::EtsiHenkilo($this->puuhaajaid);
-}
 
 /*Luo suositus olion ja antaa sille tuloksissa määritellyt arvot*/
     public static function asetaArvot($tulos){
@@ -70,7 +54,7 @@ public function getSuosittelija(){
         $sql = "INSERT INTO suositukset(puuhanid, puuhaajaid,suositusteksti) VALUES(?,?,?) RETURNING suositusid";
         $kysely = getTietokantayhteys()->prepare($sql);
 
-        $ok = $kysely->execute(array($this->getPuuhaId(), $this->getPuuhaajaId(),$this->getSuositusTeksti()));
+        $ok = $kysely->execute(array($this->getPuuhaId(), $this->getPuuhaajaId()$this->getSuositusTeksti()));
         if ($ok) {
             //Haetaan RETURNING-määreen palauttama id.
             //HUOM! Tämä toimii ainoastaan PostgreSQL-kannalla!

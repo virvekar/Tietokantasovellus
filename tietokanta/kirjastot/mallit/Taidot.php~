@@ -19,6 +19,7 @@ class Taidot {
         $this->id = $id;
     }
 
+/*Asettaa taidolle nimen ja tarkistaa ettei se ole liian pitkä tai tyhjä*/
     public function setNimi($nimi) {
         $this->nimi = $nimi;
         if (trim($this->nimi) == '') {
@@ -30,6 +31,7 @@ class Taidot {
         }
     }
 
+/*Asettaa taidolle kuvauksen ja tarkistaa ettei se ole tyhjä tai liian pitkä*/
     public function setKuvaus($kuvaus) {
         $this->kuvaus = $kuvaus;
         if (trim($this->kuvaus) == '') {
@@ -73,6 +75,7 @@ class Taidot {
         return $this->virheet;
     }
 
+/*Luo taito olion ja asettaa sille tulos muuttujassa määritellyt arvot*/
     public static function asetaArvot($tulos) {
         $taidot = new Taidot();
         $taidot->setId($tulos->taidonid);
@@ -84,6 +87,7 @@ class Taidot {
         return $taidot;
     }
 
+/*Palauttaa listan tietokannassa olevista taidoista*/
     public static function AnnaTaitoListaus() {
         $sql = "SELECT taidonid, taidonNimi,taidonKuvaus,taidonLisaysPaiva,puuhaajaid FROM taidot";
         $kysely = getTietokantayhteys()->prepare($sql);
@@ -97,6 +101,7 @@ class Taidot {
         return $tulokset;
     }
 
+/*Antaa listan niiden henkilöiden id:istä ketkä ovat lisänneet järjestelmään taitoja*/
     public static function AnnaTaidonLisaajaListaus() {
         $sql = "SELECT taidonid, taidonNimi,taidonKuvaus,taidonLisaysPaiva,puuhaajaid FROM taidot";
         $kysely = getTietokantayhteys()->prepare($sql);
@@ -110,6 +115,7 @@ class Taidot {
         return $tulokset;
     }
 
+/*Palauttaa listan tietokannassa olevista taidoista tietylle sivulle*/
     public static function AnnaTaitoListausRajattu($montako, $sivu) {
         $sql = "SELECT taidonid, taidonNimi,taidonKuvaus,taidonLisaysPaiva,puuhaajaid FROM taidot ORDER BY taidonNimi LIMIT ? OFFSET ?";
         $kysely = getTietokantayhteys()->prepare($sql);
@@ -122,6 +128,7 @@ class Taidot {
         return $tulokset;
     }
 
+/*Antaa listan niiden henkilöiden id:istä ketkä ovat lisänneet järjestelmään taitoja jossa ovat tietylle sivulle tarvittavat tiedot*/
     public static function AnnaTaidonLisaajaListausRajattu($montako, $sivu) {
         $sql = "SELECT taidonid, taidonNimi,taidonKuvaus,taidonLisaysPaiva,puuhaajaid FROM taidot ORDER BY taidonNimi LIMIT ? OFFSET ?";
         $kysely = getTietokantayhteys()->prepare($sql);
@@ -135,6 +142,7 @@ class Taidot {
         return $tulokset;
     }
 
+/*Antaa taidon nimeä vastaavan id:n*/
     public static function AnnaTaidonID($taidonNimi) {
         $sql = "SELECT taidonid FROM taidot WHERE taidonNimi= ?";
         $kysely = getTietokantayhteys()->prepare($sql);
@@ -147,6 +155,8 @@ class Taidot {
         }
         return $tulos->taidonid;
     }
+
+/*Palauttaa tietyn henkilön lisäämät taidot*/
 public static function HaeTaidotTekijalla($puuhaajaid) {
         $sql = "SELECT taidonid, taidonNimi,taidonKuvaus,taidonLisaysPaiva,puuhaajaid FROM taidot WHERE puuhaajaid=?";
         $kysely = getTietokantayhteys()->prepare($sql);
@@ -160,6 +170,7 @@ public static function HaeTaidotTekijalla($puuhaajaid) {
         return $tulokset;
     }
     
+/*Palauttaa taidon id:tä vastaavan taidon*/
     public static function EtsiTaito($taidonid) {
         $sql = "SELECT taidonid, taidonNimi, taidonKuvaus,taidonLisaysPaiva, puuhaajaid FROM taidot WHERE taidonid= ?";
         $kysely = getTietokantayhteys()->prepare($sql);
@@ -173,6 +184,7 @@ public static function HaeTaidotTekijalla($puuhaajaid) {
        
         return Taidot::asetaArvot($tulos);
     }
+/*Laskee tietokannassa olevien taitojen lukumäärän*/
     public static function lukumaara() {
         $sql = "SELECT count(*) FROM taidot";
         $kysely = getTietokantayhteys()->prepare($sql);
@@ -180,6 +192,7 @@ public static function HaeTaidotTekijalla($puuhaajaid) {
         return $kysely->fetchColumn();
     }
 
+/*Lisää taidon kantaan*/
     public function lisaaKantaan() {
         $sql = "INSERT INTO Taidot( taidonNimi, taidonKuvaus,taidonLisaysPaiva, puuhaajaid) VALUES(?,?,?,?) RETURNING taidonid";
         $kysely = getTietokantayhteys()->prepare($sql);
@@ -192,6 +205,8 @@ public static function HaeTaidotTekijalla($puuhaajaid) {
         }
         return $ok;
     }
+
+/*Lisää taitoon tehdyt muokkaukset kantaan*/
     public function lisaaMuokkauksetKantaan() {
         $sql = "UPDATE Taidot SET taidonNimi=?, taidonKuvaus=?,taidonLisaysPaiva=?, puuhaajaid=?
  WHERE taidonid=?";
@@ -201,6 +216,7 @@ public static function HaeTaidotTekijalla($puuhaajaid) {
         return $ok;
     }
 
+/*Poistaa taidon tietokannasta*/
     public static function PoistaTaito($taidonid) {
         $sql = "DELETE FROM taidot WHERE taidonid = ?";
         $kysely = getTietokantayhteys()->prepare($sql);
@@ -208,5 +224,19 @@ public static function HaeTaidotTekijalla($puuhaajaid) {
 
         return $ok;
     }
+/*Palauttaa true jos taito löytyy henkilön osaamista taidoista*/
+    public function OnkoOmissaTaidoissa($puuhaajaid){
+         $sql = "SELECT taidonid, puuhaajaid FROM omatTaidot
+                where taidonid=? AND puuhaajaid= ?";
+        $kysely = getTietokantayhteys()->prepare($sql);
+        $kysely->execute(array($this->getId(), $puuhaajaid));
 
+        $tulos = $kysely->fetchObject();
+  
+        if(empty($tulos)){
+            return FALSE;
+        }else{
+            return TRUE;
+        }
+    }
 }
