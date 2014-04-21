@@ -66,7 +66,7 @@ if (isset($_POST['submitPoistaPuuhaluokka'])) {
 
         $nimi = $_POST['poistettavaPuuhaluokka'];
         $puuhaluokka = Puuhaluokka::AnnaPuuhaLuokanID($nimi);
-        error_log(print_r($puuhaluokka, TRUE));
+        
 
         /* Jos puuhaluokka löytyy poistetaan se */
         if (!empty($puuhaluokka)) {
@@ -140,6 +140,46 @@ if (isset($_POST['submitPoista'])) {
     ));
 }
 
+if (isset($_POST['submitKorota'])) {
+    $puuhaajaid = $_POST['henkilo_id'];
+    $puuhaaja=Henkilo::EtsiKokoHenkilo($puuhaajaid);
+    $puuhaaja->VaihdaYllapitajaksi();
+    $_SESSION['ilmoitus'] = "Puuhaaja on korotetty Ylläpitäjäksi.";
+    
+     /* Haetaan lista kayttajista */
+    $kayttajat = Henkilo::etsiKaikkiKayttajat();
+    naytaNakyma('nakymat/yllapitajanSivu.php', array(
+        'aktiivinen' => "omaSivu",
+        'henkilot' => $kayttajat
+    ));
+}
+if (isset($_POST['submitBlokkaa'])) {
+    $puuhaajaid = $_POST['henkilo_id'];
+    $puuhaaja=Henkilo::EtsiKokoHenkilo($puuhaajaid);
+    $puuhaaja->Blokkaa();
+    $_SESSION['ilmoitus'] = "Puuhaaja on blokattu.";
+    
+     /* Haetaan lista kayttajista */
+    $kayttajat = Henkilo::etsiKaikkiKayttajat();
+    naytaNakyma('nakymat/yllapitajanSivu.php', array(
+        'aktiivinen' => "omaSivu",
+        'henkilot' => $kayttajat
+    ));
+}
+
+if (isset($_POST['submitPoistaBlokkaus'])) {
+    $puuhaajaid = $_POST['henkilo_id'];
+    $puuhaaja=Henkilo::EtsiKokoHenkilo($puuhaajaid);
+    $puuhaaja->PoistaBlokkaus();
+    $_SESSION['ilmoitus'] = "Puuhaajan blokkaus on poistettu.";
+    
+     /* Haetaan lista kayttajista */
+    $kayttajat = Henkilo::etsiKaikkiKayttajat();
+    naytaNakyma('nakymat/yllapitajanSivu.php', array(
+        'aktiivinen' => "omaSivu",
+        'henkilot' => $kayttajat
+    ));
+}
 
 /* Jos mitään nappia ei ole painettu näytetään sivu normaalisti */
 naytaNakyma('nakymat/yllapitajanSivu.php', array(

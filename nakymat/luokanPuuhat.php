@@ -7,47 +7,61 @@
                 <th>Nimi</th>
                 <th>Kesto tunteina</th>
                 <th>Lisäyspäivä</th>
-                <?php if (OnkoKirjautunut()){ ?>
-                    <th>Lisää suosikkeihin</th>
-                    <?php }else{?>
-                    <th></th>
-                 <?php }?>
+                <th> </th>
+                <th> </th>
             </tr>
         </thead>
         <tbody>
             <?php
             if (isset($data->puuhat)) {
-                $monesko = 0;
-                foreach ($data->puuhat as $puuha):
-                    ?>
-                    <tr>
-                        <td><?php echo ($monesko + 1)+($data->sivuNumero-1)*($data->montakoSivulla); ?></td>
-                        <td><a href=puuhanTiedotK.php?puuhanid=<?php echo $puuha->getId(); ?>"><?php echo $puuha->getNimi(); ?></a> </td>
-                        <td><?php echo $puuha->getKesto(); ?></td>
-                        <td><?php echo $puuha->getPuuhanLisaysPaiva(); ?></td>
-                        <?php if (OnkoKirjautunut()){ ?>
-                        <?php if (!($puuha->OnkoTykannyt($data->kirjautuneenid))){  ?>
-                        <td><form action="luokanPuuhatK.php" method="post">
-                                <input type="hidden" name="puuha_id" value="<?php echo $puuha->getId(); ?>">
-                                <input type="hidden" name="luokan_id" value="<?php echo $data->luokanid ?>">
-                                <input type="submit" id=submitLisaaSuosikkeihin name="submitLisaaSuosikkeihin" value="Tykkää">
-                            </form> </td>
-                        <?php }
-                        }else{?>
-                        <td></td><?php }?>
-                    </tr>
-                    <?php
-                    $monesko = $monesko + 1;
-                endforeach;
+            $monesko = 0;
+            foreach ($data->puuhat as $puuha):
+            ?>
+            <tr>
+                <td><?php echo ($monesko + 1)+($data->sivuNumero-1)*($data->montakoSivulla); ?></td>
+                <td><a href=puuhanTiedotK.php?puuhanid=<?php echo $puuha->getId(); ?>"><?php echo $puuha->getNimi(); ?></a> </td>
+                <td><?php echo $puuha->getKesto(); ?></td>
+                <td><?php echo $puuha->getPuuhanLisaysPaiva(); ?></td>
+                <?php if (OnkoKirjautunut()){ ?>
+                <?php if (!($puuha->OnkoTykannyt($data->kirjautuneenid))){ ?>
+                <td><form action="luokanPuuhatK.php" method="post">
+                        <input type="hidden" name="puuha_id" value="<?php echo $puuha->getId(); ?>">
+                        <input type="hidden" name="luokan_id" value="<?php echo $data->luokanid ?>">
+                        <input type="submit" id=submitLisaaSuosikkeihin name="submitLisaaSuosikkeihin" value="Tykkää">
+                    </form> </td>
+                <?php }
+                else{
+                ?>
+                <td> </td><?php } ?>
+<?php } ?>
+
+
+                <td> <?php if(OnkoKirjautunutTamaHenkilo($puuha->getLisaaja())){ ?>                       
+                    <a href="puuhanMuokkausK.php?puuhanid=<?php echo $puuha->getId(); ?>">Muokkaa</a> 
+            <?php } ?></td>
+            <?php if (OnkoYllapitajaKirjautunut()) { ?>
+              <td>  <form action="luokanPuuhatK.php" method="post">
+                    <input type="hidden" name="puuha_id" value="<?php echo $puuha->getId(); ?>">
+                     <input type="hidden" name="luokan_id" value="<?php echo $data->luokanid ?>">
+                    <input type="submit" id=submitPoista name="submitPoista" value="Poista tietokannasta">
+                </form> </td>
+                <?php
+            }
+            ?>    
+                
+            </tr>
+            <?php
+            $monesko = $monesko + 1;
+            endforeach;
             }
             ?>
 
         </tbody>
     </table>
     <?php if ($data->sivuNumero > 1): ?>
-        <a href="luokanPuuhatK.php?sivuNumero=<?php echo $data->sivuNumero - 1; ?>&luokanid=<?php echo $data->luokanid; ?>">Edellinen sivu</a>
+    <a href="luokanPuuhatK.php?sivuNumero=<?php echo $data->sivuNumero - 1; ?>&luokanid=<?php echo $data->luokanid; ?>">Edellinen sivu</a>
     <?php endif; ?>
     <?php if ($data->sivuNumero < $data->sivuja): ?>
-        <a href="luokanPuuhatK.php?sivuNumero=<?php echo $data->sivuNumero + 1; ?>&luokanid=<?php echo $data->luokanid; ?>">Seuraava sivu</a>
+    <a href="luokanPuuhatK.php?sivuNumero=<?php echo $data->sivuNumero + 1; ?>&luokanid=<?php echo $data->luokanid; ?>">Seuraava sivu</a>
 <?php endif; ?>
 </div>

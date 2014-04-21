@@ -14,6 +14,11 @@ if (!OnkoKirjautunut()) {
         'virhe' => "Kirjaudu sisään lisätäksesi taidon.", request
     ));
 }
+/*Tarkistetaan onko käyttäjä blokattu*/
+if (Henkilo::OnkoBlokattu(annaKirjautuneenId())) {
+    $_SESSION['ilmoitus'] = "Et voi lisätä taitoa.";
+    naytaNakymaTaidotSivulle(1);
+}
 
 /* Katsotaan onko taidonlisäysnappia painettu */
 if (isset($_POST['submittaito'])) {
@@ -36,7 +41,8 @@ if (isset($_POST['submittaito'])) {
         naytaNakyma("nakymat/taidonLisays.php", array(
             'aktiivinen' => "taidot",
             'uusiTaito' => $uusiTaito,
-            'virhe' => $virheet
+            'virhe' => $virheet,
+            'tyyppi' => "Lisays"
         ));
     }
 }
@@ -44,5 +50,6 @@ if (isset($_POST['submittaito'])) {
 /*Jos taidonlisäys nappia ei oltu painettu näyteään normaalinäkymä*/
 naytaNakyma('nakymat/taidonLisays.php', array(
     'aktiivinen' => "taidot",
-    'uusiTaito' => new Taidot()
+    'uusiTaito' => new Taidot(),
+    'tyyppi' => "Lisays"
 ));

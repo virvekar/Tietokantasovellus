@@ -15,6 +15,12 @@ if (!OnkoKirjautunut()) {
     ));
 }
 
+/*Tarkistetaan onko käyttäjä blokattu*/
+if (Henkilo::OnkoBlokattu(annaKirjautuneenId())) {
+    $_SESSION['ilmoitus'] = "Et voi muokata taitoa.";
+    naytaNakymaTaidotSivulle(1);
+}
+
 /*Jos taidon id löytyy get parametrista haetaan sen tiedot kannasta*/
 if (isset($_GET['taidonid'])) {
     $taitoid = (int) $_GET['taidonid'];
@@ -23,15 +29,16 @@ if (isset($_GET['taidonid'])) {
 }
 /*Jos taitoa ei löytynyt tai sitä ei annettu annetaan virheilmoitus*/
 if (empty($uusiTaito)) {
-    naytaNakyma('nakymat/taidonMuokkaus.php', array(
+    naytaNakyma('nakymat/taidonLisays.php', array(
         'aktiivinen' => "taidot",
         'uusiTaito' => $uusiTaito,
-        'virhe' => "Taitoa ei löydy."
+        'virhe' => "Taitoa ei löydy.",
+            'tyyppi' => "Muokkaus"
     ));
 }
 
 /*Katsotaan onko taidonmuokkausnappia painettu*/
-if (isset($_POST['submittaitoMuokkaus'])) {
+if (isset($_POST['submittaito'])) {
     /*Luodaan uusi taitomuuttuja annetuilla tiedoilla*/
     $uusiTaito = new Taidot();
     $uusiTaito->setId($taitoid);
@@ -49,15 +56,18 @@ if (isset($_POST['submittaitoMuokkaus'])) {
     } else {
         /*Jos virheitä löytyi välitetään ne näkymälle annettujen tietojen kera*/
         $virheet = $uusiTaito->getVirheet();
-        naytaNakyma("nakymat/taidonMuokkaus.php", array(
+        naytaNakyma("nakymat/taidonLisays.php", array(
             'aktiivinen' => "taidot",
             'uusiTaito' => $uusiTaito,
-            'virhe' => $virheet
+            'virhe' => $virheet,
+            'tyyppi' => "Muokkaus"
         ));
     }
 }
 /*Jos nappia ei painettu näytetään normaalinäkymä muokattavan taidon tiedoilla*/
-naytaNakyma('nakymat/taidonMuokkaus.php', array(
+naytaNakyma('nakymat/taidonLisays.php', array(
     'aktiivinen' => "taidot",
-    'uusiTaito' => $uusiTaito
+    'uusiTaito' => $uusiTaito,
+    'tyyppi' => "Muokkaus"
+        
 ));

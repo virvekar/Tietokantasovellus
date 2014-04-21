@@ -35,6 +35,15 @@ if(isset($_POST['submitPoista'])){
     naytaNakymaLuokanPuuhatSivulle(1,$poistettavaPuuha->getPuuhaluokanId());
 }
 
+/* Tarkistaa onko suosituksen poisto nappia painettu*/
+if(isset($_POST['submitPoistaSuositus'])){
+error_log(print_r("taalla ollaan", TRUE)); 
+     $suositusid=$_POST['suositus_id'];
+     Suositukset::PoistaSuositus($suositusid);
+     $_SESSION['ilmoitus'] = "Suositus poistettu onnistuneesti.";
+    
+}
+
 /* Haetaan puuhan ja sen lisääjän tiedot*/
 $puuha = Puuhat::EtsiPuuha($puuhaid);
 $lisaaja=Henkilo::EtsiHenkilo($puuha->getLisaaja());

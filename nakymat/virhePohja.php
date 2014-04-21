@@ -3,7 +3,7 @@
   <div class="alert alert-danger"><?php 
   if(is_array($data->virhe)){
       foreach ($data->virhe as $virhelause):
-          echo $virhelause;
+          echo $virhelause; ?><br> <?php 
       endforeach;
   }else{
       echo $data->virhe; 

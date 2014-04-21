@@ -1,5 +1,16 @@
-<h1>Puuhan lisäys</h1>
-<form class="form-horizontal" role="form" action="puuhanLisaysK.php" method="POST">
+<h1><?php if($data->tyyppi=="Lisays"){
+        echo "Puuhan lisäys";  
+    } else if ($data->tyyppi=="Muokkaus"){
+        echo "Puuhan muokkaus";
+    }?>
+</h1>
+<form class="form-horizontal" role="form" action="
+      <?php if($data->tyyppi=="Lisays"){
+        echo "puuhanLisaysK.php";  
+    } else if ($data->tyyppi=="Muokkaus"){
+        echo "puuhanMuokkausK.php?puuhanid=".$data->uusiPuuha->getId();
+    }?>
+      " method="POST">
     <div class="form-group">
         <label for="nimi" class="col-md-2 control-label">Puuhan nimi*</label>
         <div class="col-md-10">
@@ -123,7 +134,13 @@
             </div>
     <div class="form-group">
         <div class="col-md-offset-2 col-md-10">
-            <button type="submit" id=submitpuuha name="submitpuuha" class="btn btn-default">Lisää puuha</button>
+            <button type="submit" id=submitpuuha name="submitpuuha" class="btn btn-default">
+              <?php  if ($data->tyyppi == "Lisays") {
+                    echo "Lisää";
+                    } else if ($data->tyyppi == "Muokkaus") {
+                    echo "Muokkaa";
+                    }
+                    ?></button>
         </div>
     </div>
 </form>

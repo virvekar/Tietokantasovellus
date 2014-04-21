@@ -17,7 +17,8 @@
                     <th>Kuvaus</th>
                     <th>Lisäyspäivä</th>
                     <th>Lisääjä</th>
-                    <th>Hallitsen!</th>
+                    <th> </th>
+                    <th> </th>
                 </tr>
             </thead>
             <tbody>
@@ -41,10 +42,23 @@
                                             <input type="submit" id=submitHallitsen name="submitHallitsen" value="Hallitsen!">
                                         </form> </td>
 
-                                <?php }
-                            } else {
-                                ?>
-                                <td>   </td><?php } ?>
+                                <?php } else {
+                                    ?>
+                                    <td>   </td><?php } ?>
+                                <?php
+                            }  ?>
+                            <td> <?php if (OnkoKirjautunutTamaHenkilo($taito->getLisaaja())) { ?>                       
+                                    <a href="taidonMuokkausK.php?taidonid=<?php echo $taito->getId(); ?>">Muokkaa</a> 
+                                <?php } ?></td>
+                            
+                    <td>         <?php if (OnkoYllapitajaKirjautunut()) { ?>
+                <form action="taidotK.php" method="post">
+                    <input type="hidden" name="taito_id" value="<?php echo $taito->getId(); ?>">
+                    <input type="submit" id=submitPoista name="submitPoista" value="Poista tietokannasta">
+                </form>
+                <?php
+            }
+            ?></td>
                         </tr>
                         <?php
                         $monesko = $monesko + 1;
@@ -59,7 +73,7 @@
         <?php endif; ?>
         <?php if ($data->sivuNumero < $data->sivuja): ?>
             <a href="taidotK.php?sivuNumero=<?php echo $data->sivuNumero + 1; ?>">Seuraava sivu</a>
-<?php endif; ?>
+        <?php endif; ?>
 
     </div></div>
 

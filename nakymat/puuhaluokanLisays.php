@@ -1,7 +1,20 @@
 
 <div> 
-    <h1>Puuhaluokan lisäys </h1>
-    <form class="form-horizontal" role="form" action="puuhaluokanLisaysK.php" method="POST">
+    <h1><?php
+        if ($data->tyyppi == "Lisays") {
+            ?> Puuhaluokan lisäys
+        <?php } else if ($data->tyyppi == "Muokkaus") {
+            ?> Puuhaluokan muokkaus
+        <?php }
+        ?></h1>
+    <form class="form-horizontal" role="form" action="
+          <?php
+    if ($data->tyyppi == "Lisays") {
+        echo "puuhaluokanLisaysK.php";
+    } else if ($data->tyyppi == "Muokkaus") {
+        echo "puuhaluokanMuokkausK.php?puuhaluokanid=" . $data->uusiLuokka->getId();
+    }
+    ?>" method="POST">
         <div class="form-group">
             <label for="nimi" class="col-md-2 control-label">Luokan nimi</label>
             <div class="col-md-10">
@@ -17,7 +30,13 @@
         </div>
         <div class="form-group">
             <div class="col-md-offset-2 col-md-10">
-                <button type="submit" id=submitluokka name="submitluokka" class="btn btn-default">Lisää Luokka</button>
+                <button type="submit" id=submitluokka name="submitluokka" class="btn btn-default"> <?php
+                    if ($data->tyyppi == "Lisays") {
+                        ?> Lisää
+                    <?php } else if ($data->tyyppi == "Muokkaus") {
+                        ?> Muokkaa
+                    <?php }
+                    ?></button>
             </div>
         </div>
     </form>

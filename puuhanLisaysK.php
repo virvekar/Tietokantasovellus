@@ -7,6 +7,7 @@ require_once 'tietokanta/kirjastot/mallit/Puuhaluokka.php';
 require_once 'tietokanta/kirjastot/mallit/Taidot.php';
 require_once 'tietokanta/kirjastot/mallit/Puuhat.php';
 require_once 'tietokanta/kirjastot/mallit/PuuhaTaidot.php';
+require_once 'tietokanta/kirjastot/mallit/Henkilo.php';
 require_once 'tietokanta/kirjastot/annaKirjautuneenNimimerkki.php';
 require_once 'tietokanta/kirjastot/luoOlio.php';
 
@@ -15,6 +16,12 @@ if (!OnkoKirjautunut()) {
     naytaNakyma('nakymat/Kirjautuminen.php', array(
         'virhe' => "Kirjaudu sisään lisätäksesi puuhan.", request
     ));
+}
+
+/*Tarkistetaan onko käyttäjä blokattu*/
+if (Henkilo::OnkoBlokattu(annaKirjautuneenId())) {
+    $_SESSION['ilmoitus'] = "Et voi lisätä puuhaa.";
+    naytaNakymaPuuhatSivulle(1);
 }
 
 /* Haetaan puuhaluokat ja taidot dropvalikkoja varten */
@@ -62,7 +69,8 @@ if (isset($_POST['submitpuuha'])) {
             'uusiPuuha' => $uusiPuuha,
             'luokat' => $luokat,
             'taidot' => $taidot,
-            'virhe' => $virheet
+            'virhe' => $virheet,
+            'tyyppi' => "Lisays"
         ));
     }
 }
@@ -71,7 +79,8 @@ naytaNakyma('nakymat/puuhanLisays.php', array(
     'aktiivinen' => "puuhat",
     'uusiPuuha' => new Puuhat(),
     'luokat' => $luokat,
-    'taidot' => $taidot
+    'taidot' => $taidot,
+    'tyyppi' => "Lisays"
     
 ));
 

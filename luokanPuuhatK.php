@@ -22,6 +22,18 @@ if (isset($_POST['submitLisaaSuosikkeihin'])) {
     $luokanid = (int) $_GET['luokanid'];
 }
 
+/* Tarkistaa onko poista nappia painettu*/
+if(isset($_POST['submitPoista'])){
+     $puuhaid=$_POST['puuha_id'];
+     $luokanid = $_POST['luokan_id'];
+     Puuhat::PoistaPuuha($puuhaid);
+     $_SESSION['ilmoitus'] = "Puuha poistettu onnistuneesti.";
+   
+} else {
+    /* Otetaan luokan ide get parametrina osoitteesta */
+    $luokanid = (int) $_GET['luokanid'];
+}
+
 /* Katsotaan onko sivunumero annettu */
 $sivuNumero = 1;
 if (isset($_GET['sivuNumero'])) {

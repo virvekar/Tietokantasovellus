@@ -3,6 +3,7 @@ require_once 'tietokanta/kirjastot/nakymakutsut.php';
 require_once 'tietokanta/kirjastot/tietokantayhteys.php';
 require_once 'tietokanta/kirjastot/onkoKirjautunut.php';
 require_once 'tietokanta/kirjastot/annaKirjautuneenNimimerkki.php';
+require_once 'tietokanta/kirjastot/kirjauduUlos.php';
 require_once 'tietokanta/kirjastot/mallit/Puuhat.php';
 require_once 'tietokanta/kirjastot/mallit/Taidot.php';
 require_once 'tietokanta/kirjastot/mallit/Suosikit.php';
@@ -25,6 +26,13 @@ if (isset($_POST['submitPoistaSuosikeista'])) {
 if (isset($_POST['submitPoistaOmistaTaidoista'])) {
     $taidonid=$_POST['taito_id'];
     OmatTaidot::PoistaOmistaTaidoista($taidonid,  annaKirjautuneenId());
+}
+
+if (isset($_POST['submitPoistaHenkilo'])) {
+    Henkilo::PoistaHenkilo(annaKirjautuneenId());
+    $_SESSION['ilmoitus'] = "Olet poistanut rekisteröitymisesi järjestelmästä";
+     KirjauduUlos();
+
 }
 
 /*Haetaan käyttäjän suosikkipuuhien id:t tietokannasta*/

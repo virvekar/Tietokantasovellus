@@ -33,10 +33,6 @@
 		    	      echo $taitonimi; echo "; ";  } ?></td>
                 </tr>
                 <tr>
-                    <td>Suositukset:</td>
-                    <td>Ei suosituksia</td>
-                </tr>
-                <tr>
                     <td>Paikka:</td>
                     <td><?php echo $puuha->getPaikka(); ?></td>
                 </tr>
@@ -72,6 +68,35 @@
     }
     }
     ?>
+
+<h3>Suositukset</h3>
+   <?php if(!empty($data->suositukset)){ ?>
+ <table style="width:800px" class="table table-striped">
+      <thead>
+	 <tr>
+             <th>Kirjoittaja</th>
+             <th>Suositus</th>
+	     <th> </th>
+	   
+         </tr>
+      </thead>
+      <tbody>
+	    <?php foreach( $data->suositukset as $suositus) {  ?>
+	     <tr>
+                    <td><?php echo $suositus->getSuosittelija(); ?></td>
+                    <td><?php echo $suositus->getSuositusTeksti(); ?></td>
+ 		   <td> <?php if(OnkoKirjautunutYllapitajaTaiTamaHenkilo($suositus->getPuuhaajaId())){ ?>
+		    	  <form action="puuhanTiedotK.php" method="post">
+                	  	<input type="hidden" name="suositus_id" value="<?php echo $suositus->getSuositusId(); ?>">
+                	  	<input type="submit" id=submitPoistaSuositus name="submitPoistaSuositus" value="Poista">
+            		  </form>
+ 	   	     <?php } ?></td>
+             </tr>
+ 	    <?php  } ?>
+      </tbody>
+  </table>	
+<?php  } else {?>
+Puuhalla ei ole suosituksia.
+<?php  } ?>	    	    
 </div> 
-
-
+ 

@@ -4,6 +4,7 @@ require_once 'tietokanta/kirjastot/nakymakutsut.php';
 require_once 'tietokanta/kirjastot/tietokantayhteys.php';
 require_once 'tietokanta/kirjastot/onkoKirjautunut.php';
 require_once 'tietokanta/kirjastot/mallit/Puuhaluokka.php';
+require_once 'tietokanta/kirjastot/mallit/Henkilo.php';
 
 /* Tarkistetaan onko käyttäjä kirjautunut sisään */
 if (!OnkoKirjautunut()) {
@@ -11,23 +12,27 @@ if (!OnkoKirjautunut()) {
         'virhe' => "Kirjaudu sisään lisätäksesi puuhaluokan.", request
     ));
 }
-    
-if ( isset( $_POST['submitluokka'] ) ) { 
-    
+
+/*Tarkistetaan onko käyttäjä blokattu*/
+if (Henkilo::OnkoBlokattu(annaKirjautuneenId())) {
+    $_SESSION['ilmoitus'] = "Et voi lisätä puuhaluokkaa.";
+    naytaNakymaPuuhatSivulle(1);
+}
+
+if (isset($_POST['submitluokka'])) {
+
     $uusiLuokka = new Puuhaluokka();
     $uusiLuokka->setNimi($_POST['nimi']);
     $uusiLuokka->setKuvaus($_POST['kuvaus']);
-    $virheet=$uusiLuokka->getVirheet();
-    
+    $virheet = $uusiLuokka->getVirheet();
+
 
     /* Tarksitetaan onko puuhaluokka syötetty oikein */
     if (empty($virheet)) {
         $uusiLuokka->lisaaKantaan();
-        $_SESSION['ilmoitus'] = "Puuhaluokka lisätty onnistuneesti.";  
-        
-        naytaNakymaPuuhatSivulle(1);
+        $_SESSION['ilmoitus'] = "Puuhaluokka lisätty onnistuneesti.";
 
-        
+        naytaNakymaPuuhatSivulle(1);
     } else {
         $virheet = $uusiLuokka->getVirheet();
 
@@ -35,12 +40,14 @@ if ( isset( $_POST['submitluokka'] ) ) {
         naytaNakyma("nakymat/puuhaluokanLisays.php", array(
             'aktiivinen' => "puuhat",
             'uusiLuokka' => $uusiLuokka,
-            'virhe' => $virheet
+            'virhe' => $virheet,
+            'tyyppi' => "Lisays"
         ));
     }
 }
 naytaNakyma('nakymat/puuhaluokanLisays.php', array(
     'aktiivinen' => "puuhat",
-    'uusiLuokka' => new Puuhaluokka()
+    'uusiLuokka' => new Puuhaluokka(),
+    'tyyppi' => "Lisays"
 ));
 

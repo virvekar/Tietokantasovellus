@@ -150,5 +150,7 @@ if (!empty($data->omatTaidot)) {
 <?php } ?>
 <a class="btn" href="http://virvemaa.users.cs.helsinki.fi/Tietokantasovellus/salasananVaihtoK.php">Vaihda salasana</a>
 
-
+ <form action="omaSivuK.php" method="post">
+        <input type="submit" id=submitPoistaHenkilo name="submitPoistaHenkilo" value="Jätä puuha-arkisto pysyvästi">
+</form>
 

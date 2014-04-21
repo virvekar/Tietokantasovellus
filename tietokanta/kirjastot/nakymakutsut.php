@@ -16,8 +16,9 @@ function naytaPohjaNakyma($sivu) {
 /* Näyttää näkymätiedoston ja lähettää sille muuttujat */
 function naytaNakyma($sivu, $data = array()) {
     $data = (object) $data;
-    require '/home/virvemaa/htdocs/Tietokantasovellus/nakymat/pohja.php';
     require '/home/virvemaa/htdocs/Tietokantasovellus/nakymat/virhePohja.php';
+    require '/home/virvemaa/htdocs/Tietokantasovellus/nakymat/pohja.php';
+
     exit();
 }
 

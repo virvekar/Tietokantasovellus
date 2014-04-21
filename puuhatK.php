@@ -15,6 +15,14 @@ if (isset($_GET['sivuNumero'])) {
     if ($sivuNumero < 1)
         $sivuNumero = 1;
 }
+
+/*Tarkistetaan onko poista nappia painettu*/
+if (isset($_POST['submitPoista'])) {
+    
+    $LuokkaId=$_POST['puuhaLuokka_id'];  
+    Puuhaluokka::PoistaPuuhaluokka($LuokkaId);
+     $_SESSION['ilmoitus'] = "Puuhaluokka poistettu onnistuneesti.";
+}
 /*Kutsutaan funktiota joka näytää puuhat näkymän*/
 naytaNakymaPuuhatSivulle($sivuNumero);
 

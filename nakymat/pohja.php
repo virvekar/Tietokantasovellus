@@ -27,7 +27,9 @@ require_once 'tietokanta/kirjastot/onkoKirjautunut.php';
                             Kirjaudu ulos</a>
                     <?php } else { ?> Kirjaudu sisään</a>
                     <?php } ?> <br>
+                    <?php if (!OnkoKirjautunut()) { ?>
                     <a href="http://virvemaa.users.cs.helsinki.fi/Tietokantasovellus/rekisteroityminenK.php">Rekisteröidy</a>
+                    <?php } ?> 
                 </div>
             </div>
             <?php if (!empty($data->aktiivinen)) { ?>

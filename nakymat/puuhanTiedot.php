@@ -29,8 +29,12 @@
                 </tr>
                 <tr>
                     <td>Tarvittavat taidot:</td>
-                    <td><?php foreach( $data->taitojenNimet as $taitonimi) {
-		    	      echo $taitonimi; echo "; ";  } ?></td>
+                    <td><?php
+                        foreach ($data->taitojenNimet as $taitonimi) {
+                            echo $taitonimi;
+                            echo "; ";
+                        }
+                        ?></td>
                 </tr>
                 <tr>
                     <td>Paikka:</td>
@@ -50,53 +54,66 @@
                 </tr>
             </tbody>
         </table>
-    <?php if (OnkoKirjautunut()){ ?>
+        <?php if (OnkoKirjautunut()) { ?>
+
         <?php if (!($puuha->OnkoTykannyt($data->kirjautuneenid))) { ?>
-            <form action="puuhanTiedotK.php" method="post">
-                <input type="hidden" name="puuha_id" value="<?php echo $puuha->getId(); ?>">
-                <input type="submit" id=submitLisaaSuosikkeihin name="submitLisaaSuosikkeihin" value="Tykkää">
-            </form>
-        <?php } ?>
-        <a href=suosituksenKirjoitusK.php?puuhanid=<?php echo $puuha->getId(); ?>">Kirjoita suositus</a> 
+                <form action="puuhanTiedotK.php" method="post">
+                    <input type="hidden" name="puuha_id" value="<?php echo $puuha->getId(); ?>">
+                    <input type="submit" id=submitLisaaSuosikkeihin name="submitLisaaSuosikkeihin" value="Tykkää">
+                </form>
+            <?php } ?>
+            <a href=suosituksenKirjoitusK.php?puuhanid=<?php echo $puuha->getId(); ?>">Kirjoita suositus</a> 
+        <?php if (OnkoYllapitajaKirjautunut()) { ?>
+                <form action="puuhanTiedotK.php" method="post">
+                    <input type="hidden" name="puuha_id" value="<?php echo $puuha->getId(); ?>">
+                    <input type="submit" id=submitPoista name="submitPoista" value="Poista tietokannasta">
+                </form>
+                <?php
+            }
+            ?>
+            <br>
+            <?php if (OnkoKirjautunutTamaHenkilo($puuha->getLisaaja())) { ?>                       
+                <a href="puuhanMuokkausK.php?puuhanid=<?php echo $puuha->getId(); ?>">Muokkaa</a> 
+            <?php } ?>
+
         <?php
-        if(OnkoYllapitajaKirjautunut()){ ?>
-            <form action="puuhanTiedotK.php" method="post">
-                <input type="hidden" name="puuha_id" value="<?php echo $puuha->getId(); ?>">
-                <input type="submit" id=submitPoista name="submitPoista" value="Poista tietokannasta">
-            </form>
-     <?php   }
-    }
+        }
     }
     ?>
 
-<h3>Suositukset</h3>
-   <?php if(!empty($data->suositukset)){ ?>
- <table style="width:800px" class="table table-striped">
-      <thead>
-	 <tr>
-             <th>Kirjoittaja</th>
-             <th>Suositus</th>
-	     <th> </th>
-	   
-         </tr>
-      </thead>
-      <tbody>
-	    <?php foreach( $data->suositukset as $suositus) {  ?>
-	     <tr>
-                    <td><?php echo $suositus->getSuosittelija(); ?></td>
-                    <td><?php echo $suositus->getSuositusTeksti(); ?></td>
- 		   <td> <?php if(OnkoKirjautunutYllapitajaTaiTamaHenkilo($suositus->getPuuhaajaId())){ ?>
-		    	  <form action="puuhanTiedotK.php" method="post">
-                	  	<input type="hidden" name="suositus_id" value="<?php echo $suositus->getSuositusId(); ?>">
-                	  	<input type="submit" id=submitPoistaSuositus name="submitPoistaSuositus" value="Poista">
-            		  </form>
- 	   	     <?php } ?></td>
-             </tr>
- 	    <?php  } ?>
-      </tbody>
-  </table>	
-<?php  } else {?>
-Puuhalla ei ole suosituksia.
-<?php  } ?>	    	    
+    <h3>Suositukset</h3>
+<?php if (!empty($data->suositukset)) { ?>
+        <table style="width:800px" class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Kirjoittaja</th>
+                    <th>Suositus</th>
+                    <th> </th>
+                    <th> </th>
+
+                </tr>
+            </thead>
+            <tbody>
+    <?php foreach ($data->suositukset as $suositus) { ?>
+                    <tr>
+                        <td><?php echo $suositus->getSuosittelija(); ?></td>
+                        <td><?php echo $suositus->getSuositusTeksti(); ?></td>
+                        <td> <?php if (OnkoKirjautunutYllapitajaTaiTamaHenkilo($suositus->getPuuhaajaId())) { ?>
+                                <form action="puuhanTiedotK.php?puuhanid=<?php echo $puuha->getId(); ?>" method="post">
+                                    <input type="hidden" name="suositus_id" value="<?php echo $suositus->getSuositusId(); ?>">
+                                    <input type="submit" id=submitPoistaSuositus name="submitPoistaSuositus" value="Poista">
+                                </form>
+        <?php } ?></td>
+                        <td> <?php if (OnkoKirjautunutTamaHenkilo($suositus->getPuuhaajaId())) { ?>
+
+                                <a href="suosituksenMuokkausK.php?suositusid=<?php echo $suositus->getSuositusId(); ?>">Muokkaa suositusta</a> 
+                    <?php } ?></td>
+                    </tr>
+        <?php } ?>
+            </tbody>
+        </table>	
+    <?php } else { ?>
+        Puuhalla ei ole suosituksia.
+<?php } ?>	    	    
 </div> 
- 
+

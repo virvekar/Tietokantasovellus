@@ -32,11 +32,20 @@
                     foreach ($data->luokat as $puuhaluokka):
                         ?>
                         <tr>
-                            <td><?php echo ($monesko + 1)+($data->sivuNumero-1)*($data->montakoSivulla); ?></td>
+                            <td><?php echo ($monesko + 1) + ($data->sivuNumero - 1) * ($data->montakoSivulla); ?></td>
                             <td><a href=luokanPuuhatK.php?luokanid=<?php echo $puuhaluokka->getId(); ?>"><?php echo $puuhaluokka->getNimi(); ?></a> </td>
                             <td><?php echo $puuhaluokka->getKuvaus(); ?></td>
                             <td><?php echo $sarakeMontako[$monesko]; ?></td>
                             <td><?php echo $sarakePaiva[$monesko]; ?></td>
+                            <?php if (OnkoYllapitajaKirjautunut()) { ?>
+                                <td>  <a href="puuhaluokanMuokkausK.php?puuhaluokanid=<?php echo $puuhaluokka->getId(); ?>">Muokkaa</a> </td>
+                                <td> <form action="puuhatK.php" method="post">
+                                        <input type="hidden" name="puuhaLuokka_id" value="<?php echo $puuhaluokka->getId(); ?>">
+                                        <input type="submit" id=submitPoista name="submitPoista" value="Poista tietokannasta">
+                                    </form> </td>
+                                <?php
+                            }
+                            ?>
 
                         </tr>
                         <?php
@@ -51,7 +60,7 @@
         <?php endif; ?>
         <?php if ($data->sivuNumero < $data->sivuja): ?>
             <a href="puuhatK.php?sivuNumero=<?php echo $data->sivuNumero + 1; ?>">Seuraava sivu</a>
-<?php endif; ?>
+        <?php endif; ?>
 
 
     </div></div>
