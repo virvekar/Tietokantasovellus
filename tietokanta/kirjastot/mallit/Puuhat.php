@@ -265,6 +265,20 @@ Se ole liian pitkä*/
         return $puuha;
     }
 
+    /*Hakee kaikki puuhat*/
+    public static function KaikkiPuuhat(){
+         $sql = "SELECT puuhanid, puuhaluokanid, puuhanNimi, puuhanKuvaus, puuhanKesto, henkilomaara, paikka, ajankohta,puuhanLisaysPaiva, puuhaajaid FROM puuhat
+                ORDER BY puuhanNimi";
+        $kysely = getTietokantayhteys()->prepare($sql);
+        $kysely->execute();
+
+        $tulokset = array();
+        foreach ($kysely->fetchAll(PDO::FETCH_OBJ) as $tulos) {
+            $tulokset[] = Puuhat::asetaArvot($tulos);
+        }
+        return $tulokset;
+    }
+    
 /*Etsii tietokannasta puuhan id:n avulla*/
     public static function EtsiPuuha($puuhanid) {
         $sql = "SELECT puuhanid, puuhaluokanid, puuhanNimi, puuhanKuvaus, puuhanKesto, henkilomaara, paikka, ajankohta,puuhanLisaysPaiva, puuhaajaid FROM puuhat
@@ -308,6 +322,20 @@ Se ole liian pitkä*/
         $kysely = getTietokantayhteys()->prepare($sql);
         $kysely->execute(array($luokanid));
         return $kysely->fetchColumn();
+    }
+    
+    /*Laskee montako puuhaa on yhteensa*/
+    public static function kokonaismaara() {
+        $sql = "SELECT count(*) FROM puuhat";
+        $kysely = getTietokantayhteys()->prepare($sql);
+        $kysely->execute();
+        return $kysely->fetchColumn();
+    }
+    
+    /*Palauttaa puuhan joka on listassa luvun kohdalla*/
+    public static function OtaSatunnaisPuuha($luku){
+        $puuhat=Puuhat::KaikkiPuuhat();
+        return $puuhat[$luku];
     }
 
 /*Hakee tiettyyn luokkaan kuuluvat puuhat keston, henkilömäärän ja paikan perusteella*/

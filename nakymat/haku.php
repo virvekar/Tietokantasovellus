@@ -89,6 +89,13 @@
             </div>
 
         </form> 
+        <form class="form-horizontal" role="form" action="hakuK.php" method="POST">
+            <div class="form-group">
+                <div class="col-md-offset-1">
+                    <button type="submit" id=submitarvo name="submitarvo" class="btn btn-default">Arvo</button>
+                </div>
+            </div>
+        </form> 
         <?php if (isset($data->puuhat)) { ?>
             <div>
                 <table class="table table-striped">
@@ -116,13 +123,12 @@
                             <?php
                             $monesko = $monesko + 1;
                         endforeach;
-                    
-                    ?>
+                        ?>
 
-                </tbody>
-            </table>
-            
-        </div>
+                    </tbody>
+                </table>
+
+            </div>
         <?php } ?>
     </div>
 </div>

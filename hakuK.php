@@ -7,6 +7,7 @@ require_once 'tietokanta/kirjastot/tietokantayhteys.php';
 require_once 'tietokanta/kirjastot/mallit/Puuhaluokka.php';
 require_once 'tietokanta/kirjastot/mallit/Puuhat.php';
 
+/*Katsotaan onko hakunappia painettu*/
 if (isset($_POST['submithaku'])) {
     $parametrit = LueHakuParametrit();
 
@@ -36,13 +37,20 @@ if (isset($_POST['submithaku'])) {
     NaytaHakuNakyma($puuhat,null);
     
 }
+
+/*Katsotaan onko arvonappia painettu*/
+if (isset($_POST['submitarvo'])) {
+    ArvoPuuha();
+}
+
+/*Naytetaan normaalinakyma*/
 NaytaHakuNakyma(null,null);
 
 
 
 /*----------------------------------------------------------------------------*/
 
-
+/*Lukee syötetyt hakuparametrit ja palauttaa ne listassa*/
 function LueHakuParametrit() {
     $parametrit = array();
     $parametrit[] = LueAnnettuLuokka();
@@ -53,6 +61,7 @@ function LueHakuParametrit() {
     return $parametrit;
 }
 
+/*Katsoo millä tavalla luokka on annettu  ja palauttaa sen*/
 function LueAnnettuLuokka() {
     
     /* Tarkistetaan onko luokkaa annettu ja miten se on annettu */
@@ -66,4 +75,13 @@ function LueAnnettuLuokka() {
         return null;
     }
     return $valittuLuokka;
+}
+
+/*Arpoo puuhan ja nayttaa sen nakymassa*/
+function ArvoPuuha(){
+    $maara=Puuhat::kokonaismaara();    
+    $luku=rand(0, $maara-1);    
+    $puuhat=array();
+    $puuhat[]=Puuhat::OtaSatunnaisPuuha($luku);
+     NaytaHakuNakyma($puuhat,null);
 }
