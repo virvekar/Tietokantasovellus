@@ -7,69 +7,63 @@ require_once 'tietokanta/kirjastot/tietokantayhteys.php';
 require_once 'tietokanta/kirjastot/mallit/Puuhaluokka.php';
 require_once 'tietokanta/kirjastot/mallit/Puuhat.php';
 
-$luokat = Puuhaluokka::AnnaTiedotListaukseen();
+if (isset($_POST['submithaku'])) {
+    $parametrit = LueHakuParametrit();
 
-/* Tarkistetaan onko luokkaa annettu ja miten se on annettu*/
-if(!empty($_POST["luokkasailio"])){
-    $valittuLuokka = $_POST['luokkasailio'];
-}elseif(!empty($_POST["luokka"])){
-    $luokanNimi=$_POST["luokka"];
-    $valittuLuokka=Puuhaluokka::AnnaPuuhaLuokanID($luokanNimi);
-}
-
-/*Tarkista että mikään arvo ei ole tyhjä */
-if (!empty($valittuLuokka) && !empty($_POST["Kesto"]) && !empty($_POST["Henkilomaara"]) && !empty($_POST["Paikka"])) {
-    $kesto = $_POST["Kesto"];
-    $kestot = karsiKesto($kesto);
-    
-    $henkilomaara = $_POST["Henkilomaara"];
-    $henkilomaarat = karsiHenkilo($henkilomaara);
-    $paikka = $_POST["Paikka"];
-
-    /* Tarkistaa onko puuhaluokka valittu*/
-    if ($valittuLuokka == "any") {
-        /* Tarkistaa onko paikka valittu*/
-        if($paikka == "any"){
-            $puuhat = Puuhat::HaePuuhatEiPaikkaaEiLuokkaa($kestot[0], $kestot[1], $henkilomaarat[0], $henkilomaarat[1]);
-        }else{
-            $puuhat = Puuhat::HaePuuhatEiLuokkaa($kestot[0], $kestot[1], $henkilomaarat[0], $henkilomaarat[1],$paikka);
-        }
-                   
-    } else {
-        if ($paikka == "any") {
-            $puuhat = Puuhat::HaePuuhatEiPaikkaa($valittuLuokka, $kestot[0], $kestot[1], $henkilomaarat[0], $henkilomaarat[1]);
+    /* Tarkistaa onko puuhaluokka valittu */
+    if ($parametrit[0] == "any") {
+        /* Tarkistaa onko paikka valittu */
+        if ($parametrit[3] == "any") {
+            $puuhat = Puuhat::HaePuuhatEiPaikkaaEiLuokkaa($parametrit[1][0], $parametrit[1][1], $parametrit[2][0], $parametrit[2][1]);
         } else {
-            $puuhat = Puuhat::HaePuuhat($valittuLuokka, $kestot[0], $kestot[1], $henkilomaarat[0], $henkilomaarat[1], $paikka);
+            $puuhat = Puuhat::HaePuuhatEiLuokkaa($parametrit[1][0], $parametrit[1][1], $parametrit[2][0], $parametrit[2][1], $parametrit[3]);
         }
+    } else {
+        if ($parametrit[3] == "any") {
+            $puuhat = Puuhat::HaePuuhatEiPaikkaa($parametrit[0], $parametrit[1][0], $parametrit[1][1], $parametrit[2][0], $parametrit[2][1]);
+        } else {
+            $puuhat = Puuhat::HaePuuhat($parametrit[0], $parametrit[1][0], $parametrit[1][1], $parametrit[2][0], $parametrit[2][1], $parametrit[3]);
+        }
+    }
+
+    /* Jos puuhat on tyhjä tulostetaan virhe */
+    
+    if (empty($puuhat)) {
+        NaytaHakuNakyma(null,"Yhtään puuhaa ei löytynyt");
         
     }
+    /* Tulostus jos puuhia löytyi */
+    NaytaHakuNakyma($puuhat,null);
+    
+}
+NaytaHakuNakyma(null,null);
 
-/* Jos puuhat on tyhjä tulostetaan virhe*/
-    if (empty($puuhat)) {
-        naytaNakyma('nakymat/haku.php', array(
-            'aktiivinen' => "haku",
-            'luokat' => $luokat,
-            'virhe' => "Yhtään puuhaa ei löytynyt"
-        ));
-    }
-    /* Tulostus jos puuhia löytyi*/
-    naytaNakyma('nakymat/haku.php', array(
-        'aktiivinen' => "haku",
-        'luokat' => $luokat,
-        'puuhat' => $puuhat
-    ));
+
+
+/*----------------------------------------------------------------------------*/
+
+
+function LueHakuParametrit() {
+    $parametrit = array();
+    $parametrit[] = LueAnnettuLuokka();
+    $parametrit[] = karsiKesto($_POST["Kesto"]);
+    $parametrit[] = karsiHenkilo($_POST["Henkilomaara"]);
+    $parametrit[] = $_POST["Paikka"];
+
+    return $parametrit;
 }
 
-/* Jos puuhaluokkaan ei ole laitettu mitään annetaan pelkkä hakusivu eikä listausta*/
-if (empty($valittuLuokka)) {
-    naytaNakyma('nakymat/haku.php', array(
-        'aktiivinen' => "haku",
-        'luokat' => $luokat
-    ));
-}else{
-    naytaNakyma('nakymat/haku.php', array(
-        'aktiivinen' => "haku",
-        'luokat' => $luokat,
-        'virhe'=> "Yhtään puuhaa ei löytynyt."
-        ));
+function LueAnnettuLuokka() {
+    
+    /* Tarkistetaan onko luokkaa annettu ja miten se on annettu */
+    if (!empty($_POST["luokka"])) {
+         $luokanNimi = $_POST["luokka"];
+        $valittuLuokka = Puuhaluokka::AnnaPuuhaLuokanID($luokanNimi);
+    } elseif (!empty($_POST["luokkasailio"])) {
+        $valittuLuokka = $_POST["luokkasailio"];
+
+    } else {
+        return null;
+    }
+    return $valittuLuokka;
 }

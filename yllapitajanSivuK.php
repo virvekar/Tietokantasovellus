@@ -3,6 +3,7 @@
 require_once 'tietokanta/kirjastot/nakymakutsut.php';
 require_once 'tietokanta/kirjastot/tietokantayhteys.php';
 require_once 'tietokanta/kirjastot/onkoKirjautunut.php';
+require_once 'tietokanta/kirjastot/nakymakutsut.php';
 require_once 'tietokanta/kirjastot/mallit/Puuhat.php';
 require_once 'tietokanta/kirjastot/mallit/Puuhaluokka.php';
 require_once 'tietokanta/kirjastot/mallit/Taidot.php';
@@ -10,25 +11,58 @@ require_once 'tietokanta/kirjastot/mallit/Henkilo.php';
 
 /* Tarkistetaan onko käyttäjä kirjautunut sisään */
 if (!OnkoKirjautunut()) {
-    naytaNakyma('nakymat/Kirjautuminen.php', array(
-        'aktiivinen' => "ei mikaan",
-        'virhe' => "Kirjaudu sisään tarkastellaksesi yllapitajan sivua.", request
-    ));
+    naytaNakymaKirjautumisSivulleVirheella();
 }
 
 /* Tarkistetaan onko kirjautunut yllapitaja */
-if (!OnkoYllapitajaKirjautunut()) {
-    naytaNakyma('nakymat/Kirjautuminen.php', array(
-        'aktiivinen' => "ei mikaan",
-        'virhe' => "Vain ylläpitäjä voi tarkastella ylläpitäjän sivua.", request
-    ));
+else if (!OnkoYllapitajaKirjautunut()) {
+    naytaNakymaKirjautumisSivulleYllapitajaVirheella();
 }
 
-/* Haetaan lista kayttajista */
-$kayttajat = Henkilo::etsiKaikkiKayttajat();
-
 /* Katsotaan onko puuhan poistonappia painettu */
-if (isset($_POST['submitPoistaPuuha'])) {
+else if (isset($_POST['submitPoistaPuuha'])) {
+    PuuhanPoisto();
+}
+/* Katsotaan onko puuhaluokan poistonappia painettu */
+else if (isset($_POST['submitPoistaPuuhaluokka'])) {
+    PuuhaluokanPoisto();
+}
+
+/* Katsotaan onko taidon poistonappia painettu */
+else if (isset($_POST['submitPoistaTaito'])) {
+    TaidonPoisto();
+}
+
+/* Katsotaan onko henkilön poistonappia painettu */
+else if (isset($_POST['submitPoista'])) {
+    HenkilonPoisto();
+}
+
+/* Katsotaan onko korota ylläpitäjäksi nappia painettu */
+else if (isset($_POST['submitKorota'])) {
+    YllapitajaksiKorottaminen();
+}
+
+/* Katsotaan onko blokkaus nappia painettu */
+else if (isset($_POST['submitBlokkaa'])) {
+    Blokkaus();
+}
+
+/* Katsotaan onko blokkauksen poisto nappia painettu */
+else if (isset($_POST['submitPoistaBlokkaus'])) {
+    BlokkauksenPoisto();
+}
+
+/* Jos mitään nappia ei ole painettu näytetään sivu normaalisti */
+naytaNakymaYllapitajanSivulle();
+
+/* -------------------------------------------------------------------------------- */
+/* Funktiot jotka huolehtivat poistoista: */
+
+
+/* Huolehtii puuhan poistamisesta */
+
+function PuuhanPoisto() {
     /* Katsotaan onko kenttään annettu jokin arvo */
     if (!empty($_POST["poistettavaPuuha"])) {
 
@@ -38,64 +72,47 @@ if (isset($_POST['submitPoistaPuuha'])) {
         if (!empty($puuha)) {
             Puuhat::PoistaPuuha($puuha->getId());
             $_SESSION['ilmoitus'] = "Puuha poistettu onnistuneesti.";
-            naytaNakyma('nakymat/yllapitajanSivu.php', array(
-                'aktiivinen' => "omaSivu",
-                'henkilot' => $kayttajat
-            ));
+            /* Kutsutaan functiota joka nayttaa nakyman yllapitajan sivulle */
+            naytaNakymaYllapitajanSivulle(null);
         } else {
             /* Jos puuhaa ei löytynyt näytetään virheilmoitus */
-            naytaNakyma('nakymat/yllapitajanSivu.php', array(
-                'aktiivinen' => "omaSivu",
-                'henkilot' => $kayttajat,
-                'virhe' => "Puuhaa ei loytynyt.", request
-            ));
+            naytaNakymaYllapitajanSivulle("Puuhaa ei loytynyt.");
         }
     } else {
         /* Jos kenttä oli tyhjä niin annetaan virheilmoitus */
-        naytaNakyma('nakymat/yllapitajanSivu.php', array(
-            'aktiivinen' => "omaSivu",
-            'henkilot' => $kayttajat,
-            'virhe' => "Syötä poistettava puuha.", request
-        ));
+        naytaNakymaYllapitajanSivulle("Syötä poistettava puuha.");
     }
 }
-/* Katsotaan onko puuhaluokan poistonappia painettu */
-if (isset($_POST['submitPoistaPuuhaluokka'])) {
+
+/* Huolehtii puuhaluokan poistamisesta */
+
+function PuuhaluokanPoisto() {
     /* Katsotaan onko kenttään annettu jokin arvo */
     if (!empty($_POST["poistettavaPuuhaluokka"])) {
 
         $nimi = $_POST['poistettavaPuuhaluokka'];
         $puuhaluokka = Puuhaluokka::AnnaPuuhaLuokanID($nimi);
-        
+
 
         /* Jos puuhaluokka löytyy poistetaan se */
         if (!empty($puuhaluokka)) {
             Puuhaluokka::PoistaPuuhaluokka($puuhaluokka);
             $_SESSION['ilmoitus'] = "Puuhaluokka poistettu onnistuneesti.";
-            naytaNakyma('nakymat/yllapitajanSivu.php', array(
-                'aktiivinen' => "omaSivu",
-                'henkilot' => $kayttajat
-            ));
+            /* Kutsutaan functiota joka nayttaa nakyman yllapitajan sivulle */
+            naytaNakymaYllapitajanSivulle(null);
         } else {
             /* Jos puuhaluokkaa ei löytynyt annetaan virheilmoitus */
-            naytaNakyma('nakymat/yllapitajanSivu.php', array(
-                'aktiivinen' => "omaSivu",
-                'henkilot' => $kayttajat,
-                'virhe' => "Puuhaluokkaa ei loytynyt.", request
-            ));
+            naytaNakymaYllapitajanSivulle("Puuhaluokkaa ei loytynyt.");
         }
     } else {
         /* Jos kenttä oli tyhjä annetaan virheilmoitus */
-        naytaNakyma('nakymat/yllapitajanSivu.php', array(
-            'aktiivinen' => "omaSivu",
-            'henkilot' => $kayttajat,
-            'virhe' => "Syötä poistettava puuhaluokka.", request
-        ));
+        naytaNakymaYllapitajanSivulle("Syötä poistettava puuhaluokka.");
     }
 }
 
-/* Katsotaan onko taidon poistonappia painettu */
-if (isset($_POST['submitPoistaTaito'])) {
+/* Huolehtii taidon poistamisesta */
+
+function TaidonPoisto() {
     /* Katsotaan onko kenttään annettu jokin arvo */
     if (!empty($_POST["poistettavaTaito"])) {
 
@@ -105,85 +122,70 @@ if (isset($_POST['submitPoistaTaito'])) {
         if (!empty($taito)) {
             Taidot::PoistaTaito($taito);
             $_SESSION['ilmoitus'] = "Taito poistettu onnistuneesti.";
-            naytaNakyma('nakymat/yllapitajanSivu.php', array(
-                'aktiivinen' => "omaSivu",
-                'henkilot' => $kayttajat
-            ));
+            /* Kutsutaan functiota joka nayttaa nakyman yllapitajan sivulle */
+            naytaNakymaYllapitajanSivulle(null);
         } else {
             /* Jos taitoa ei löytynyt annetaan virheilmoitus */
-            naytaNakyma('nakymat/yllapitajanSivu.php', array(
-                'aktiivinen' => "omaSivu",
-                'henkilot' => $kayttajat,
-                'virhe' => "Taitoa ei loytynyt.", request
-            ));
+            naytaNakymaYllapitajanSivulle("Taitoa ei loytynyt.");
         }
     } else {
         /* Jos kenttä oli tyhjä annetaan virheilmoitus */
-        naytaNakyma('nakymat/yllapitajanSivu.php', array(
-            'aktiivinen' => "omaSivu",
-            'henkilot' => $kayttajat,
-            'virhe' => "Syötä poistettava taito.", request
-        ));
+        naytaNakymaYllapitajanSivulle("Syötä poistettava taito.");
     }
 }
 
-if (isset($_POST['submitPoista'])) {
+/* Huolehtii Henkilon poistamisesta */
+
+function HenkilonPoisto() {
+    /* otetaan id piiloteutusta kentästä */
     $puuhaaja = $_POST['henkilo_id'];
+    /* Poistetaan henkilo */
     Henkilo::PoistaHenkilo($puuhaaja);
     $_SESSION['ilmoitus'] = "Puuhaaja poistettu onnistuneesti.";
-    
-    /* Haetaan lista kayttajista */
-    $kayttajat = Henkilo::etsiKaikkiKayttajat();
-    naytaNakyma('nakymat/yllapitajanSivu.php', array(
-        'aktiivinen' => "omaSivu",
-        'henkilot' => $kayttajat
-    ));
+
+    /* Kutsutaan functiota joka nayttaa nakyman yllapitajan sivulle */
+    naytaNakymaYllapitajanSivulle(null);
 }
 
-if (isset($_POST['submitKorota'])) {
+/* Huolehtii ylläpitäjäksi korottamisesta */
+
+function YllapitajaksiKorottaminen() {
+    /* otetaan id piiloteutusta kentästä */
     $puuhaajaid = $_POST['henkilo_id'];
-    $puuhaaja=Henkilo::EtsiKokoHenkilo($puuhaajaid);
+    /* Korotetaan henkilo yllapitajaksi */
+    $puuhaaja = Henkilo::EtsiKokoHenkilo($puuhaajaid);
     $puuhaaja->VaihdaYllapitajaksi();
     $_SESSION['ilmoitus'] = "Puuhaaja on korotetty Ylläpitäjäksi.";
-    
-     /* Haetaan lista kayttajista */
-    $kayttajat = Henkilo::etsiKaikkiKayttajat();
-    naytaNakyma('nakymat/yllapitajanSivu.php', array(
-        'aktiivinen' => "omaSivu",
-        'henkilot' => $kayttajat
-    ));
+
+    /* Kutsutaan functiota joka nayttaa nakyman yllapitajan sivulle */
+    naytaNakymaYllapitajanSivulle(null);
 }
-if (isset($_POST['submitBlokkaa'])) {
+
+/* Huolehtii puuhaaajan blokkaamisesta. Blokattu käyttäjä ei voi lisätä tai
+ *  muokata mitään sivun sisältöä */
+
+function Blokkaus() {
+    /* otetaan id piiloteutusta kentästä */
     $puuhaajaid = $_POST['henkilo_id'];
-    $puuhaaja=Henkilo::EtsiKokoHenkilo($puuhaajaid);
+    $puuhaaja = Henkilo::EtsiKokoHenkilo($puuhaajaid);
+    /* Blokataan puuhaaja */
     $puuhaaja->Blokkaa();
     $_SESSION['ilmoitus'] = "Puuhaaja on blokattu.";
-    
-     /* Haetaan lista kayttajista */
-    $kayttajat = Henkilo::etsiKaikkiKayttajat();
-    naytaNakyma('nakymat/yllapitajanSivu.php', array(
-        'aktiivinen' => "omaSivu",
-        'henkilot' => $kayttajat
-    ));
+
+    /* Kutsutaan functiota joka nayttaa nakyman yllapitajan sivulle */
+    naytaNakymaYllapitajanSivulle(null);
 }
 
-if (isset($_POST['submitPoistaBlokkaus'])) {
+/* Huolehtii puuhaajan blokkauksen poistamisesta */
+
+function BlokkauksenPoisto() {
+    /* otetaan id piiloteutusta kentästä */
     $puuhaajaid = $_POST['henkilo_id'];
-    $puuhaaja=Henkilo::EtsiKokoHenkilo($puuhaajaid);
+    $puuhaaja = Henkilo::EtsiKokoHenkilo($puuhaajaid);
+    /* Poistetaan blokkaus */
     $puuhaaja->PoistaBlokkaus();
     $_SESSION['ilmoitus'] = "Puuhaajan blokkaus on poistettu.";
-    
-     /* Haetaan lista kayttajista */
-    $kayttajat = Henkilo::etsiKaikkiKayttajat();
-    naytaNakyma('nakymat/yllapitajanSivu.php', array(
-        'aktiivinen' => "omaSivu",
-        'henkilot' => $kayttajat
-    ));
+
+    /* Kutsutaan functiota joka nayttaa nakyman yllapitajan sivulle */
+    naytaNakymaYllapitajanSivulle(null);
 }
-
-/* Jos mitään nappia ei ole painettu näytetään sivu normaalisti */
-naytaNakyma('nakymat/yllapitajanSivu.php', array(
-    'aktiivinen' => "omaSivu",
-    'henkilot' => $kayttajat
-));
-

@@ -9,8 +9,7 @@
             <div class="col-md-offset-1"> 
                 <div class="form-group">
                     <select name="luokkasailio" id="luokkasailio">
-                        <option value="0" selected>-</option>
-                        <option value="any">Mikä tahansa</option>
+                        <option value="any" selected>Mikä tahansa</option>
                         <?php
                         if (isset($data->luokat)) {
 
@@ -85,7 +84,7 @@
             </div>
             <div class="form-group">
                 <div class="col-md-offset-1">
-                    <button type="submit" class="btn btn-default">Hae</button>
+                    <button type="submit" id=submithaku name="submithaku" class="btn btn-default">Hae</button>
                 </div>
             </div>
 

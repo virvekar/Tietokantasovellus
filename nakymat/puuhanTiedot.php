@@ -21,7 +21,7 @@
                 </tr>
                 <tr>
                     <td>Kesto:</td>
-                    <td><?php echo $puuha->getKesto(); ?></td>
+                    <td><?php echo number_format((float)$puuha->getKesto(), 2, '.', ''); ?></td>
                 </tr>
                 <tr>
                     <td>Henkilömäärä:</td>

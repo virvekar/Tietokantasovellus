@@ -28,7 +28,7 @@ class Suositukset {
         $this->suositusteksti = $suositusteksti;
  	if (trim($this->suositusteksti) == '') {
             $this->virheet['suositusteksti'] = "Suositus ei saa olla tyhjä.";
-        } else if (strlen($this->kuvaus) > 1000) {
+        } else if (strlen($this->suositusteksti) > 1000) {
             $this->virheet['suositusteksti'] = "Suositus on liian pitkä.";
         } else {
             unset($this->virheet['suositusteksti']);
@@ -84,25 +84,45 @@ public function getSuosittelija(){
         $sql = "SELECT puuhanid, puuhaajaid, suositusteksti, suositusid FROM suositukset WHERE puuhanid=?";
         $kysely = getTietokantayhteys()->prepare($sql);
         $kysely->execute(array($puuhanid));
-        $kysely->rowCount();
+     
         $tulokset = array();
         foreach ($kysely->fetchAll(PDO::FETCH_OBJ) as $tulos) {
 
             $tulokset[] = Suositukset::asetaArvot($tulos);
         }
-        error_log(print_r($kysely->rowCount(), TRUE)); 
+     
+        return $tulokset;
+    }
+
+/*Antaa suosituksen tiedot*/
+    public function EtsiSuositus($suositusid){
+        $sql = "SELECT puuhanid, puuhaajaid, suositusteksti, suositusid FROM suositukset WHERE suositusid=?";
+        $kysely = getTietokantayhteys()->prepare($sql);
+        $kysely->execute(array($suositusid));
+         foreach ($kysely->fetchAll(PDO::FETCH_OBJ) as $tulos) {
+
+            $tulokset = Suositukset::asetaArvot($tulos);
+        }
         return $tulokset;
     }
 
 /*Poistaa puuhan suosituksista*/
-    public function PoistaSuosikeista($suositusid){
+    public function PoistaSuositus($suositusid){
          $sql = "DELETE FROM suositukset WHERE suositusid = ?";
         $kysely = getTietokantayhteys()->prepare($sql);
         $ok = $kysely->execute(array($suositusid));
 
         return $ok;
     }
-
+/*Lisää suositukseen tehdyt muokkaukset kantaan*/
+    public function lisaaMuokkauksetKantaan() {
+        $sql = "UPDATE suositukset SET puuhanid=?, puuhaajaid=?, suositusteksti=?
+ WHERE suositusid=?";
+        $kysely = getTietokantayhteys()->prepare($sql);
+        error_log(print_r(array($this->getPuuhaId(), $this->getPuuhaajaId(), $this->getSuositusTeksti(), $this->getSuositusId()), TRUE)); 
+        $ok = $kysely->execute(array($this->getPuuhaId(), $this->getPuuhaajaId(), $this->getSuositusTeksti(), $this->getSuositusId()));
+        return $ok;
+    }
 
 }
 

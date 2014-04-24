@@ -125,6 +125,20 @@ Kukin päivämäärä vastaa päivää, jolloin luokkaan on viimeksi lisätty pu
         return $tulokset;
     }
 
+ /*Antaa puuhaluokan kun sille annetaan id*/
+    public static function EtsiPuuhaLuokka($luokanid) {
+        $sql = "SELECT puuhaluokanid, puuhaluokanNimi, puuhaluokanKuvaus FROM puuhaluokka WHERE puuhaluokanid= ?";
+        $kysely = getTietokantayhteys()->prepare($sql);
+        $kysely->execute(array($luokanid));
+        $tulos = $kysely->fetchObject();
+        if ($tulos == null) {
+            return null;
+        } else {
+            $puuhaluokka = Puuhaluokka::asetaArvot($tulos);
+        }
+        return $puuhaluokka;
+    }   
+    
 /*Antaa puuhaluokan nimen kun sille annetaan id*/
     public static function AnnaPuuhaLuokka($luokanid) {
         $sql = "SELECT puuhaluokanid, puuhaluokanNimi, puuhaluokanKuvaus FROM puuhaluokka WHERE puuhaluokanid= ?";
@@ -200,6 +214,16 @@ public static function PoistaPuuhaluokka($puuhaluokanid) {
         $ok = $kysely->execute(array($puuhaluokanid));
    
 
+        return $ok;
+    }
+    
+    /*Lisää Puuhaluokkaan tehdyt muokkaukset kantaan*/
+    public function lisaaMuokkauksetKantaan() {
+        $sql = "UPDATE puuhaluokka SET puuhaluokanNimi=?, puuhaluokanKuvaus=?
+ WHERE puuhaluokanid=?";
+        $kysely = getTietokantayhteys()->prepare($sql);
+        $ok = $kysely->execute(array($this->getNimi(), $this->getKuvaus(), $this->getId()));
+        error_log(print_r($this->getId(), TRUE)); 
         return $ok;
     }
 }

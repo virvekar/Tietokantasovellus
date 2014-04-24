@@ -50,6 +50,9 @@ class Henkilo {
         }
     }
     public function setSalasana2($salasana1){
+         if (trim($salasana1) == '') {
+            $this->virheet['salasana'] = "salasanaa ei annettu.";
+        } 
         $this->salasana=$salasana1;
     }
 
@@ -212,7 +215,40 @@ class Henkilo {
         }
         return null;
     }
+    
+    /* Palauttaa true jos henkilo on ylläpitäjä */
 
+    public static function OnkoYllapitaja($kayttajaid) {
+        $sql = "SELECT puuhaajaid,sahkoposti,salasana,asema,nimimerkki from henkilo where puuhaajaid = ?";
+        $kysely = getTietokantayhteys()->prepare($sql);
+        $kysely->execute(array($kayttajaid));
+
+        $tulos = $kysely->fetchObject();
+        if (!$tulos == null) {
+            $asema= $tulos->asema;
+            if($asema=='Yllapitaja'){
+                return true;
+            }
+        }
+        return false;
+    }
+
+      /* Palauttaa true jos henkilo on blokattu */
+
+    public static function OnkoBlokattu($kayttajaid) {
+        $sql = "SELECT puuhaajaid,sahkoposti,salasana,asema,nimimerkki from henkilo where puuhaajaid = ?";
+        $kysely = getTietokantayhteys()->prepare($sql);
+        $kysely->execute(array($kayttajaid));
+
+        $tulos = $kysely->fetchObject();
+        if (!$tulos == null) {
+            $asema= $tulos->asema;
+            if($asema=='blokattu'){
+                return true;
+            }
+        }
+        return false;
+    }
     /* Lisää Henkilon tietokantaan */
 
     public function lisaaKantaan() {
@@ -266,5 +302,28 @@ class Henkilo {
         return $ok;
     }
     
-   
+   /*vaihtaa statuksen yllapitajaksi*/
+    public function VaihdaYllapitajaksi() {
+        $sql = "UPDATE Henkilo SET asema=? WHERE puuhaajaid=?";
+        $kysely = getTietokantayhteys()->prepare($sql);
+        
+        $ok = $kysely->execute(array('Yllapitaja', $this->getId()));
+        return $ok;
+    }
+    /*vaihtaa aseman blokatuksi*/
+    public function Blokkaa() {
+        $sql = "UPDATE Henkilo SET asema=? WHERE puuhaajaid=?";
+        $kysely = getTietokantayhteys()->prepare($sql);
+        
+        $ok = $kysely->execute(array('blokattu', $this->getId()));
+        return $ok;
+    }
+     /*vaihtaa aseman puuhaajaksi*/
+    public function PoistaBlokkaus() {
+        $sql = "UPDATE Henkilo SET asema=? WHERE puuhaajaid=?";
+        $kysely = getTietokantayhteys()->prepare($sql);
+        
+        $ok = $kysely->execute(array('Puuhaaja', $this->getId()));
+        return $ok;
+    }
 }

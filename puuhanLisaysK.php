@@ -13,77 +13,54 @@ require_once 'tietokanta/kirjastot/luoOlio.php';
 
 /* Tarkistetaan onko käyttäjä kirjautunut sisään */
 if (!OnkoKirjautunut()) {
-    naytaNakyma('nakymat/Kirjautuminen.php', array(
-        'virhe' => "Kirjaudu sisään lisätäksesi puuhan.", request
-    ));
+    naytaNakymaKirjautumisSivulleVirheella();
 }
 
-/*Tarkistetaan onko käyttäjä blokattu*/
+/* Tarkistetaan onko käyttäjä blokattu */
 if (Henkilo::OnkoBlokattu(annaKirjautuneenId())) {
     $_SESSION['ilmoitus'] = "Et voi lisätä puuhaa.";
     naytaNakymaPuuhatSivulle(1);
 }
 
-/* Haetaan puuhaluokat ja taidot dropvalikkoja varten */
-$luokat = Puuhaluokka::AnnaTiedotListaukseen();
-$taidot = Taidot::AnnaTaitoListaus();
-
-/*Katsotaan onko puuhan lisäysnappia painettu*/
+/* Katsotaan onko puuhan lisäysnappia painettu */
 if (isset($_POST['submitpuuha'])) {
-    
-  /*Kutsutaan funktiota joka asettaa puuhalle arvot syötteestä*/
-    $uusiPuuha=TaytaPuuhanTiedotSyotteella(new Puuhat());
-    $virheet = $uusiPuuha->getVirheet();
+    PuuhanLisaysToimet();
+}
+/* Jos nappia ei ole painettu näytetään normaalinäkymä */
+NaytaNakymaPuuhanLisaysSivulle(new Puuhat(), "Lisays", null);
 
+/* ---------------------------------------------------------------------------- */
 
-     /* Jos ei virheitä lisätään puuha kantaan */
-    if (empty($virheet)) {
-        
-        
-            /*Jos ajankohta on tyhjä kutsutaan funktiota joka ei aseta tietokantaan aikkaa*/
+/*Tarkistaa puuhan syotteen ja lisaa puuhan kantaan jos syote oli hyva, lopuksi 
+ohjataan kayttaja puuhat sivulle */
+function PuuhanLisaysToimet() {
+    /* Kutsutaan funktiota joka asettaa puuhalle arvot syötteestä */
+    $uusiPuuha = TaytaPuuhanTiedotSyotteella(new Puuhat());
+
+    /* Jos ei virheitä lisätään puuha kantaan */
+    if (OlioOnVirheeton($uusiPuuha)) {
+
+        /* Jos ajankohta on tyhjä kutsutaan funktiota joka ei aseta tietokantaan aikaa */
         if (is_null($uusiPuuha->getAjankohta())) {
-             $uusiPuuha->lisaaKantaanEiAikaa();
-           $_SESSION['ilmoitus'] = "Puuha lisätty kantaan.";
-            
-
-           luoPuuhaTaidot($uusiPuuha);
-    
-            /*Viedään käyttäjä puuhat sivulle*/
-            naytaNakymaPuuhatSivulle(1);
-            
-            /*Jos ajankohta ei ole tyhjä kutsutaan funktiota joka asettaa tietokantaan myös ajan */
+            $uusiPuuha->lisaaKantaanEiAikaa();
+            LisayskenJalkitoimet($uusiPuuha);
+            /* Jos ajankohta ei ole tyhjä kutsutaan funktiota joka asettaa tietokantaan myös ajan */
         } else {
             $uusiPuuha->lisaaKantaan();
-            $_SESSION['ilmoitus'] = "Puuha lisätty kantaan.";
-            
-            luoPuuhaTaidot($uusiPuuha);
-            /*Viedään käyttäjä puuhat sivulle*/
-            naytaNakymaPuuhatSivulle(1);
-        
+            LisayskenJalkitoimet($uusiPuuha);
         }
     } else {
-        /*Jos virheitä oli näytetään virheilmoitus ja välitetään puuhan tiedot näkymälle*/
+        /* Jos virheitä oli näytetään virheilmoitus ja välitetään puuhan tiedot näkymälle */
         $virheet = $uusiPuuha->getVirheet();
-        naytaNakyma("nakymat/puuhanLisays.php", array(
-            'aktiivinen' => "puuhat",
-            'uusiPuuha' => $uusiPuuha,
-            'luokat' => $luokat,
-            'taidot' => $taidot,
-            'virhe' => $virheet,
-            'tyyppi' => "Lisays"
-        ));
+        NaytaNakymaPuuhanLisaysSivulle($uusiPuuha, "Lisays", $virheet);
     }
 }
-/*Jos nappia ei ole painettu näytetään normaalinäkymä*/
-naytaNakyma('nakymat/puuhanLisays.php', array(
-    'aktiivinen' => "puuhat",
-    'uusiPuuha' => new Puuhat(),
-    'luokat' => $luokat,
-    'taidot' => $taidot,
-    'tyyppi' => "Lisays"
-    
-));
 
+/*Annetaan ilmoitus, luodaan puuhataidot ja ohjataan kayttaja puuhat sivulle*/
+function LisayskenJalkitoimet($uusiPuuha) {
+    $_SESSION['ilmoitus'] = "Puuha lisätty kantaan.";
 
-
-
+    luoPuuhaTaidot($uusiPuuha);
+    /* Viedään käyttäjä puuhat sivulle */
+    naytaNakymaPuuhatSivulle(1);
+}

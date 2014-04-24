@@ -6,7 +6,7 @@
             <label for="inputEmail1" class="col-md-2 control-label">Sähköposti</label>
             <div class="col-md-10">
                 <input type="email" class="form-control" id="inputEmail1" name="email" placeholder="Email"
-                       value="<?php echo $data->kayttaja; ?>">
+                       value="<?php echo $data->kayttaja->getSahkoposti(); ?>">
             </div>
         </div>
         <div class="form-group">
@@ -19,7 +19,7 @@
         </div>
         <div class="form-group">
             <div class="col-md-offset-2 col-md-10">
-                <button type="submit" class="btn btn-default">Kirjaudu sisään</button>
+                <button type="submit" id=submitkirjautuminen name="submitkirjautuminen" class="btn btn-default">Kirjaudu sisään</button>
             </div>
         </div>
     </form>

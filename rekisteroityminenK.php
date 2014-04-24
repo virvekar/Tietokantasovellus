@@ -1,4 +1,5 @@
 <?php
+
 require_once 'tietokanta/kirjastot/nakymakutsut.php';
 require_once 'tietokanta/kirjastot/tietokantayhteys.php';
 require_once 'tietokanta/kirjastot/mallit/Henkilo.php';
@@ -9,44 +10,39 @@ require_once 'tietokanta/kirjastot/onkoKirjautunut.php';
 
 /* Katsotaan onko rekisteroitymisnappia painettu */
 if (isset($_POST['submitrekisteroidy'])) {
-    
+
     /* Luodaan Henkilö-olio ja annetaan sille tarvittavat tiedot */
-    $uusiHenkilo=new Henkilo();
-    $uusiHenkilo=TaytaHenkilonTiedotSyotteella($uusiHenkilo);
-    
-    /* Otetaan ylös virheet */
-    $virheet = $uusiHenkilo->getVirheet();
+    $uusiHenkilo = new Henkilo();
+    $uusiHenkilo = TaytaHenkilonTiedotSyotteella($uusiHenkilo);
 
     /* Jos virheitä ei ollut lisätään henkilo tietokantaan */
-    if (empty($virheet)) {
-        $idtunnus=$uusiHenkilo->lisaaKantaan();
+    if (OlioOnVirheeton($uusiHenkilo)) {
+        $idtunnus = $uusiHenkilo->lisaaKantaan();
 
-	 session_start();
+        KirjaaHenkiloSisaan($uusiHenkilo);
         $_SESSION['ilmoitus'] = "Rekisteröityminen onnistui.";
-         
-        /*Haetaan käyttäjä vastasaatuine id tunnuksineen tietokannasta*/
-$henkilo = Henkilo::EtsiKokoHenkilo($uusiHenkilo->getId());
-       /* $henkilo = Henkilo::etsiKayttajaTunnuksilla($uusiHenkilo->getNimimerkki(), $uusiHenkilo->getSalasana());*/
-      
-        /*Kirjataan henkilo sisään*/
-         $_SESSION['kirjautunut'] =serialize($henkilo); 
-         
-        /* Kutsutaan funktiota joka näyttää oman sivun*/
+        /* Kutsutaan funktiota joka näyttää oman sivun */
         header('Location: omaSivuK.php');
     } else {
         /* Jos virheitä oli välitetään ne näkymälle täytettyjen tietojen kera */
         $virheet = $uusiHenkilo->getVirheet();
-        naytaNakyma("nakymat/rekisteroityminen.php", array(
-            'aktiivinen' => "ei mikaan",
-            'uusiHenkilo' => $uusiHenkilo,
-            'virhe' => $virheet
-        ));
+        NaytaNakymaRekisteroitymisSivulle($uusiHenkilo, $virheet);
     }
-    
 }
 
-/*Jos nappia ei ole painettu näytetään normaalinäkymä*/
-naytaNakyma('nakymat/rekisteroityminen.php', array(
-    'aktiivinen' => "ei mikaan",
-    'uusiHenkilo' => new Henkilo()
-));
+/* Jos nappia ei ole painettu näytetään normaalinäkymä */
+NaytaNakymaRekisteroitymisSivulle(new Henkilo(), null);
+
+
+/* ---------------------------------------------------------------------------- */
+
+/* Hakee henkilon tiedot ja kirjaa taman sisaan */
+
+function KirjaaHenkiloSisaan($uusiHenkilo) {
+    session_start();
+    /* Haetaan käyttäjä vastasaatuine id tunnuksineen tietokannasta */
+    $henkilo = Henkilo::EtsiKokoHenkilo($uusiHenkilo->getId());
+
+    /* Kirjataan henkilo sisään */
+    $_SESSION['kirjautunut'] = serialize($henkilo);
+}

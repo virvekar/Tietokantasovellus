@@ -68,11 +68,14 @@ Se ole liian pitkä*/
 
 /*Asettaa puuhalle keston ja tarkistaa että se on positiivinen luku*/
     public function setKesto($kesto) {
-        $this->kesto = $kesto;
+        $this->kesto = (float)$kesto;
+        error_log(print_r($kesto, TRUE)); 
         if (!is_numeric($kesto)) {
             $this->virheet['kesto'] = "Keston tulee olla numero.";
         } else if ($kesto <= 0) {
             $this->virheet['kesto'] = "Puuhalla täytyy olla positiivinen kesto.";
+        } else if ($kesto > 9999999) {
+            $this->virheet['kesto'] = "Puuhan keston täytyy olla vähemmän kuin 9999999 tuntia.";
         } else {
             unset($this->virheet['kesto']);
         }
@@ -85,7 +88,9 @@ Se ole liian pitkä*/
             $this->virheet['henkilomaara'] = "Henkilomaaran tulee olla numero.";
         } else if ($henkilomaara <= 0) {
             $this->virheet['henkilomaara'] = "Henkilomaaran täytyy olla positiivinen henkilomaara.";
-        } else if (!preg_match('/^\d+$/', $henkilomaara)) {
+        }else if ($henkilomaara >= 1000000) {
+            $this->virheet['henkilomaara'] = "Henkilomaaran ei saa olla suurempi kuin 1000000.";
+        }else if (!preg_match('/^\d+$/', $henkilomaara)) {
             $this->virheet['henkilomaara'] = "Henkilomaaran tulee olla kokonaisluku.";
         } else {
             unset($this->virheet['henkilomaara']);
@@ -255,6 +260,7 @@ Se ole liian pitkä*/
         $puuha->setAjankohtaEiTarkistusta($tulos->ajankohta);
         $puuha->setPuuhanLisaysPaiva($tulos->puuhanlisayspaiva);
         $puuha->setLisaaja($tulos->puuhaajaid);
+
         
         return $puuha;
     }

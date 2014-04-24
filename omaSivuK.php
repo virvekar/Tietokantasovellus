@@ -11,60 +11,32 @@ require_once 'tietokanta/kirjastot/mallit/OmatTaidot.php';
 
 /* Tarkistetaan onko käyttäjä kirjautunut sisään*/
 if (!OnkoKirjautunut()) {
-    naytaNakyma('nakymat/Kirjautuminen.php', array(      
-        'aktiivinen' => "ei mikaan",
-        'virhe' => "Kirjaudu sisään tarkastellaksesi omaa sivua.", request
-    ));
+    naytaNakymaKirjautumisSivulleVirheella();
 }
 
 /*Tarkistetaan onko painettu nappia puuhan poistamiseksi suosikeista*/
 if (isset($_POST['submitPoistaSuosikeista'])) {
     $puuhanid=$_POST['puuha_id'];
+    /*Poistetaan puuha henkilon suosikeista*/
     Suosikit::PoistaSuosikeista($puuhanid,  annaKirjautuneenId());
 }
 
+/*Tarkisteaan onko painettu nappia taidon poistamiseksi omista taidoista*/
 if (isset($_POST['submitPoistaOmistaTaidoista'])) {
     $taidonid=$_POST['taito_id'];
+    /*Poistetaan taito henkilon osaamista taidoista*/
     OmatTaidot::PoistaOmistaTaidoista($taidonid,  annaKirjautuneenId());
 }
 
+/*Katsotaan onko painettu nappia rekisteröitymisen poistamiseksi*/
 if (isset($_POST['submitPoistaHenkilo'])) {
+    /*Poisteaan kirjautunut henkilo järjestelmästä*/
     Henkilo::PoistaHenkilo(annaKirjautuneenId());
     $_SESSION['ilmoitus'] = "Olet poistanut rekisteröitymisesi järjestelmästä";
      KirjauduUlos();
 
 }
 
-/*Haetaan käyttäjän suosikkipuuhien id:t tietokannasta*/
-$suosikkiPuuhaIDt=Suosikit::AnnaKayttajanSuosikit(annaKirjautuneenId());
-
-/*Haetaan käyttäjän osaamien taitojen id:t tietokannasta*/
-$osattujenTaitojenIDt=OmatTaidot::AnnaKayttajanTaidot(annaKirjautuneenId());
-
-/*Haetaan suosikkipuuhien tiedot*/
-$suosikkiPuuhat = array();
-foreach ($suosikkiPuuhaIDt as $id):
-    $suosikkiPuuhat[]=Puuhat::EtsiPuuha($id);
-endforeach;
-
-/*Haetaan osattujen taitojen tiedot*/
-$osatutTaitodt = array();
-foreach ($osattujenTaitojenIDt as $id):
-    $osatutTaidot[]=Taidot::EtsiTaito($id);
-endforeach;
-
-/*Haetaan käyttäjän lisäämät puuhat ja taidot*/
-$omatPuuhat=Puuhat::HaePuuhatTekijalla(annaKirjautuneenId());
-$omatTaidot=Taidot::HaeTaidotTekijalla(annaKirjautuneenId());
-
-/*Välitetään tiedot näkymälle*/
-naytaNakyma('nakymat/omaSivu.php', array(
-    'nimi' => annaKirjautuneenNimimerkki(),
-    'aktiivinen' => "omaSivu",
-    'omatPuuhat' => $omatPuuhat,
-    'omatTaidot' => $omatTaidot,
-    'suosikkiPuuhat' => $suosikkiPuuhat,
-    'osatutTaidot'=>$osatutTaidot
-));
+naytaNakymaOmalleSivulle();
 
     

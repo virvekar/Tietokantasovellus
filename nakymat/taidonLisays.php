@@ -10,9 +10,9 @@
     <form class="form-horizontal" role="form" action="
     <?php
     if ($data->tyyppi == "Lisays") {
-        echo "TaidonLisaysK.php";
+        echo "taidonLisaysK.php";
     } else if ($data->tyyppi == "Muokkaus") {
-        echo "TaidonMuokkausK.php?taidonid=" . $data->uusiTaito->getId();
+        echo "taidonMuokkausK.php?taidonid=" . $data->uusiTaito->getId();
     }
     ?>
           " method="POST">
