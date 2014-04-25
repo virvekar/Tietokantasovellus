@@ -1,6 +1,6 @@
 <?php
 
-
+/*Palauttaa yhteyden tietokantaan*/
 function getTietokantayhteys() {
   static $yhteys = null; //Muuttuja, jonka sisältö säilyy getTietokantayhteys-kutsujen välillä.
 

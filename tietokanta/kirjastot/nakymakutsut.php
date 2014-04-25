@@ -4,6 +4,9 @@ require_once 'tietokanta/kirjastot/mallit/Puuhaluokka.php';
 require_once 'tietokanta/kirjastot/mallit/Henkilo.php';
 require_once 'tietokanta/kirjastot/mallit/Taidot.php';
 require_once 'tietokanta/kirjastot/mallit/Puuhat.php';
+require_once 'tietokanta/kirjastot/mallit/Suosikit.php';
+require_once 'tietokanta/kirjastot/mallit/OmatTaidot.php';
+require_once 'tietokanta/kirjastot/mallit/PuuhaTaidot.php';
 require_once 'tietokanta/kirjastot/annaKirjautuneenNimimerkki.php';
 
 
@@ -181,6 +184,7 @@ function naytaNakymaYllapitajanSivulle($viesti) {
 function naytaNakymaKirjautumisSivulleVirheella() {
     naytaNakyma('nakymat/Kirjautuminen.php', array(
         'aktiivinen' => "ei mikaan",
+        'kayttaja' => new Henkilo(),
         'virhe' => "Kirjaudu sisään tarkastellaksesi tätä sivua", request
     ));
 }
@@ -199,6 +203,7 @@ function naytaNakymaKirjautumisSivulle($virhe,$kayttaja) {
 function naytaNakymaKirjautumisSivulleYllapitajaVirheella() {
     naytaNakyma('nakymat/Kirjautuminen.php', array(
         'aktiivinen' => "ei mikaan",
+        'kayttaja' => new Henkilo(),
         'virhe' => "Vain ylläpitäjä voi tarkasttella tätä sivua", request
     ));
 }
@@ -272,6 +277,8 @@ function NaytaNakymaPuuhanTiedotSivulle($puuha, $virheet) {
     ));
 }
 
+/*Nayttaa nakyman puuhan lisays sivulle*/
+
 function NaytaNakymaPuuhanLisaysSivulle($uusiPuuha, $tyyppi, $virhe) {
 
     /* Haetaan puuhaluokat ja taidot dropvalikkoja varten */
@@ -288,6 +295,8 @@ function NaytaNakymaPuuhanLisaysSivulle($uusiPuuha, $tyyppi, $virhe) {
     ));
 }
 
+/*Nayttaa nakyman puuhaluokan muokkaussivulle*/
+
 function NaytaNakymaPuuhaluokanLisaysSivulle($uusiLuokka, $tyyppi, $virheet) {
     naytaNakyma("nakymat/puuhaluokanLisays.php", array(
         'aktiivinen' => "puuhat",
@@ -296,6 +305,8 @@ function NaytaNakymaPuuhaluokanLisaysSivulle($uusiLuokka, $tyyppi, $virheet) {
         'tyyppi' => $tyyppi
     ));
 }
+
+/*Nayttaa hakunäkymän*/
 
 function NaytaHakuNakyma($puuhat,$virhe){
     $luokat = Puuhaluokka::AnnaTiedotListaukseen();

@@ -111,6 +111,8 @@ function LuoHenkiloKirjautumiseen() {
     return $kayttaja;
 }
 
+/*Luo kaikkille puuhan taidoille puuhantaidot olion*/
+
 function luoPuuhaTaidot($uusiPuuha) {
 
     $taitojenIdt = $uusiPuuha->getTaidot();
@@ -122,6 +124,7 @@ function luoPuuhaTaidot($uusiPuuha) {
     endforeach;
 }
 
+/*Luo uuden Suositus olion*/
 function luoSuositus($puuhaid, $suositusid) {
     $suositus = new Suositukset();
     $suositus->setPuuhaId($puuhaid);
@@ -131,6 +134,7 @@ function luoSuositus($puuhaid, $suositusid) {
     return $suositus;
 }
 
+/*Luo uuden suosikki olion*/
 function luoSuosikki($puuhaid) {
     $suosikki = new Suosikit();
     $suosikki->setPuuhaId($puuhaid);
@@ -138,6 +142,7 @@ function luoSuosikki($puuhaid) {
     return $suosikki;
 }
 
+/*Luo uuden puuhaluokka olion ja tayttää sen tiedot syöttellä*/
 function luoLuokka() {
     $uusiLuokka = new Puuhaluokka();
     $uusiLuokka->setId($puuhaluokanid);
@@ -147,6 +152,7 @@ function luoLuokka() {
     return $uusiLuokka;
 }
 
+/*Palauttaa true, jos olion virheet lista on tyhjä*/
 function OlioOnVirheeton($olio) {
     $virheet = $olio->getVirheet();
     if (empty($virheet)) {

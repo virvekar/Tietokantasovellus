@@ -27,6 +27,11 @@ $uusiPuuha=AlustaUusiPuuha();
 if (empty($uusiPuuha)) {
     NaytaNakymaPuuhanLisaysSivulle($uusiPuuha, "Muokkaus", "Puuhaa ei löydy.");
 }
+/*Katsotaan onko henkilo yllapitaja tai puuhan lisaaja*/
+if(!OnkoKirjautunutTamaHenkilo($uusiPuuha->getLisaaja()) ){
+     $_SESSION['ilmoitus'] = "Voit muokata vain itse lisäämiäsi puuhia.";
+     naytaNakymaLuokanPuuhatSivulle(1,$uusiPuuha->getPuuhaluokanId());
+}
 
 /* Onko nappia painettu */
 if (isset($_POST['submitpuuha'])) {
@@ -89,6 +94,12 @@ function AlustaUusiPuuha() {
     $puuhaid = (int) $_GET['puuhanid'];
     /* Haetaan puuha tietokannasta */
     $uusiPuuha = Puuhat::EtsiPuuha($puuhaid);
+    $nimi=$uusiPuuha->getNimi();
+    error_log(print_r($uusiPuuha, TRUE)); 
+    if(empty($nimi)){
+        $_SESSION['ilmoitus'] = "Puuhaa ei löytynyt.";
+        naytaNakymaPuuhatSivulle(1);
+    }
     $uusiPuuha->setId($puuhaid);
     /* Haetaan puuhaan liittyvät taidot */
     $taitojenIdt = PuuhaTaidot::AnnaPuuhanTaidot($puuhaid);

@@ -84,6 +84,11 @@
             </div>
             <div class="form-group">
                 <div class="col-md-offset-1">
+                    <?php if (OnkoKirjautunut()) { ?>
+                        <input type='checkbox' name='taitorajaus' value='rajaa' id='checkbox' /> Ota mukaan vain sellaiset puuhat joihin taitoni riittävät<br />
+                        <?php
+                    }
+                    ?>
                     <button type="submit" id=submithaku name="submithaku" class="btn btn-default">Hae</button>
                 </div>
             </div>

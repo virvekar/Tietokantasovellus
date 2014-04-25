@@ -23,10 +23,17 @@ if (Henkilo::OnkoBlokattu(annaKirjautuneenId())) {
 $uusiTaito = HaeTaito();
 
 
+
 /* Jos taitoa ei löytynyt tai sitä ei annettu annetaan virheilmoitus */
 if (is_null($uusiTaito)) {
     naytaNakymaTaidonMuokkausSivulleVirheella(new Taidot(), "Taitoa ei löydy.");
 }
+/*Katsotaan onko henkilo yllapitaja tai taidon lisaaja*/
+if(!OnkoKirjautunutTamaHenkilo($uusiTaito->getLisaaja()) ){
+     $_SESSION['ilmoitus'] = "Voit muokata vain itse lisäämiäsi taitoja.";
+    naytaNakymaTaidotSivulle(1);
+}
+
 /* Katsotaan onko taidonmuokkausnappia painettu */
 if (isset($_POST['submittaito'])) {
     TaidonMuokkausToimet($uusiTaito->getId());

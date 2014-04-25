@@ -51,13 +51,13 @@ class PuuhaTaidot {
         $sql = "SELECT puuhanid, taidonid FROM puuhaTaidot WHERE puuhanid=?";
         $kysely = getTietokantayhteys()->prepare($sql);
         $kysely->execute(array($puuhanid));
-        $kysely->rowCount();
+
         $tulokset = array();
         foreach ($kysely->fetchAll(PDO::FETCH_OBJ) as $tulos) {
 
             $tulokset[] = PuuhaTaidot::asetaArvot($tulos)->getTaitoId();
         }
-        error_log(print_r($kysely->rowCount(), TRUE)); 
+
         return $tulokset;
     }
     

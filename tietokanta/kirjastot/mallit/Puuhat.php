@@ -127,7 +127,9 @@ Se ole liian pitkä*/
     public function setPuuhanLisaysPaiva($puuhanlisayspaiva) {
         $this->puuhanlisayspaiva = $puuhanlisayspaiva;
     }
-
+/*Asettaa taidot  puuhalle. Jos annettua taitoa ei löytynut, annetaan virhe*/
+    /*Puuhalla ei ole taitoja tietokannassa attribuuttina, vaan ne tallenetaan 
+     * puuhataidot tauluun*/
      public function setTaidot($taidot) {
      	    if (empty($taidot)){
 	        $this->taidot = $taidot;
@@ -181,7 +183,7 @@ Se ole liian pitkä*/
     public function getAjankohta() {
         return $this->ajankohta;
     }
-
+/*Palauttaa ajankohdasta otetun paivan*/
     public function getPaiva() {
 
 
@@ -193,6 +195,7 @@ Se ole liian pitkä*/
         return $ajankohta->format("j.n.Y");
     }
 
+    /*Palauttaa ajankohdasta otetun kellonajan*/
     public function getKellonaika() {
         if (empty($this->ajankohta)) {
             return null;
@@ -224,6 +227,7 @@ Se ole liian pitkä*/
     public function getTaidot() {
         return $this->taidot;
     }
+    /*Palauttaa taitojen nimet stringina*/
     public function getTaidotTeksti(){
         $tekstia="";
 	$taitojenNimet=Taidot::EtsiTaitojenNimet($this->taidot);
@@ -473,6 +477,16 @@ Se ole liian pitkä*/
 
         return $ok;
     }
+ 
+    /*Poistaa annetut puuhat tietokannasta*/
+    public function PoistaNamaPuuhat($puuhat){
+        $sql = "DELETE FROM puuhat WHERE puuhanid = ?";
+        foreach ($puuhat as $puuha){
+            $kysely = getTietokantayhteys()->prepare($sql);
+            $ok = $kysely->execute(array($puuha->getId()));
+        }
+        return $ok;
+    }
 /*Palauttaa true jos henkilön tykkäys löytyy suosikit taulusta*/
     public function OnkoTykannyt($puuhaajaid){
          $sql = "SELECT puuhanid, puuhaajaid FROM Suosikit
@@ -489,4 +503,19 @@ Se ole liian pitkä*/
         }
     }
 
+    /*Hakee puuhat joiden ajankohta on ennen tata paivaa*/
+    public function HaeVanhatPuuhat(){
+         $sql = "SELECT puuhanid, puuhaluokanid, puuhanNimi, puuhanKuvaus, puuhanKesto, henkilomaara, paikka, ajankohta,puuhanLisaysPaiva, puuhaajaid FROM puuhat
+                where ajankohta < now()::date
+                ORDER BY puuhanNimi";
+        $kysely = getTietokantayhteys()->prepare($sql);
+        $kysely->execute();
+
+        $tulokset = array();
+        foreach ($kysely->fetchAll(PDO::FETCH_OBJ) as $tulos) {
+            $tulokset[] = Puuhat::asetaArvot($tulos);
+        }
+        return $tulokset;
+        
+    }
 }

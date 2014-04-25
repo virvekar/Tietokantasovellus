@@ -14,7 +14,7 @@ require_once 'tietokanta/kirjastot/luoOlio.php';
 
 /* Tarkistaa onko lisää suosikkeihin nappia painettu */
 if (isset($_POST['submitLisaaSuosikkeihin'])) {
-    SuosikinLisaysToimet();
+   $puuhaid= SuosikinLisaysToimet();
 } else {
     /* Otetaan puuhaid get parametrina */
     $puuhaid = (int) $_GET['puuhanid'];
@@ -51,10 +51,11 @@ NaytaNakymaPuuhanTiedotSivulle($puuha,$virheet);
 function SuosikinLisaysToimet() {
     /* Otetaan puuha id post muutujana näkymän formilta */
     $puuhaid = $_POST['puuha_id'];
-    luoSuosikki($puuhaid);
+    $suosikki=luoSuosikki($puuhaid);
     /* Lisätään puuha suosikkeihin */
     $suosikki->LisaaSuosikkeihin();
     $_SESSION['ilmoitus'] = "Puuha lisätty suosikkeihin.";
+    return $puuhaid;
 }
 
 /*Suoritetaaan puuhan poisto tietokannasta*/

@@ -10,7 +10,7 @@ require_once 'tietokanta/kirjastot/luoOlio.php';
 
 /* Tarkistetaan onko käyttäjä kirjautunut sisään */
 if (!OnkoKirjautunut()) {
-   naytaNakymaKirjautumisSivulleVirheella();
+    naytaNakymaKirjautumisSivulleVirheella();
 }
 
 if (isset($_POST['submitLisaaSuositus'])) {
@@ -22,14 +22,26 @@ if (isset($_POST['submitLisaaSuositus'])) {
 
     /* Hae suosituksen tiedot */
     $suositus = Suositukset::EtsiSuositus($suositusid);
+    /*Tarkistetaan löytyikö suositus*/
+     if(is_null($suositus)){
+         $_SESSION['ilmoitus'] = "Suositusta ei löytynyt";
+         naytaNakymaPuuhatSivulle(1);
+    }
     $puuha = Puuhat::EtsiPuuha($suositus->getPuuhaId());
+   
+    /* Katsotaan onko henkilo yllapitaja tai suosituksen lisaaja */
+    if (!OnkoKirjautunutTamaHenkilo($suositus->getPuuhaajaId())) {
+        $_SESSION['ilmoitus'] = "Voit muokata vain itse lisäämiäsi suosituksia.";
+        NaytaNakymaPuuhanTiedotSivulle($puuha);
+    }
 }
 
 naytaNakymaSuosituksenKirjoitusSivulle($puuha, $suositus, null, "Muokkaus");
 
 /* ---------------------------------------------------------------------------- */
 
-/*Suorittaa suosituksen lisaykseen vaadittavat toimet*/
+/* Suorittaa suosituksen lisaykseen vaadittavat toimet */
+
 function SuoritaMuokkausToimet() {
     /* Otetaaan puuhaid ja suositus id piilotetuista kentista */
     $puuhaid = $_POST['puuha_id'];

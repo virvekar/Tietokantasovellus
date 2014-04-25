@@ -55,13 +55,14 @@
             </tbody>
         </table>
         <?php if (OnkoKirjautunut()) { ?>
-
+        <br>
         <?php if (!($puuha->OnkoTykannyt($data->kirjautuneenid))) { ?>
                 <form action="puuhanTiedotK.php" method="post">
                     <input type="hidden" name="puuha_id" value="<?php echo $puuha->getId(); ?>">
                     <input type="submit" id=submitLisaaSuosikkeihin name="submitLisaaSuosikkeihin" value="Tykkää">
                 </form>
             <?php } ?>
+        <br>
             <a href=suosituksenKirjoitusK.php?puuhanid=<?php echo $puuha->getId(); ?>">Kirjoita suositus</a> 
         <?php if (OnkoYllapitajaKirjautunut()) { ?>
                 <form action="puuhanTiedotK.php" method="post">

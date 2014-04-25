@@ -20,6 +20,8 @@ class Henkilo {
         $this->id = $id;
     }
 
+    /* Asettaa nimimerkin ja tarkistaa ettei se ole tyhja tai liian pitka */
+
     public function setNimimerkki($tunnus) {
         $this->nimimerkki = $tunnus;
         if (trim($this->nimimerkki) == '') {
@@ -31,29 +33,36 @@ class Henkilo {
         }
     }
 
-    public function setSalasana($salasana1, $salasana2) {
+    /* Lisaa salasanan henkilolle */
 
+    public function setSalasana($salasana1, $salasana2) {
+        /* Tarkistetaan ettei kumpikaan annettu salasana ole tyhja */
         if (trim($salasana1) == '') {
             $this->virheet['salasana'] = "Salasana ei saa olla tyhjä.";
         } else if (trim($salasana2) == '') {
             $this->virheet['salasana'] = "Anna salasana molempiin kenttiin.";
         } else {
             unset($this->virheet['salasana']);
+            /* Jos salasanat ovat samat, palauttaa md5 salauksella muutetun salasanan */
             $salasanaHash = $this->vertaaSalasanojaJaAnnaHash($salasana1, $salasana2);
-
+            /* Jos salasanat eivat vastanneet toisiaan, annetaan virhe */
             if (is_null($salasanaHash)) {
                 $this->virheet['salasana'] = "Salasanat eivat vastanneet toisiaan.";
             } else {
+                /* Tallennetaan salasana tietokantaan */
                 $this->salasana = substr($salasanaHash, 0, 19);
                 unset($this->virheet['salasana']);
             }
         }
     }
-    public function setSalasana2($salasana1){
-         if (trim($salasana1) == '') {
+
+    /* Asettaa salasanan henkilolle ilman salausta */
+
+    public function setSalasana2($salasana1) {
+        if (trim($salasana1) == '') {
             $this->virheet['salasana'] = "salasanaa ei annettu.";
-        } 
-        $this->salasana=$salasana1;
+        }
+        $this->salasana = $salasana1;
     }
 
     /* tarkistaa ovatko annetut salasanat samat ja palauttaa hashin talletettavaksi
@@ -66,6 +75,8 @@ class Henkilo {
             return null;
         }
     }
+
+    /* Asettaa sahkopostin henkilolle jos se ei ole tyhja tai liian pitka */
 
     public function setSahkoposti($sahkoposti) {
         $this->sahkoposti = $sahkoposti;
@@ -119,6 +130,16 @@ class Henkilo {
         return "Puuhaja ID: {$this->id}, Nimimerkki: {$this->nimimerkki}, Salasana {$this->salasana}\n";
     }
 
+    /*Asettaa henkilolle tuloksissa maaritellyt arvot ja palauttaa henkilon*/
+    public static function asetaArvot($tulos) {
+        $kayttaja = new Henkilo();
+        $kayttaja->setId($tulos->puuhaajaid);
+        $kayttaja->setSahkoposti($tulos->sahkoposti);
+        $kayttaja->setSalasana2($tulos->salasana);
+        $kayttaja->setAsema($tulos->asema);
+        $kayttaja->setNimimerkki($tulos->nimimerkki);
+    }
+
     /* Tekee listauksen kaikista käyttäjistä tietokannassa */
 
     public static function etsiKaikkiKayttajat() {
@@ -129,11 +150,11 @@ class Henkilo {
         $tulokset = array();
         foreach ($kysely->fetchAll(PDO::FETCH_OBJ) as $tulos) {
             $kayttaja = new Henkilo();
-            $kayttaja->setId($tulos->puuhaajaid);
-            $kayttaja->setNimimerkki($tulos->nimimerkki);
-            $kayttaja->setSalasana($tulos->salasana);
-            $kayttaja->setLiittymispaiva($tulos->liittymispaiva);
-            $kayttaja->setAsema($tulos->asema);
+        $kayttaja->setId($tulos->puuhaajaid);
+        $kayttaja->setSahkoposti($tulos->sahkoposti);
+        $kayttaja->setSalasana2($tulos->salasana);
+        $kayttaja->setAsema($tulos->asema);
+        $kayttaja->setNimimerkki($tulos->nimimerkki);
 
             //$array[] = $muuttuja; lisää muuttujan arrayn perään. 
             //Se vastaa melko suoraan ArrayList:in add-metodia.
@@ -145,8 +166,8 @@ class Henkilo {
     /* Etsitään kannasta käyttäjätunnuksella ja salasanalla käyttäjäriviä */
 
     public static function etsiKayttajaTunnuksilla($kayttaja, $salasana) {
-        /*Muutetaan salasana hash muotoon*/
-        $salasana=substr(md5($salasana),0,19);
+        /* Muutetaan salasana hash muotoon */
+        $salasana = substr(md5($salasana), 0, 19);
         $sql = "SELECT puuhaajaid,sahkoposti,salasana,asema,nimimerkki from henkilo where sahkoposti = ? AND salasana = ? LIMIT 1";
         $kysely = getTietokantayhteys()->prepare($sql);
         $kysely->execute(array($kayttaja, $salasana));
@@ -156,11 +177,11 @@ class Henkilo {
             return null;
         } else {
             $kayttaja = new Henkilo();
-            $kayttaja->setId($tulos->puuhaajaid);
-            $kayttaja->setSahkoposti($tulos->sahkoposti);
-            $kayttaja->setSalasana2($tulos->salasana);
-            $kayttaja->setAsema($tulos->asema);
-            $kayttaja->setNimimerkki($tulos->nimimerkki);
+        $kayttaja->setId($tulos->puuhaajaid);
+        $kayttaja->setSahkoposti($tulos->sahkoposti);
+        $kayttaja->setSalasana2($tulos->salasana);
+        $kayttaja->setAsema($tulos->asema);
+        $kayttaja->setNimimerkki($tulos->nimimerkki);
 
             return $kayttaja;
         }
@@ -215,7 +236,7 @@ class Henkilo {
         }
         return null;
     }
-    
+
     /* Palauttaa true jos henkilo on ylläpitäjä */
 
     public static function OnkoYllapitaja($kayttajaid) {
@@ -225,15 +246,15 @@ class Henkilo {
 
         $tulos = $kysely->fetchObject();
         if (!$tulos == null) {
-            $asema= $tulos->asema;
-            if($asema=='Yllapitaja'){
+            $asema = $tulos->asema;
+            if ($asema == 'Yllapitaja') {
                 return true;
             }
         }
         return false;
     }
 
-      /* Palauttaa true jos henkilo on blokattu */
+    /* Palauttaa true jos henkilo on blokattu */
 
     public static function OnkoBlokattu($kayttajaid) {
         $sql = "SELECT puuhaajaid,sahkoposti,salasana,asema,nimimerkki from henkilo where puuhaajaid = ?";
@@ -242,13 +263,14 @@ class Henkilo {
 
         $tulos = $kysely->fetchObject();
         if (!$tulos == null) {
-            $asema= $tulos->asema;
-            if($asema=='blokattu'){
+            $asema = $tulos->asema;
+            if ($asema == 'blokattu') {
                 return true;
             }
         }
         return false;
     }
+
     /* Lisää Henkilon tietokantaan */
 
     public function lisaaKantaan() {
@@ -278,7 +300,7 @@ class Henkilo {
     /* Palauttaa true jos annettu salasana vastaa henkilon salasanaa */
 
     public function TarkistaOnkoVanhaSalasanaOikein($salasana) {
-        $salasana=substr(md5($salasana),0,19);
+        $salasana = substr(md5($salasana), 0, 19);
 
         if ($salasana == $this->salasana) {
             return TRUE;
@@ -293,37 +315,44 @@ class Henkilo {
         $this->setSalasana($salasana1, $salasana2);
     }
 
-    /*vaihtaa salasanan tietokantaan*/
+    /* vaihtaa salasanan tietokantaan */
+
     public function VaihdaSalasanaTietokantaan() {
         $sql = "UPDATE Henkilo SET salasana=? WHERE puuhaajaid=?";
         $kysely = getTietokantayhteys()->prepare($sql);
-        
+
         $ok = $kysely->execute(array($this->getSalasana(), $this->getId()));
         return $ok;
     }
-    
-   /*vaihtaa statuksen yllapitajaksi*/
+
+    /* vaihtaa statuksen yllapitajaksi */
+
     public function VaihdaYllapitajaksi() {
         $sql = "UPDATE Henkilo SET asema=? WHERE puuhaajaid=?";
         $kysely = getTietokantayhteys()->prepare($sql);
-        
+
         $ok = $kysely->execute(array('Yllapitaja', $this->getId()));
         return $ok;
     }
-    /*vaihtaa aseman blokatuksi*/
+
+    /* vaihtaa aseman blokatuksi */
+
     public function Blokkaa() {
         $sql = "UPDATE Henkilo SET asema=? WHERE puuhaajaid=?";
         $kysely = getTietokantayhteys()->prepare($sql);
-        
+
         $ok = $kysely->execute(array('blokattu', $this->getId()));
         return $ok;
     }
-     /*vaihtaa aseman puuhaajaksi*/
+
+    /* vaihtaa aseman puuhaajaksi */
+
     public function PoistaBlokkaus() {
         $sql = "UPDATE Henkilo SET asema=? WHERE puuhaajaid=?";
         $kysely = getTietokantayhteys()->prepare($sql);
-        
+
         $ok = $kysely->execute(array('Puuhaaja', $this->getId()));
         return $ok;
     }
+
 }

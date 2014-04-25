@@ -1,5 +1,6 @@
 <?php
 
+/*Palauttaa osoitteessa annetun sivunumeron*/
 function OtaSivunumero(){
     $sivuNumero = (int) $_GET['sivuNumero'];
 

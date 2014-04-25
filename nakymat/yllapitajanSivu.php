@@ -1,5 +1,12 @@
 <h1>Ylläpitäjän sivu</h1>
-
+<h3>Etsi ja poista vanhentuneet puuhat</h3>
+<form class="form-horizontal" role="form" action="yllapitajanSivuK.php" method="POST">
+    <div class="form-group">
+        <div class="col-md-offset-2 col-md-10">
+            <button type="submit" id=submitPoistaVanhat name="submitPoistaVanhat" class="btn btn-default">Poista vanhat</button>
+        </div>
+    </div>
+</form>
 <h3>Poista puuha</h3>
 <form class="form-horizontal" role="form" action="yllapitajanSivuK.php" method="POST">
     <div class="form-group">

@@ -18,7 +18,10 @@ if (!OnkoKirjautunut()) {
 else if (!OnkoYllapitajaKirjautunut()) {
     naytaNakymaKirjautumisSivulleYllapitajaVirheella();
 }
-
+/* Katsotaan onko puuhan poistonappia painettu */
+else if (isset($_POST['submitPoistaVanhat'])) {
+    EtsiJaPoistaVanhat();
+}
 /* Katsotaan onko puuhan poistonappia painettu */
 else if (isset($_POST['submitPoistaPuuha'])) {
     PuuhanPoisto();
@@ -59,6 +62,12 @@ naytaNakymaYllapitajanSivulle();
 /* -------------------------------------------------------------------------------- */
 /* Funktiot jotka huolehtivat poistoista: */
 
+function EtsiJaPoistaVanhat(){
+    $puuhat=Puuhat::HaeVanhatPuuhat();
+    Puuhat::PoistaNamaPuuhat($puuhat);
+    $_SESSION['ilmoitus'] = "Vanhat puuhat poistettu onnistuneesti.";
+    naytaNakymaYllapitajanSivulle(null);
+}
 
 /* Huolehtii puuhan poistamisesta */
 

@@ -149,8 +149,11 @@ if (!empty($data->omatTaidot)) {
     <br>Et ole lisännyt järjestelmään vielä yhtään taitoa.<br>
 <?php } ?>
 <a class="btn" href="http://virvemaa.users.cs.helsinki.fi/Tietokantasovellus/salasananVaihtoK.php">Vaihda salasana</a>
-
+<br>
+<br>
  <form action="omaSivuK.php" method="post">
-        <input type="submit" id=submitPoistaHenkilo name="submitPoistaHenkilo" value="Jätä puuha-arkisto pysyvästi">
+        <input type="submit" id=submitPoistaHenkilo name="submitPoistaHenkilo"  
+               onclick="return confirm('Oletko varma että haluat poistua pysyvästi järjestelmästä? Kaikki lisäämäsi sisältö poistetaan?')" 
+               value="Jätä puuha-arkisto pysyvästi">
 </form>
 
